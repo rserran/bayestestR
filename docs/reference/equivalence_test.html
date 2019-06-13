@@ -84,7 +84,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bayestestR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1</span>
       </span>
     </div>
 
@@ -113,10 +113,13 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/example1_LM.html">1. Linear Models</a>
+      <a href="../articles/example1.html">1. Initiation to Bayesian models</a>
     </li>
     <li>
-      <a href="../articles/example2_GLM.html">2. General Linear Models</a>
+      <a href="../articles/example2.html">2. Confirmation of Bayesian skills</a>
+    </li>
+    <li>
+      <a href="../articles/example3.html">3. Become a Bayesian master</a>
     </li>
   </ul>
 </li>
@@ -188,23 +191,27 @@
 <span class='fu'>equivalence_test</span>(<span class='no'>x</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for numeric</span>
-<span class='fu'>equivalence_test</span>(<span class='no'>x</span>, <span class='kw'>range</span> <span class='kw'>=</span> <span class='st'>"default"</span>, <span class='kw'>ci</span> <span class='kw'>=</span> <span class='fl'>0.95</span>,
+<span class='fu'>equivalence_test</span>(<span class='no'>x</span>, <span class='kw'>range</span> <span class='kw'>=</span> <span class='st'>"default"</span>, <span class='kw'>ci</span> <span class='kw'>=</span> <span class='fl'>0.89</span>,
   <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for data.frame</span>
-<span class='fu'>equivalence_test</span>(<span class='no'>x</span>, <span class='kw'>range</span> <span class='kw'>=</span> <span class='st'>"default"</span>, <span class='kw'>ci</span> <span class='kw'>=</span> <span class='fl'>0.95</span>,
+<span class='fu'>equivalence_test</span>(<span class='no'>x</span>, <span class='kw'>range</span> <span class='kw'>=</span> <span class='st'>"default"</span>, <span class='kw'>ci</span> <span class='kw'>=</span> <span class='fl'>0.89</span>,
+  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)
+
+<span class='co'># S3 method for emmGrid</span>
+<span class='fu'>equivalence_test</span>(<span class='no'>x</span>, <span class='kw'>range</span> <span class='kw'>=</span> <span class='st'>"default"</span>, <span class='kw'>ci</span> <span class='kw'>=</span> <span class='fl'>0.89</span>,
   <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for BFBayesFactor</span>
 <span class='fu'>equivalence_test</span>(<span class='no'>x</span>, <span class='kw'>range</span> <span class='kw'>=</span> <span class='st'>"default"</span>,
-  <span class='kw'>ci</span> <span class='kw'>=</span> <span class='fl'>0.9</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)
+  <span class='kw'>ci</span> <span class='kw'>=</span> <span class='fl'>0.89</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for stanreg</span>
-<span class='fu'>equivalence_test</span>(<span class='no'>x</span>, <span class='kw'>range</span> <span class='kw'>=</span> <span class='st'>"default"</span>, <span class='kw'>ci</span> <span class='kw'>=</span> <span class='fl'>0.95</span>,
+<span class='fu'>equivalence_test</span>(<span class='no'>x</span>, <span class='kw'>range</span> <span class='kw'>=</span> <span class='st'>"default"</span>, <span class='kw'>ci</span> <span class='kw'>=</span> <span class='fl'>0.89</span>,
   <span class='kw'>parameters</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for brmsfit</span>
-<span class='fu'>equivalence_test</span>(<span class='no'>x</span>, <span class='kw'>range</span> <span class='kw'>=</span> <span class='st'>"default"</span>, <span class='kw'>ci</span> <span class='kw'>=</span> <span class='fl'>0.95</span>,
+<span class='fu'>equivalence_test</span>(<span class='no'>x</span>, <span class='kw'>range</span> <span class='kw'>=</span> <span class='st'>"default"</span>, <span class='kw'>ci</span> <span class='kw'>=</span> <span class='fl'>0.89</span>,
   <span class='kw'>parameters</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -224,7 +231,7 @@
     </tr>
     <tr>
       <th>ci</th>
-      <td><p>The Credible Interval (CI) probability, corresponding to the proportion of HDI, to use.</p></td>
+      <td><p>The Credible Interval (CI) probability, corresponding to the proportion of HDI, to use for the percentage in ROPE.</p></td>
     </tr>
     <tr>
       <th>verbose</th>
@@ -258,25 +265,25 @@ for the output.</p></td>
 <li><p><a href='https://easystats.github.io/bayestestR/reference/equivalence_test.html'>Bayesian models</a></p></li>
 <li><p><a href='https://easystats.github.io/parameters/reference/equivalence_test.lm.html'>Frequentist models</a></p></li>
 </ul>
-    <p>For Bayesian models, the <strong>Test for Practical Equivalence</strong> is based on the <em>"HDI+ROPE decision rule"</em> (<cite>Kruschke, 2015, 2018</cite>) to check whether parameter values should be accepted or rejected against an explicitly formulated "null hypothesis" (i.e., a ROPE).</p>
+    <p>For Bayesian models, the <strong>Test for Practical Equivalence</strong> is based on the <em>"HDI+ROPE decision rule"</em> (<cite>Kruschke, 2014, 2018</cite>) to check whether parameter values should be accepted or rejected against an explicitly formulated "null hypothesis" (i.e., a ROPE). In other words, it checks the percentage of the 89% <a href='hdi.html'>HDI</a> that is the null region (the ROPE). If this percentage is sufficiently low, the null hypothesis is rejected. If this percentage is sufficiently high, the null hypothesis is accepted.</p>
 <p>Using the <a href='rope.html'>ROPE</a> and the <a href='hdi.html'>HDI</a>, <cite>Kruschke (2018)</cite>
-  suggests using the percentage of the 95% (or 90%, considered more stable)
+  suggests using the percentage of the 95% (or 89%, considered more stable)
   HDI that falls within the ROPE as a decision rule. If the HDI
   is completely outside the ROPE, the "null hypothesis" for this parameter is
-  "rejected". If the ROPE completely covers the HDI, i.e. all most credible
+  "rejected". If the ROPE completely covers the HDI, i.e., all most credible
   values of a parameter are inside the region of practical equivalence, the
   null hypothesis is accepted. Else, it’s undecided whether to accept or
   reject the null hypothesis. If the full ROPE is used (i.e., 100% of the
   HDI), then the null hypothesis is rejected or accepted if the percentage
   of the posterior within the ROPE is smaller than to 2.5% or greater than
   97.5%. Desirable results are low proportions inside the ROPE  (the closer
-  to zero the better) and the null hypothesis should be rejected.
+  to zero the better).
   <br /> <br />
   Some attention is required for finding suitable values for the ROPE limits
   (argument <code>range</code>). See 'Details' in <code><a href='rope_range.html'>rope_range()</a></code>
   for further information.
   <br /> <br />
-  <strong>Non-independent covariates</strong>
+  <strong>Multicollinearity: Non-independent covariates</strong>
   <br /> <br />
   When parameters show strong correlations, i.e. when covariates are not
   independent, the joint parameter distributions may shift towards or
@@ -285,10 +292,10 @@ for the output.</p></td>
   testing based on univariate marginals, as the probabilities are conditional
   on independence. Most problematic are the results of the "undecided"
   parameters, which may either move further towards "rejection" or away
-  from it (<cite>Kruschke 2015, 340f</cite>).
+  from it (<cite>Kruschke 2014, 340f</cite>).
   <br /> <br />
-  <code>equivalence_test()</code> performs a simple check for pairs of correlating
-  parameters, but as there can be collinearity between more than two variables,
+  <code>equivalence_test()</code> performs a simple check for pairwise correlations
+  between parameters, but as there can be collinearity between more than two variables,
   a first step to check the assumptions of this hypothesis testing is to look
   at different pair plots. An even more sophisticated check is the projection
   predictive variable selection (<cite>Piironen and Vehtari 2017</cite>).</p>
@@ -303,7 +310,7 @@ for the output.</p></td>
 
     <ul>
 <li><p>Kruschke, J. K. (2018). Rejecting or accepting parameter values in Bayesian estimation. Advances in Methods and Practices in Psychological Science, 1(2), 270-280. doi: <a href='https://doi.org/10.1177/2515245918771304'>10.1177/2515245918771304</a></p></li>
-<li><p>Kruschke, J. (2015). Doing Bayesian data analysis: A tutorial with R, JAGS, and Stan. Academic Press</p></li>
+<li><p>Kruschke, J. (2014). Doing Bayesian data analysis: A tutorial with R, JAGS, and Stan. Academic Press</p></li>
 <li><p>Piironen, J., &amp; Vehtari, A. (2017). Comparison of Bayesian predictive methods for model selection. Statistics and Computing, 27(3), 711–735. doi: <a href='https://doi.org/10.1007/s11222-016-9649-y'>10.1007/s11222-016-9649-y</a></p></li>
 </ul>
     
@@ -315,29 +322,29 @@ for the output.</p></td>
 #&gt; 
 #&gt; </span><span>  ROPE: [-0.10 0.10]
 #&gt; 
-#&gt;        H0 inside ROPE      95% HDI
+#&gt;        H0 inside ROPE      89% HDI
 #&gt;  accepted    100.00 % [-0.02 0.02]
 #&gt; </div><div class='input'><span class='fu'>equivalence_test</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/Normal'>rnorm</a></span>(<span class='fl'>1000</span>, <span class='fl'>0</span>, <span class='fl'>1</span>), <span class='kw'>range</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(-<span class='fl'>0.1</span>, <span class='fl'>0.1</span>))</div><div class='output co'>#&gt; </span><span style='color: #0000BB;'># Test for Practical Equivalence
 #&gt; 
 #&gt; </span><span>  ROPE: [-0.10 0.10]
 #&gt; 
-#&gt;         H0 inside ROPE      95% HDI
-#&gt;  undecided      6.83 % [-1.95 1.98]
+#&gt;         H0 inside ROPE      89% HDI
+#&gt;  undecided      9.09 % [-1.50 1.66]
 #&gt; </div><div class='input'><span class='fu'>equivalence_test</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/Normal'>rnorm</a></span>(<span class='fl'>1000</span>, <span class='fl'>1</span>, <span class='fl'>0.01</span>), <span class='kw'>range</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(-<span class='fl'>0.1</span>, <span class='fl'>0.1</span>))</div><div class='output co'>#&gt; </span><span style='color: #0000BB;'># Test for Practical Equivalence
 #&gt; 
 #&gt; </span><span>  ROPE: [-0.10 0.10]
 #&gt; 
-#&gt;        H0 inside ROPE     95% HDI
-#&gt;  rejected      0.00 % [0.98 1.02]
+#&gt;        H0 inside ROPE     89% HDI
+#&gt;  rejected      0.00 % [0.99 1.02]
 #&gt; </div><div class='input'><span class='fu'>equivalence_test</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/Normal'>rnorm</a></span>(<span class='fl'>1000</span>, <span class='fl'>1</span>, <span class='fl'>1</span>), <span class='kw'>ci</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>.50</span>, <span class='fl'>.99</span>))</div><div class='output co'>#&gt; </span><span style='color: #0000BB;'># Test for Practical Equivalence
 #&gt; 
 #&gt; </span><span>  ROPE: [-0.10 0.10]
 #&gt; 
-#&gt;         H0 inside ROPE      50% HDI
-#&gt;  undecided      1.00 % [ 0.09 1.46]
+#&gt;        H0 inside ROPE      50% HDI
+#&gt;  rejected      0.00 % [ 0.19 1.62]
 #&gt; 
 #&gt;         H0 inside ROPE      99% HDI
-#&gt;  undecided      5.25 % [-1.52 3.61]
+#&gt;  undecided      5.55 % [-1.51 3.42]
 #&gt; </div><div class='input'>
 <span class='co'># print more digits</span>
 <span class='no'>test</span> <span class='kw'>&lt;-</span> <span class='fu'>equivalence_test</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/Normal'>rnorm</a></span>(<span class='fl'>1000</span>, <span class='fl'>1</span>, <span class='fl'>1</span>), <span class='kw'>ci</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>.50</span>, <span class='fl'>.99</span>))
@@ -346,10 +353,10 @@ for the output.</p></td>
 #&gt; </span><span>  ROPE: [-0.1000 0.1000]
 #&gt; 
 #&gt;        H0 inside ROPE          50% HDI
-#&gt;  rejected    0.0000 % [ 0.2687 1.5815]
+#&gt;  rejected    0.0000 % [ 0.3801 1.7567]
 #&gt; 
 #&gt;         H0 inside ROPE          99% HDI
-#&gt;  undecided    5.3481 % [-1.4343 3.5587]
+#&gt;  undecided    4.0363 % [-1.5090 3.5295]
 #&gt; </div></span><span class='co'># NOT RUN {</span>
 <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>rstanarm</span>)
 <span class='no'>model</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>rstanarm</span><span class='kw ns'>::</span><span class='fu'><a href='https://www.rdocumentation.org/packages/rstanarm/topics/stan_glm'>stan_glm</a></span>(<span class='no'>mpg</span> ~ <span class='no'>wt</span> + <span class='no'>cyl</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>mtcars</span>)
@@ -359,6 +366,9 @@ for the output.</p></td>
 <span class='co'># plot result</span>
 <span class='no'>test</span> <span class='kw'>&lt;-</span> <span class='fu'>equivalence_test</span>(<span class='no'>model</span>)
 <span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>test</span>)
+
+<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>emmeans</span>)
+<span class='fu'>equivalence_test</span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/emmeans/topics/emtrends'>emtrends</a></span>(<span class='no'>model</span>, ~<span class='fl'>1</span>, <span class='st'>"wt"</span>))
 
 <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>brms</span>)
 <span class='no'>model</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>brms</span><span class='kw ns'>::</span><span class='fu'><a href='https://www.rdocumentation.org/packages/brms/topics/brm'>brm</a></span>(<span class='no'>mpg</span> ~ <span class='no'>wt</span> + <span class='no'>cyl</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>mtcars</span>)

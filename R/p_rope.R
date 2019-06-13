@@ -11,24 +11,31 @@
 #' @examples
 #' library(bayestestR)
 #'
-#' p_rope(x = rnorm(1000, mean = 1, sd = 1), range = c(-0.1, 0.1))
+#' # precision = 1 is used to speed up examples...
 #'
-#' # Broken
-#' # df <- data.frame(replicate(4, rnorm(100)))
-#' # p_rope(df)
-#' \dontrun{
+#' p_rope(
+#'   x = rnorm(1000, mean = 1, sd = 1),
+#'   range = c(-0.1, 0.1),
+#'   precision = 1
+#' )
+#'
+#' df <- data.frame(replicate(4, rnorm(100)))
+#' p_rope(df, precision = 1)
+#'
 #' library(rstanarm)
-#' model <- rstanarm::stan_glm(mpg ~ wt + cyl, data = mtcars)
-#' p_rope(model)
+#' model <- stan_glm(mpg ~ wt + gear, data = mtcars, chains = 2, iter = 200)
+#' p_rope(model, precision = 1)
 #'
+#' library(emmeans)
+#' p_rope(emtrends(model, ~1, "wt"))
+#' \dontrun{
 #' library(brms)
 #' model <- brms::brm(mpg ~ wt + cyl, data = mtcars)
 #' p_rope(model)
 #'
-#' # Broken
-#' # library(BayesFactor)
-#' # bf <- ttestBF(x = rnorm(100, 1, 1))
-#' # p_rope(bf)
+#' library(BayesFactor)
+#' bf <- ttestBF(x = rnorm(100, 1, 1))
+#' p_rope(bf)
 #' }
 #'
 #' @importFrom stats na.omit
@@ -116,6 +123,19 @@ p_rope.data.frame <- function(x, range = "default", precision = .1, ...) {
 
 #' @rdname p_rope
 #' @export
+p_rope.emmGrid <- function(x, range = "default", precision = .1, ...) {
+  if (!requireNamespace("emmeans")) {
+    stop("Package \"emmeans\" needed for this function to work. Please install it.")
+  }
+  xdf <- as.data.frame(as.matrix(emmeans::as.mcmc.emmGrid(x, names = FALSE)))
+
+  out <- p_rope(xdf , range = range, precision = precision, ...)
+  attr(out, "object_name") <- deparse(substitute(x), width.cutoff = 500)
+  out
+}
+
+#' @rdname p_rope
+#' @export
 p_rope.BFBayesFactor <- function(x, range = "default", precision = .1, ...) {
   out <- p_rope(insight::get_parameters(x), range = range, precision = precision, ...)
   out
@@ -184,9 +204,7 @@ p_rope.brmsfit <- function(x, range = "default", precision = .1, effects = c("fi
 
 
 
-#' Numeric Vectors
-#'
-#' @inheritParams base::as.numeric
+#' @rdname as.numeric.p_direction
 #' @method as.numeric p_rope
 #' @export
 as.numeric.p_rope <- function(x, ...) {

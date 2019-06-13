@@ -37,14 +37,21 @@ Click on the buttons above to access the package
 [**easystats blog**](https://easystats.github.io/blog/posts/), and
 check-out these vignettes:
 
+#### Tutorials
+
   - [Get Started with Bayesian
     Analysis](https://easystats.github.io/bayestestR/articles/bayestestR.html)
-  - [Example 1: Linear
-    Models](https://easystats.github.io/bayestestR/articles/example1_LM.html)
-  - [Example 2: General Linear
-    Models](https://easystats.github.io/bayestestR/articles/example2_GLM.html)
-  - [Credible
-    Intervals](https://easystats.github.io/bayestestR/articles/credible_interval.html)
+  - [Example 1: Initiation to Bayesian
+    models](https://easystats.github.io/bayestestR/articles/example1.html)
+  - [Example 2: Confirmation of Bayesian
+    skills](https://easystats.github.io/bayestestR/articles/example2.html)
+  - [Example 3: Become a Bayesian
+    master](https://easystats.github.io/bayestestR/articles/example3.html)
+
+#### Articles
+
+  - [Credible Intervals
+    (CIs)](https://easystats.github.io/bayestestR/articles/credible_interval.html)
   - [Probability of Direction
     (pd)](https://easystats.github.io/bayestestR/articles/probability_of_direction.html)
   - [Region of Practical Equivalence
@@ -99,13 +106,15 @@ typically exclude 2.5% from each tail of the distribution, the HDI is
 *not* equal-tailed and therefore always includes the mode(s) of
 posterior distributions.
 
-By default, hdi() returns the 90% intervals (`ci = 0.9`), deemed to be
-more stable than, for instance, 95% intervals (Kruschke, 2015). An
+By default, `hdi()` returns the 89% intervals (`ci = 0.89`), deemed to
+be more stable than, for instance, 95% intervals (Kruschke, 2014). An
 effective sample size of at least 10.000 is recommended if 95% intervals
-should be computed (Kruschke 2015, p. 183ff).
+should be computed (Kruschke 2014, p. 183ff). Moreover, 89 is the
+highest prime number that does not exceed the already unstable 95%
+threshold (McElreath, 2015).
 
 ``` r
-hdi(rnorm(1000), ci = .90)
+hdi(rnorm(1000), ci = .89)
 ```
 
 ![](man/figures/unnamed-chunk-8-1.png)<!-- -->
@@ -115,7 +124,7 @@ hdi(rnorm(1000), ci = .90)
 ### ROPE
 
 [**`rope()`**](https://easystats.github.io/bayestestR/reference/rope.html)
-computes the proportion (in percentage) of the HDI (default to the 90%
+computes the proportion (in percentage) of the HDI (default to the 89%
 HDI) of a posterior distribution that lies within a region of practical
 equivalence.
 
@@ -204,27 +213,6 @@ bayesfactor_savagedickey(posterior, prior, direction = "two-sided", hypothesis =
 
 ![](man/figures/unnamed-chunk-15-1.png)<!-- -->
 
-### ROPE-based probability
-
-[**`p_rope()`**](https://easystats.github.io/bayestestR/reference/p_rope.html)
-Compute the ROPE-based p-value, an exploratory index representing the
-maximum percentage of
-[HDI](https://easystats.github.io/bayestestR/reference/hdi.html) that
-does not contain (positive values) or is entirely contained (negative
-values) in the negligible values space defined by the
-[ROPE](https://easystats.github.io/bayestestR/reference/rope.html). It
-differs from the ROPE percentage, *i.e.*, from the proportion of a given
-CI in the ROPE, as it represents the maximum CI to reach a ROPE
-proportion of 0% (positive values) or 100% (negative values). A
-ROPE-based *p* of 97% means that there is a probability of .97 that a
-parameter (described by its posterior distribution) is outside the ROPE.
-On the contrary, a ROPE-based p of -97% means that there is a
-probability of .97 that the parameter is inside the ROPE.
-
-``` r
-p_rope(rnorm(1000, 1, 1), range = c(-0.1, 0.1))
-```
-
 ### MAP-based *p*-value
 
 [**`p_map()`**](https://easystats.github.io/bayestestR/reference/p_map.html)
@@ -239,7 +227,7 @@ divided by the density of the MAP estimate.
 p_map(rnorm(1000, 1, 1))
 ```
 
-![](man/figures/unnamed-chunk-18-1.png)<!-- -->
+![](man/figures/unnamed-chunk-17-1.png)<!-- -->
 
 ## Utilities
 
@@ -296,4 +284,4 @@ You can cite the package as following:
     and Describe Bayesian Models and Posterior Distributions using
     bayestestR*. Available from
     <https://github.com/easystats/bayestestR>.
-    <DOI:10.5281/zenodo.2556486>.
+    [DOI:10.5281/zenodo.2556486](https://zenodo.org/badge/latestdoi/165641861).

@@ -4,6 +4,7 @@
 \alias{p_rope}
 \alias{p_rope.numeric}
 \alias{p_rope.data.frame}
+\alias{p_rope.emmGrid}
 \alias{p_rope.BFBayesFactor}
 \alias{p_rope.stanreg}
 \alias{p_rope.brmsfit}
@@ -14,6 +15,8 @@ p_rope(x, ...)
 \method{p_rope}{numeric}(x, range = "default", precision = 0.1, ...)
 
 \method{p_rope}{data.frame}(x, range = "default", precision = 0.1, ...)
+
+\method{p_rope}{emmGrid}(x, range = "default", precision = 0.1, ...)
 
 \method{p_rope}{BFBayesFactor}(x, range = "default", precision = 0.1,
   ...)
@@ -54,24 +57,31 @@ Compute the ROPE-based p-value, an exploratory index representing the maximum pe
 \examples{
 library(bayestestR)
 
-p_rope(x = rnorm(1000, mean = 1, sd = 1), range = c(-0.1, 0.1))
+# precision = 1 is used to speed up examples...
 
-# Broken
-# df <- data.frame(replicate(4, rnorm(100)))
-# p_rope(df)
-\dontrun{
+p_rope(
+  x = rnorm(1000, mean = 1, sd = 1),
+  range = c(-0.1, 0.1),
+  precision = 1
+)
+
+df <- data.frame(replicate(4, rnorm(100)))
+p_rope(df, precision = 1)
+
 library(rstanarm)
-model <- rstanarm::stan_glm(mpg ~ wt + cyl, data = mtcars)
-p_rope(model)
+model <- stan_glm(mpg ~ wt + gear, data = mtcars, chains = 2, iter = 200)
+p_rope(model, precision = 1)
 
+library(emmeans)
+p_rope(emtrends(model, ~1, "wt"))
+\dontrun{
 library(brms)
 model <- brms::brm(mpg ~ wt + cyl, data = mtcars)
 p_rope(model)
 
-# Broken
-# library(BayesFactor)
-# bf <- ttestBF(x = rnorm(100, 1, 1))
-# p_rope(bf)
+library(BayesFactor)
+bf <- ttestBF(x = rnorm(100, 1, 1))
+p_rope(bf)
 }
 
 }

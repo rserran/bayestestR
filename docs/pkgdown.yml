@@ -1,12 +1,13 @@
-pandoc: 2.7.1
+pandoc: 2.7.2
 pkgdown: 1.3.0
 pkgdown_sha: ~
 articles:
   bayestestR: bayestestR.html
   bayes_factors: bayes_factors.html
   credible_interval: credible_interval.html
-  example1_LM: example1_LM.html
-  example2_GLM: example2_GLM.html
+  example1: example1.html
+  example2: example2.html
+  example3: example3.html
   guidelines: guidelines.html
   indicesEstimationComparison: indicesEstimationComparison.html
   indicesExistenceComparison: indicesExistenceComparison.html

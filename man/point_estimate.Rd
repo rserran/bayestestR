@@ -5,29 +5,29 @@
 \alias{point_estimate.stanreg}
 \alias{point_estimate.brmsfit}
 \alias{point_estimate.BFBayesFactor}
-\title{Compute point-estimates of posterior distributions}
+\title{Point-estimates of posterior distributions}
 \usage{
-point_estimate(x, estimate = "median", dispersion = FALSE, ...)
+point_estimate(x, centrality = "median", dispersion = FALSE, ...)
 
-\method{point_estimate}{stanreg}(x, estimate = "median",
+\method{point_estimate}{stanreg}(x, centrality = "median",
   dispersion = FALSE, effects = c("fixed", "random", "all"),
   parameters = NULL, ...)
 
-\method{point_estimate}{brmsfit}(x, estimate = "median",
+\method{point_estimate}{brmsfit}(x, centrality = "median",
   dispersion = FALSE, effects = c("fixed", "random", "all"),
   component = c("conditional", "zi", "zero_inflated", "all"),
   parameters = NULL, ...)
 
-\method{point_estimate}{BFBayesFactor}(x, estimate = "median",
+\method{point_estimate}{BFBayesFactor}(x, centrality = "median",
   dispersion = FALSE, ...)
 }
 \arguments{
 \item{x}{Vector representing a posterior distribution. Can also be a
 \code{stanreg} or \code{brmsfit} model.}
 
-\item{estimate}{The \href{https://easystats.github.io/bayestestR/articles/indicesEstimationComparison.html}{point-estimate(s)} to compute. Can be a character or a list with "median", "mean", "MAP" or "all".}
+\item{centrality}{The point-estimates (centrality indices) to compute.  Character (vector) or list with one or more of these options: \code{"median"}, \code{"mean"}, \code{"MAP"} or \code{"all"}.}
 
-\item{dispersion}{if \code{TRUE}, computes indices of dispersion related to the estimate(s) (\code{SD} and \code{MAD} for \code{mean} and \code{median}, respectively).}
+\item{dispersion}{Logical, if \code{TRUE}, computes indices of dispersion related to the estimate(s) (\code{SD} and \code{MAD} for \code{mean} and \code{median}, respectively).}
 
 \item{...}{Additional arguments to be passed to or from methods.}
 
@@ -51,33 +51,42 @@ Compute various point-estimates, such as the mean, the median or the MAP, to des
 library(bayestestR)
 
 point_estimate(rnorm(1000))
-point_estimate(rnorm(1000), estimate = "all", dispersion = TRUE)
-point_estimate(rnorm(1000), estimate = c("median", "MAP"))
+point_estimate(rnorm(1000), centrality = "all", dispersion = TRUE)
+point_estimate(rnorm(1000), centrality = c("median", "MAP"))
 
 df <- data.frame(replicate(4, rnorm(100)))
-point_estimate(df, estimate = "all", dispersion = TRUE)
-point_estimate(df, estimate = c("median", "MAP"))
+point_estimate(df, centrality = "all", dispersion = TRUE)
+point_estimate(df, centrality = c("median", "MAP"))
 \dontrun{
 # rstanarm models
 # -----------------------------------------------
 library(rstanarm)
 model <- rstanarm::stan_glm(mpg ~ wt + cyl, data = mtcars)
-point_estimate(model, estimate = "all", dispersion = TRUE)
-point_estimate(model, estimate = c("median", "MAP"))
+point_estimate(model, centrality = "all", dispersion = TRUE)
+point_estimate(model, centrality = c("median", "MAP"))
+
+
+# emmeans estimates
+# -----------------------------------------------
+library(emmeans)
+point_estimate(emtrends(model, ~1, "wt"), centrality = c("median", "MAP"))
 
 # brms models
 # -----------------------------------------------
 library(brms)
 model <- brms::brm(mpg ~ wt + cyl, data = mtcars)
-point_estimate(model, estimate = "all", dispersion = TRUE)
-point_estimate(model, estimate = c("median", "MAP"))
+point_estimate(model, centrality = "all", dispersion = TRUE)
+point_estimate(model, centrality = c("median", "MAP"))
 
 # BayesFactor objects
 # -----------------------------------------------
 library(BayesFactor)
 bf <- ttestBF(x = rnorm(100, 1, 1))
-point_estimate(bf, estimate = "all", dispersion = TRUE)
-point_estimate(bf, estimate = c("median", "MAP"))
+point_estimate(bf, centrality = "all", dispersion = TRUE)
+point_estimate(bf, centrality = c("median", "MAP"))
 }
 
+}
+\references{
+\href{https://easystats.github.io/bayestestR/articles/indicesEstimationComparison.html}{Vignette In-Depth 1: Comparison of Point-Estimates}
 }

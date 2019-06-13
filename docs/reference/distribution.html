@@ -41,7 +41,7 @@
   
 <meta property="og:title" content="Empirical Distributions — distribution" />
 
-<meta property="og:description" content="Generate a sample of size n with a near-perfect distribution." />
+<meta property="og:description" content="Generate a sequence of n-quantiles, i.e., a sample of size n with a near-perfect distribution." />
 
 <meta property="og:image" content="/logo.png" />
 <meta name="twitter:card" content="summary" />
@@ -84,7 +84,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bayestestR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1</span>
       </span>
     </div>
 
@@ -113,10 +113,13 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/example1_LM.html">1. Linear Models</a>
+      <a href="../articles/example1.html">1. Initiation to Bayesian models</a>
     </li>
     <li>
-      <a href="../articles/example2_GLM.html">2. General Linear Models</a>
+      <a href="../articles/example2.html">2. Confirmation of Bayesian skills</a>
+    </li>
+    <li>
+      <a href="../articles/example3.html">3. Become a Bayesian master</a>
     </li>
   </ul>
 </li>
@@ -178,7 +181,7 @@
 
     <div class="ref-description">
     
-    <p>Generate a sample of size <code>n</code> with a near-perfect distribution.</p>
+    <p>Generate a sequence of n-quantiles, i.e., a sample of size <code>n</code> with a near-perfect distribution.</p>
     
     </div>
 
@@ -199,6 +202,9 @@
 <span class='fu'>distribution_beta</span>(<span class='no'>n</span>, <span class='no'>shape1</span>, <span class='no'>shape2</span>, <span class='kw'>ncp</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>random</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)
 
 <span class='fu'>distribution_custom</span>(<span class='no'>n</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"norm"</span>, <span class='no'>...</span>, <span class='kw'>random</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+
+<span class='fu'>distribution_mixture_normal</span>(<span class='no'>n</span>, <span class='kw'>mean</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(-<span class='fl'>3</span>, <span class='fl'>3</span>), <span class='kw'>sd</span> <span class='kw'>=</span> <span class='fl'>1</span>,
+  <span class='kw'>random</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)
 
 <span class='fu'>rnorm_perfect</span>(<span class='no'>n</span>, <span class='kw'>mean</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>sd</span> <span class='kw'>=</span> <span class='fl'>1</span>)</pre>
     

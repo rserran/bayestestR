@@ -84,7 +84,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bayestestR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1</span>
       </span>
     </div>
 
@@ -113,10 +113,13 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/example1_LM.html">1. Linear Models</a>
+      <a href="../articles/example1.html">1. Initiation to Bayesian models</a>
     </li>
     <li>
-      <a href="../articles/example2_GLM.html">2. General Linear Models</a>
+      <a href="../articles/example2.html">2. Confirmation of Bayesian skills</a>
+    </li>
+    <li>
+      <a href="../articles/example3.html">3. Become a Bayesian master</a>
     </li>
   </ul>
 </li>
@@ -185,22 +188,25 @@
     <pre class="usage"><span class='fu'>hdi</span>(<span class='no'>x</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for numeric</span>
-<span class='fu'>hdi</span>(<span class='no'>x</span>, <span class='kw'>ci</span> <span class='kw'>=</span> <span class='fl'>0.9</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)
+<span class='fu'>hdi</span>(<span class='no'>x</span>, <span class='kw'>ci</span> <span class='kw'>=</span> <span class='fl'>0.89</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for data.frame</span>
-<span class='fu'>hdi</span>(<span class='no'>x</span>, <span class='kw'>ci</span> <span class='kw'>=</span> <span class='fl'>0.9</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)
+<span class='fu'>hdi</span>(<span class='no'>x</span>, <span class='kw'>ci</span> <span class='kw'>=</span> <span class='fl'>0.89</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)
+
+<span class='co'># S3 method for emmGrid</span>
+<span class='fu'>hdi</span>(<span class='no'>x</span>, <span class='kw'>ci</span> <span class='kw'>=</span> <span class='fl'>0.89</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for stanreg</span>
-<span class='fu'>hdi</span>(<span class='no'>x</span>, <span class='kw'>ci</span> <span class='kw'>=</span> <span class='fl'>0.9</span>, <span class='kw'>effects</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"fixed"</span>, <span class='st'>"random"</span>,
+<span class='fu'>hdi</span>(<span class='no'>x</span>, <span class='kw'>ci</span> <span class='kw'>=</span> <span class='fl'>0.89</span>, <span class='kw'>effects</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"fixed"</span>, <span class='st'>"random"</span>,
   <span class='st'>"all"</span>), <span class='kw'>parameters</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for brmsfit</span>
-<span class='fu'>hdi</span>(<span class='no'>x</span>, <span class='kw'>ci</span> <span class='kw'>=</span> <span class='fl'>0.9</span>, <span class='kw'>effects</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"fixed"</span>, <span class='st'>"random"</span>,
+<span class='fu'>hdi</span>(<span class='no'>x</span>, <span class='kw'>ci</span> <span class='kw'>=</span> <span class='fl'>0.89</span>, <span class='kw'>effects</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"fixed"</span>, <span class='st'>"random"</span>,
   <span class='st'>"all"</span>), <span class='kw'>component</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"conditional"</span>, <span class='st'>"zi"</span>, <span class='st'>"zero_inflated"</span>, <span class='st'>"all"</span>),
   <span class='kw'>parameters</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for BFBayesFactor</span>
-<span class='fu'>hdi</span>(<span class='no'>x</span>, <span class='kw'>ci</span> <span class='kw'>=</span> <span class='fl'>0.9</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)</pre>
+<span class='fu'>hdi</span>(<span class='no'>x</span>, <span class='kw'>ci</span> <span class='kw'>=</span> <span class='fl'>0.89</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -259,74 +265,173 @@ applies to <span class="pkg">brms</span>-models.</p></td>
   of the distribution, the HDI is <em>not</em> equal-tailed and therefore always
   includes the mode(s) of posterior distributions.
   <br /> <br />
-  By default, <code>hdi()</code> returns the 90% intervals (<code>ci = 0.9</code>),
-  deemed to be more stable than, for instance, 95% intervals (<cite>Kruschke, 2015</cite>).
+  By default, <code>hdi()</code> returns the 89% intervals (<code>ci = 0.89</code>),
+  deemed to be more stable than, for instance, 95% intervals (<cite>Kruschke, 2014</cite>).
   An effective sample size of at least 10.000 is recommended if 95% intervals
-  should be computed (<cite>Kruschke, 2015, p. 183ff</cite>).</p>
+  should be computed (<cite>Kruschke, 2014, p. 183ff</cite>). Moreover, 89 is the
+  highest prime number that does not exceed the already unstable 95% threshold.
+  What does it have to do with anything? Nothing, but it reminds us of the total
+  arbitrarity of any of these conventions (McElreath, 2015).</p>
     
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
-    <p>Kruschke, J. (2015). Doing Bayesian data analysis: A tutorial with R, JAGS, and Stan. Academic Press.</p>
+    <ul>
+<li><p>Kruschke, J. (2014). Doing Bayesian data analysis: A tutorial with R, JAGS, and Stan. Academic Press.</p></li>
+<li><p>McElreath, R. (2015). Statistical rethinking: A Bayesian course with examples in R and Stan. Chapman and Hall/CRC.</p></li>
+</ul>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>bayestestR</span>)
 
 <span class='no'>posterior</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/Normal'>rnorm</a></span>(<span class='fl'>1000</span>)
-<span class='fu'>hdi</span>(<span class='no'>posterior</span>, <span class='kw'>ci</span> <span class='kw'>=</span> <span class='fl'>.90</span>)</div><div class='output co'>#&gt; <span style='color: #0000BB;'># Highest Density Interval
+<span class='fu'>hdi</span>(<span class='no'>posterior</span>, <span class='kw'>ci</span> <span class='kw'>=</span> <span class='fl'>.89</span>)</div><div class='output co'>#&gt; <span style='color: #0000BB;'># Highest Density Interval
 #&gt; 
-#&gt; </span><span>       90% HDI
-#&gt;  [-1.52, 1.63]
+#&gt; </span><span>       89% HDI
+#&gt;  [-1.75, 1.56]
 #&gt; </div><div class='input'><span class='fu'>hdi</span>(<span class='no'>posterior</span>, <span class='kw'>ci</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>.80</span>, <span class='fl'>.90</span>, <span class='fl'>.95</span>))</div><div class='output co'>#&gt; </span><span style='color: #0000BB;'># Highest Density Intervals
 #&gt; 
 #&gt; </span><span>       80% HDI
-#&gt;  [-1.15, 1.29]
+#&gt;  [-1.21, 1.39]
 #&gt; 
 #&gt; 
 #&gt;        90% HDI
-#&gt;  [-1.52, 1.63]
+#&gt;  [-1.75, 1.67]
 #&gt; 
 #&gt; 
 #&gt;        95% HDI
-#&gt;  [-1.69, 2.19]
+#&gt;  [-2.07, 2.03]
 #&gt; 
 #&gt; </div><div class='input'>
 <span class='no'>df</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/data.frame'>data.frame</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/lapply'>replicate</a></span>(<span class='fl'>4</span>, <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/Normal'>rnorm</a></span>(<span class='fl'>100</span>)))
 <span class='fu'>hdi</span>(<span class='no'>df</span>)</div><div class='output co'>#&gt; </span><span style='color: #0000BB;'># Highest Density Interval
 #&gt; 
-#&gt; </span><span> Parameter       90% HDI
-#&gt;         X1 [-1.50, 1.62]
-#&gt;         X2 [-1.26, 1.39]
-#&gt;         X3 [-1.32, 1.81]
-#&gt;         X4 [-1.62, 1.67]
+#&gt; </span><span> Parameter       89% HDI
+#&gt;         X1 [-1.12, 1.96]
+#&gt;         X2 [-1.68, 1.43]
+#&gt;         X3 [-1.62, 1.75]
+#&gt;         X4 [-1.47, 1.31]
 #&gt; </div><div class='input'><span class='fu'>hdi</span>(<span class='no'>df</span>, <span class='kw'>ci</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>.80</span>, <span class='fl'>.90</span>, <span class='fl'>.95</span>))</div><div class='output co'>#&gt; </span><span style='color: #0000BB;'># Highest Density Intervals
 #&gt; 
 #&gt; </span><span> Parameter       80% HDI
-#&gt;         X1 [-0.99, 1.30]
-#&gt;         X2 [-0.84, 1.39]
-#&gt;         X3 [-1.11, 1.52]
-#&gt;         X4 [-1.25, 1.35]
+#&gt;         X1 [-1.25, 1.02]
+#&gt;         X2 [-1.16, 1.43]
+#&gt;         X3 [-1.30, 1.29]
+#&gt;         X4 [-0.95, 1.20]
 #&gt; 
 #&gt; 
 #&gt;  Parameter       90% HDI
-#&gt;         X1 [-1.50, 1.62]
-#&gt;         X2 [-1.26, 1.39]
-#&gt;         X3 [-1.32, 1.81]
-#&gt;         X4 [-1.62, 1.67]
+#&gt;         X1 [-1.12, 2.04]
+#&gt;         X2 [-1.58, 1.59]
+#&gt;         X3 [-1.62, 1.88]
+#&gt;         X4 [-1.59, 1.31]
 #&gt; 
 #&gt; 
 #&gt;  Parameter       95% HDI
-#&gt;         X1 [-1.50, 2.20]
-#&gt;         X2 [-1.70, 1.39]
-#&gt;         X3 [-1.96, 1.70]
-#&gt;         X4 [-2.46, 1.67]
+#&gt;         X1 [-1.89, 1.96]
+#&gt;         X2 [-1.78, 1.81]
+#&gt;         X3 [-2.23, 1.75]
+#&gt;         X4 [-1.59, 1.75]
 #&gt; 
-#&gt; </div></span><span class='co'># NOT RUN {</span>
+#&gt; </div><div class='input'>
 <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>rstanarm</span>)
-<span class='no'>model</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>rstanarm</span><span class='kw ns'>::</span><span class='fu'><a href='https://www.rdocumentation.org/packages/rstanarm/topics/stan_glm'>stan_glm</a></span>(<span class='no'>mpg</span> ~ <span class='no'>wt</span> + <span class='no'>cyl</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>mtcars</span>)
-<span class='fu'>hdi</span>(<span class='no'>model</span>)
-<span class='fu'>hdi</span>(<span class='no'>model</span>, <span class='kw'>ci</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>.80</span>, <span class='fl'>.90</span>, <span class='fl'>.95</span>))
-
+<span class='no'>model</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/rstanarm/topics/stan_glm'>stan_glm</a></span>(<span class='no'>mpg</span> ~ <span class='no'>wt</span> + <span class='no'>gear</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>mtcars</span>, <span class='kw'>chains</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>iter</span> <span class='kw'>=</span> <span class='fl'>200</span>)</div><div class='output co'>#&gt; 
+#&gt; SAMPLING FOR MODEL 'continuous' NOW (CHAIN 1).
+#&gt; Chain 1: 
+#&gt; Chain 1: Gradient evaluation took 0 seconds
+#&gt; Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0 seconds.
+#&gt; Chain 1: Adjust your expectations accordingly!
+#&gt; Chain 1: 
+#&gt; Chain 1: 
+#&gt; Chain 1: WARNING: There aren't enough warmup iterations to fit the
+#&gt; Chain 1:          three stages of adaptation as currently configured.
+#&gt; Chain 1:          Reducing each adaptation stage to 15%/75%/10% of
+#&gt; Chain 1:          the given number of warmup iterations:
+#&gt; Chain 1:            init_buffer = 15
+#&gt; Chain 1:            adapt_window = 75
+#&gt; Chain 1:            term_buffer = 10
+#&gt; Chain 1: 
+#&gt; Chain 1: Iteration:   1 / 200 [  0%]  (Warmup)
+#&gt; Chain 1: Iteration:  20 / 200 [ 10%]  (Warmup)
+#&gt; Chain 1: Iteration:  40 / 200 [ 20%]  (Warmup)
+#&gt; Chain 1: Iteration:  60 / 200 [ 30%]  (Warmup)
+#&gt; Chain 1: Iteration:  80 / 200 [ 40%]  (Warmup)
+#&gt; Chain 1: Iteration: 100 / 200 [ 50%]  (Warmup)
+#&gt; Chain 1: Iteration: 101 / 200 [ 50%]  (Sampling)
+#&gt; Chain 1: Iteration: 120 / 200 [ 60%]  (Sampling)
+#&gt; Chain 1: Iteration: 140 / 200 [ 70%]  (Sampling)
+#&gt; Chain 1: Iteration: 160 / 200 [ 80%]  (Sampling)
+#&gt; Chain 1: Iteration: 180 / 200 [ 90%]  (Sampling)
+#&gt; Chain 1: Iteration: 200 / 200 [100%]  (Sampling)
+#&gt; Chain 1: 
+#&gt; Chain 1:  Elapsed Time: 0.011 seconds (Warm-up)
+#&gt; Chain 1:                0.011 seconds (Sampling)
+#&gt; Chain 1:                0.022 seconds (Total)
+#&gt; Chain 1: 
+#&gt; 
+#&gt; SAMPLING FOR MODEL 'continuous' NOW (CHAIN 2).
+#&gt; Chain 2: 
+#&gt; Chain 2: Gradient evaluation took 0 seconds
+#&gt; Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 0 seconds.
+#&gt; Chain 2: Adjust your expectations accordingly!
+#&gt; Chain 2: 
+#&gt; Chain 2: 
+#&gt; Chain 2: WARNING: There aren't enough warmup iterations to fit the
+#&gt; Chain 2:          three stages of adaptation as currently configured.
+#&gt; Chain 2:          Reducing each adaptation stage to 15%/75%/10% of
+#&gt; Chain 2:          the given number of warmup iterations:
+#&gt; Chain 2:            init_buffer = 15
+#&gt; Chain 2:            adapt_window = 75
+#&gt; Chain 2:            term_buffer = 10
+#&gt; Chain 2: 
+#&gt; Chain 2: Iteration:   1 / 200 [  0%]  (Warmup)
+#&gt; Chain 2: Iteration:  20 / 200 [ 10%]  (Warmup)
+#&gt; Chain 2: Iteration:  40 / 200 [ 20%]  (Warmup)
+#&gt; Chain 2: Iteration:  60 / 200 [ 30%]  (Warmup)
+#&gt; Chain 2: Iteration:  80 / 200 [ 40%]  (Warmup)
+#&gt; Chain 2: Iteration: 100 / 200 [ 50%]  (Warmup)
+#&gt; Chain 2: Iteration: 101 / 200 [ 50%]  (Sampling)
+#&gt; Chain 2: Iteration: 120 / 200 [ 60%]  (Sampling)
+#&gt; Chain 2: Iteration: 140 / 200 [ 70%]  (Sampling)
+#&gt; Chain 2: Iteration: 160 / 200 [ 80%]  (Sampling)
+#&gt; Chain 2: Iteration: 180 / 200 [ 90%]  (Sampling)
+#&gt; Chain 2: Iteration: 200 / 200 [100%]  (Sampling)
+#&gt; Chain 2: 
+#&gt; Chain 2:  Elapsed Time: 0.015 seconds (Warm-up)
+#&gt; Chain 2:                0.014 seconds (Sampling)
+#&gt; Chain 2:                0.029 seconds (Total)
+#&gt; Chain 2: </div><div class='input'><span class='fu'>hdi</span>(<span class='no'>model</span>)</div><div class='output co'>#&gt; </span><span style='color: #0000BB;'># Highest Density Interval
+#&gt; 
+#&gt; </span><span>   Parameter        89% HDI
+#&gt;  (Intercept) [32.36, 46.98]
+#&gt;           wt [-6.56, -4.57]
+#&gt;         gear [-1.69,  1.22]
+#&gt; </div><div class='input'><span class='fu'>hdi</span>(<span class='no'>model</span>, <span class='kw'>ci</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>.80</span>, <span class='fl'>.90</span>, <span class='fl'>.95</span>))</div><div class='output co'>#&gt; </span><span style='color: #0000BB;'># Highest Density Intervals
+#&gt; 
+#&gt; </span><span>   Parameter        80% HDI
+#&gt;  (Intercept) [33.70, 44.82]
+#&gt;           wt [-6.38, -4.77]
+#&gt;         gear [-1.43,  0.81]
+#&gt; 
+#&gt; 
+#&gt;    Parameter        90% HDI
+#&gt;  (Intercept) [32.36, 47.57]
+#&gt;           wt [-6.68, -4.61]
+#&gt;         gear [-1.69,  1.31]
+#&gt; 
+#&gt; 
+#&gt;    Parameter        95% HDI
+#&gt;  (Intercept) [29.76, 49.50]
+#&gt;           wt [-6.74, -4.09]
+#&gt;         gear [-2.26,  1.26]
+#&gt; 
+#&gt; </div><div class='input'>
+<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>emmeans</span>)
+<span class='fu'>hdi</span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/emmeans/topics/emtrends'>emtrends</a></span>(<span class='no'>model</span>, ~<span class='fl'>1</span>, <span class='st'>"wt"</span>))</div><div class='output co'>#&gt; </span><span style='color: #0000BB;'># Highest Density Interval
+#&gt; 
+#&gt; </span><span> Parameter        89% HDI
+#&gt;    overall [-6.56, -4.57]
+#&gt; </div></span><span class='co'># NOT RUN {</span>
 <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>brms</span>)
 <span class='no'>model</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>brms</span><span class='kw ns'>::</span><span class='fu'><a href='https://www.rdocumentation.org/packages/brms/topics/brm'>brm</a></span>(<span class='no'>mpg</span> ~ <span class='no'>wt</span> + <span class='no'>cyl</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>mtcars</span>)
 <span class='fu'>hdi</span>(<span class='no'>model</span>)

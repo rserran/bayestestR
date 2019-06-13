@@ -2,6 +2,7 @@
 #'
 #' This function is a wrapper over different methods of density estimation. By default, it uses the base R \link{density} with by default uses a different smoothing bandwidth (\code{"SJ"}) from the legacy default implemented the base R \link{density} function (\code{"nrd0"}). However, Deng \& Wickham suggest that \code{method = "KernSmooth"} is the fastest and the most accurate.
 #'
+#' @inheritParams hdi
 #' @inheritParams stats::density
 #' @param method Method of density estimation. Can be \code{"kernel"} (default), \code{"logspline"} or \code{"KernSmooth"}.
 #' @param precision Number of points of density data. See the \code{n} parameter in \link[=density]{density}.
@@ -30,12 +31,43 @@
 #' hist(x, prob = TRUE)
 #' lines(density_extended$x, density_extended$y, col = "red", lwd = 3)
 #' lines(density_default$x, density_default$y, col = "black", lwd = 3)
-#' @references Deng, H., \& Wickham, H. (2011). Density estimation in R. Electronic publication.
+#'
+#' df <- data.frame(replicate(4, rnorm(100)))
+#' head(estimate_density(df))
+#'
+#' # rstanarm models
+#' # -----------------------------------------------
+#' library(rstanarm)
+#' model <- stan_glm(mpg ~ wt + gear, data = mtcars, chains = 2, iter = 200)
+#' head(estimate_density(model))
+#'
+#' library(emmeans)
+#' head(estimate_density(emtrends(model, ~1, "wt")))
+#' \dontrun{
+#' # brms models
+#' # -----------------------------------------------
+#' library(brms)
+#' model <- brms::brm(mpg ~ wt + cyl, data = mtcars)
+#' estimate_density(model)
+#' }
+#'
+#' @references Deng, H., & Wickham, H. (2011). Density estimation in R. Electronic publication.
 #'
 #' @importFrom stats density
 #' @importFrom utils install.packages
 #' @export
 estimate_density <- function(x, method = "kernel", precision = 2^10, extend = FALSE, extend_scale = 0.1, bw = "SJ", ...) {
+  UseMethod("estimate_density")
+}
+
+#' @rdname estimate_density
+#' @export
+estimate_probability <- estimate_density
+
+
+
+#' @keywords internal
+.estimate_density <- function(x, method = "kernel", precision = 2^10, extend = FALSE, extend_scale = 0.1, bw = "SJ", ...) {
   method <- match.arg(method, c("kernel", "logspline", "KernSmooth", "smooth"))
 
   # Range
@@ -45,6 +77,9 @@ estimate_density <- function(x, method = "kernel", precision = 2^10, extend = FA
     x_range[1] <- x_range[1] - extension_scale
     x_range[2] <- x_range[2] + extension_scale
   }
+
+  # Replace inf values if needed
+  x_range[is.infinite(x_range)] <- 5.565423e+156
 
   # Kernel
   if (method == "kernel") {
@@ -75,7 +110,7 @@ estimate_density <- function(x, method = "kernel", precision = 2^10, extend = FA
         stop("Package \"KernSmooth\" needed for this function. Press run 'install.packages(\"KernSmooth\")'.")
       }
     }
-    x <- as.data.frame(KernSmooth::bkde(x, range.x = x_range, gridsize = precision, truncate = TRUE, ...))
+    return(as.data.frame(KernSmooth::bkde(x, range.x = x_range, gridsize = precision, truncate = TRUE, ...)))
   } else {
     stop("method should be one of 'kernel', 'logspline' or 'KernSmooth'")
   }
@@ -83,6 +118,70 @@ estimate_density <- function(x, method = "kernel", precision = 2^10, extend = FA
 
 
 
+
+
+#' @export
+estimate_density.numeric <- function(x, method = "kernel", precision = 2^10, extend = FALSE, extend_scale = 0.1, bw = "SJ", ...) {
+  out <- .estimate_density(x, method = method, precision = precision, extend = extend, extend_scale = extend_scale, bw = bw, ...)
+  class(out) <- c("estimate_density", "see_estimate_density", class(out))
+  out
+}
+
+
+
+
+
+
+#' @export
+estimate_density.data.frame <- function(x, method = "kernel", precision = 2^10, extend = FALSE, extend_scale = 0.1, bw = "SJ", ...) {
+  x <- .select_nums(x)
+  out <- sapply(x, estimate_density, method = method, precision = precision, extend = extend, extend_scale = extend_scale, bw = bw, simplify = FALSE)
+  for (i in names(out)) {
+    out[[i]]$Parameter <- i
+  }
+  out <- do.call(rbind, out)
+
+  row.names(out) <- NULL
+  out[, c("Parameter", "x", "y")]
+}
+
+#' @export
+estimate_density.emmGrid <- function(x, method = "kernel", precision = 2^10, extend = FALSE, extend_scale = 0.1, bw = "SJ", ...) {
+  if (!requireNamespace("emmeans")) {
+    stop("Package \"emmeans\" needed for this function to work. Please install it.")
+  }
+  x <- as.data.frame(as.matrix(emmeans::as.mcmc.emmGrid(x, names = FALSE)))
+
+  estimate_density(x, method = method, precision = precision,
+                              extend = extend, extend_scale = extend_scale,
+                              bw = bw, ...)
+}
+
+
+
+
+#' @importFrom insight get_parameters
+#' @export
+estimate_density.stanreg <- function(x, method = "kernel", precision = 2^10, extend = FALSE, extend_scale = 0.1, bw = "SJ", effects = c("fixed", "random", "all"), parameters = NULL, ...) {
+  effects <- match.arg(effects)
+
+  out <- estimate_density(insight::get_parameters(x, effects = effects, parameters = parameters), method = method, precision = precision, extend = extend, extend_scale = extend_scale, bw = bw, ...)
+
+  out
+}
+
+
+
+#' @importFrom insight get_parameters
+#' @export
+estimate_density.brmsfit <- function(x, method = "kernel", precision = 2^10, extend = FALSE, extend_scale = 0.1, bw = "SJ", effects = c("fixed", "random", "all"), component = c("conditional", "zi", "zero_inflated", "all"), parameters = NULL, ...) {
+  effects <- match.arg(effects)
+  component <- match.arg(component)
+
+  out <- estimate_density(insight::get_parameters(x, effects = effects, component = component, parameters = parameters), method = method, precision = precision, extend = extend, extend_scale = extend_scale, bw = bw, ...)
+
+  out
+}
 
 
 #' Coerce to a Data Frame

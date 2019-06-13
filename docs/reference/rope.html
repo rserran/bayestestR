@@ -84,7 +84,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bayestestR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1</span>
       </span>
     </div>
 
@@ -113,10 +113,13 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/example1_LM.html">1. Linear Models</a>
+      <a href="../articles/example1.html">1. Initiation to Bayesian models</a>
     </li>
     <li>
-      <a href="../articles/example2_GLM.html">2. General Linear Models</a>
+      <a href="../articles/example2.html">2. Confirmation of Bayesian skills</a>
+    </li>
+    <li>
+      <a href="../articles/example3.html">3. Become a Bayesian master</a>
     </li>
   </ul>
 </li>
@@ -188,24 +191,28 @@
 <span class='fu'>rope</span>(<span class='no'>x</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for numeric</span>
-<span class='fu'>rope</span>(<span class='no'>x</span>, <span class='kw'>range</span> <span class='kw'>=</span> <span class='st'>"default"</span>, <span class='kw'>ci</span> <span class='kw'>=</span> <span class='fl'>0.9</span>,
+<span class='fu'>rope</span>(<span class='no'>x</span>, <span class='kw'>range</span> <span class='kw'>=</span> <span class='st'>"default"</span>, <span class='kw'>ci</span> <span class='kw'>=</span> <span class='fl'>0.89</span>,
   <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for data.frame</span>
-<span class='fu'>rope</span>(<span class='no'>x</span>, <span class='kw'>range</span> <span class='kw'>=</span> <span class='st'>"default"</span>, <span class='kw'>ci</span> <span class='kw'>=</span> <span class='fl'>0.9</span>,
+<span class='fu'>rope</span>(<span class='no'>x</span>, <span class='kw'>range</span> <span class='kw'>=</span> <span class='st'>"default"</span>, <span class='kw'>ci</span> <span class='kw'>=</span> <span class='fl'>0.89</span>,
+  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)
+
+<span class='co'># S3 method for emmGrid</span>
+<span class='fu'>rope</span>(<span class='no'>x</span>, <span class='kw'>range</span> <span class='kw'>=</span> <span class='st'>"default"</span>, <span class='kw'>ci</span> <span class='kw'>=</span> <span class='fl'>0.89</span>,
   <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for BFBayesFactor</span>
-<span class='fu'>rope</span>(<span class='no'>x</span>, <span class='kw'>range</span> <span class='kw'>=</span> <span class='st'>"default"</span>, <span class='kw'>ci</span> <span class='kw'>=</span> <span class='fl'>0.9</span>,
+<span class='fu'>rope</span>(<span class='no'>x</span>, <span class='kw'>range</span> <span class='kw'>=</span> <span class='st'>"default"</span>, <span class='kw'>ci</span> <span class='kw'>=</span> <span class='fl'>0.89</span>,
   <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for stanreg</span>
-<span class='fu'>rope</span>(<span class='no'>x</span>, <span class='kw'>range</span> <span class='kw'>=</span> <span class='st'>"default"</span>, <span class='kw'>ci</span> <span class='kw'>=</span> <span class='fl'>0.9</span>,
+<span class='fu'>rope</span>(<span class='no'>x</span>, <span class='kw'>range</span> <span class='kw'>=</span> <span class='st'>"default"</span>, <span class='kw'>ci</span> <span class='kw'>=</span> <span class='fl'>0.89</span>,
   <span class='kw'>effects</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"fixed"</span>, <span class='st'>"random"</span>, <span class='st'>"all"</span>), <span class='kw'>parameters</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for brmsfit</span>
-<span class='fu'>rope</span>(<span class='no'>x</span>, <span class='kw'>range</span> <span class='kw'>=</span> <span class='st'>"default"</span>, <span class='kw'>ci</span> <span class='kw'>=</span> <span class='fl'>0.9</span>,
+<span class='fu'>rope</span>(<span class='no'>x</span>, <span class='kw'>range</span> <span class='kw'>=</span> <span class='st'>"default"</span>, <span class='kw'>ci</span> <span class='kw'>=</span> <span class='fl'>0.89</span>,
   <span class='kw'>effects</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"fixed"</span>, <span class='st'>"random"</span>, <span class='st'>"all"</span>), <span class='kw'>component</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"conditional"</span>,
   <span class='st'>"zi"</span>, <span class='st'>"zero_inflated"</span>, <span class='st'>"all"</span>), <span class='kw'>parameters</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
   <span class='no'>...</span>)</pre>
@@ -227,7 +234,7 @@
     </tr>
     <tr>
       <th>ci</th>
-      <td><p>The Credible Interval (CI) probability, corresponding to the proportion of HDI, to use.</p></td>
+      <td><p>The Credible Interval (CI) probability, corresponding to the proportion of HDI, to use for the percentage in ROPE.</p></td>
     </tr>
     <tr>
       <th>verbose</th>
@@ -257,8 +264,8 @@ applies to <span class="pkg">brms</span>-models.</p></td>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>Statistically, the probability of a posterior distribution of being
-  different from 0 does not make much sense (the probability of it being
-  different from a single point being infinite). Therefore, the idea
+  different from 0 does not make much sense (the probability of a single value
+  null hypothesis in a continuous distribution is 0). Therefore, the idea
   underlining ROPE is to let the user define an area around the null value
   enclosing values that are <em>equivalent to the null</em> value for practical
   purposes (<cite>Kruschke 2010, 2011, 2014</cite>).
@@ -271,11 +278,21 @@ applies to <span class="pkg">brms</span>-models.</p></td>
   <a href='rope_range.html'>rope_range</a> function.
   <br /> <br />
   Kruschke (2010, 2011, 2014) suggests using the proportion of  the 95%
-  (or 90%, considered more stable) <a href='hdi.html'>HDI</a> that falls within the
+  (or 89%, considered more stable) <a href='hdi.html'>HDI</a> that falls within the
   ROPE as an index for "null-hypothesis" testing (as understood under the
   Bayesian framework, see <code><a href='equivalence_test.html'>equivalence_test()</a></code>).
   <br /> <br />
-  <strong>Non-independent covariates</strong>
+  <strong> Sensitivity to parameter's scale</strong>
+  <br /> <br />
+  It is important to consider the unit (i.e., the scale) of the predictors
+  when using an index based on the ROPE, as the correct interpretation of the
+  ROPE as representing a region of practical equivalence to zero is dependent
+  on the scale of the predictors. Indeed, the percentage in ROPE depend on
+  the unit of its parameter. In other words, as the ROPE represents a fixed
+  portion of the response's scale, its proximity with a coefficient depends
+  on the scale of the coefficient itself.
+  <br /> <br />
+  <strong>Multicollinearity: Non-independent covariates</strong>
   <br /> <br />
   When parameters show strong correlations, i.e. when covariates are not
   independent, the joint parameter distributions may shift towards or
@@ -285,9 +302,9 @@ applies to <span class="pkg">brms</span>-models.</p></td>
   overlap with the ROPE region. In case of collinearity, the (joint) distributions
   of these parameters may either get an increased or decreased ROPE, which
   means that inferences based on <code>rope()</code> are inappropriate
-  (<cite>Kruschke 2015, 340f</cite>).
+  (<cite>Kruschke 2014, 340f</cite>).
   <br /> <br />
-  <code>rope()</code> performs a simple check for pairs of correlating
+  <code>rope()</code> performs a simple check for pairwise correlations between
   parameters, but as there can be collinearity between more than two variables,
   a first step to check the assumptions of this hypothesis testing is to look
   at different pair plots. An even more sophisticated check is the projection
@@ -319,7 +336,7 @@ applies to <span class="pkg">brms</span>-models.</p></td>
 #&gt; </div><div class='input'><span class='fu'>rope</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/Normal'>rnorm</a></span>(<span class='fl'>1000</span>, <span class='fl'>0</span>, <span class='fl'>1</span>), <span class='kw'>range</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(-<span class='fl'>0.1</span>, <span class='fl'>0.1</span>))</div><div class='output co'>#&gt; </span><span style='color: #0000BB;'># Proportion of samples inside the ROPE [-0.10, 0.10]:
 #&gt; 
 #&gt; </span><span> inside ROPE
-#&gt;       9.32 %
+#&gt;       9.20 %
 #&gt; </div><div class='input'><span class='fu'>rope</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/Normal'>rnorm</a></span>(<span class='fl'>1000</span>, <span class='fl'>1</span>, <span class='fl'>0.01</span>), <span class='kw'>range</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(-<span class='fl'>0.1</span>, <span class='fl'>0.1</span>))</div><div class='output co'>#&gt; </span><span style='color: #0000BB;'># Proportion of samples inside the ROPE [-0.10, 0.10]:
 #&gt; 
 #&gt; </span><span> inside ROPE
@@ -329,20 +346,120 @@ applies to <span class="pkg">brms</span>-models.</p></td>
 #&gt; </span><span style='color: #00BBBB;'>ROPE for the 90% HDI:
 #&gt; 
 #&gt; </span><span> inside ROPE
-#&gt;       5.88 %
+#&gt;       6.33 %
 #&gt; 
 #&gt; 
 #&gt; </span><span style='color: #00BBBB;'>ROPE for the 95% HDI:
 #&gt; 
 #&gt; </span><span> inside ROPE
-#&gt;       5.57 %
+#&gt;       5.99 %
+#&gt; 
+#&gt; </div><div class='input'>
+<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>rstanarm</span>)
+<span class='no'>model</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/rstanarm/topics/stan_glm'>stan_glm</a></span>(<span class='no'>mpg</span> ~ <span class='no'>wt</span> + <span class='no'>gear</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>mtcars</span>, <span class='kw'>chains</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>iter</span> <span class='kw'>=</span> <span class='fl'>200</span>)</div><div class='output co'>#&gt; 
+#&gt; SAMPLING FOR MODEL 'continuous' NOW (CHAIN 1).
+#&gt; Chain 1: 
+#&gt; Chain 1: Gradient evaluation took 0 seconds
+#&gt; Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0 seconds.
+#&gt; Chain 1: Adjust your expectations accordingly!
+#&gt; Chain 1: 
+#&gt; Chain 1: 
+#&gt; Chain 1: WARNING: There aren't enough warmup iterations to fit the
+#&gt; Chain 1:          three stages of adaptation as currently configured.
+#&gt; Chain 1:          Reducing each adaptation stage to 15%/75%/10% of
+#&gt; Chain 1:          the given number of warmup iterations:
+#&gt; Chain 1:            init_buffer = 15
+#&gt; Chain 1:            adapt_window = 75
+#&gt; Chain 1:            term_buffer = 10
+#&gt; Chain 1: 
+#&gt; Chain 1: Iteration:   1 / 200 [  0%]  (Warmup)
+#&gt; Chain 1: Iteration:  20 / 200 [ 10%]  (Warmup)
+#&gt; Chain 1: Iteration:  40 / 200 [ 20%]  (Warmup)
+#&gt; Chain 1: Iteration:  60 / 200 [ 30%]  (Warmup)
+#&gt; Chain 1: Iteration:  80 / 200 [ 40%]  (Warmup)
+#&gt; Chain 1: Iteration: 100 / 200 [ 50%]  (Warmup)
+#&gt; Chain 1: Iteration: 101 / 200 [ 50%]  (Sampling)
+#&gt; Chain 1: Iteration: 120 / 200 [ 60%]  (Sampling)
+#&gt; Chain 1: Iteration: 140 / 200 [ 70%]  (Sampling)
+#&gt; Chain 1: Iteration: 160 / 200 [ 80%]  (Sampling)
+#&gt; Chain 1: Iteration: 180 / 200 [ 90%]  (Sampling)
+#&gt; Chain 1: Iteration: 200 / 200 [100%]  (Sampling)
+#&gt; Chain 1: 
+#&gt; Chain 1:  Elapsed Time: 0.012 seconds (Warm-up)
+#&gt; Chain 1:                0.014 seconds (Sampling)
+#&gt; Chain 1:                0.026 seconds (Total)
+#&gt; Chain 1: 
+#&gt; 
+#&gt; SAMPLING FOR MODEL 'continuous' NOW (CHAIN 2).
+#&gt; Chain 2: 
+#&gt; Chain 2: Gradient evaluation took 0 seconds
+#&gt; Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 0 seconds.
+#&gt; Chain 2: Adjust your expectations accordingly!
+#&gt; Chain 2: 
+#&gt; Chain 2: 
+#&gt; Chain 2: WARNING: There aren't enough warmup iterations to fit the
+#&gt; Chain 2:          three stages of adaptation as currently configured.
+#&gt; Chain 2:          Reducing each adaptation stage to 15%/75%/10% of
+#&gt; Chain 2:          the given number of warmup iterations:
+#&gt; Chain 2:            init_buffer = 15
+#&gt; Chain 2:            adapt_window = 75
+#&gt; Chain 2:            term_buffer = 10
+#&gt; Chain 2: 
+#&gt; Chain 2: Iteration:   1 / 200 [  0%]  (Warmup)
+#&gt; Chain 2: Iteration:  20 / 200 [ 10%]  (Warmup)
+#&gt; Chain 2: Iteration:  40 / 200 [ 20%]  (Warmup)
+#&gt; Chain 2: Iteration:  60 / 200 [ 30%]  (Warmup)
+#&gt; Chain 2: Iteration:  80 / 200 [ 40%]  (Warmup)
+#&gt; Chain 2: Iteration: 100 / 200 [ 50%]  (Warmup)
+#&gt; Chain 2: Iteration: 101 / 200 [ 50%]  (Sampling)
+#&gt; Chain 2: Iteration: 120 / 200 [ 60%]  (Sampling)
+#&gt; Chain 2: Iteration: 140 / 200 [ 70%]  (Sampling)
+#&gt; Chain 2: Iteration: 160 / 200 [ 80%]  (Sampling)
+#&gt; Chain 2: Iteration: 180 / 200 [ 90%]  (Sampling)
+#&gt; Chain 2: Iteration: 200 / 200 [100%]  (Sampling)
+#&gt; Chain 2: 
+#&gt; Chain 2:  Elapsed Time: 0.014 seconds (Warm-up)
+#&gt; Chain 2:                0.014 seconds (Sampling)
+#&gt; Chain 2:                0.028 seconds (Total)
+#&gt; Chain 2: </div><div class='input'><span class='fu'>rope</span>(<span class='no'>model</span>)</div><div class='output co'>#&gt; </span><span style='color: #0000BB;'># Proportion of samples inside the ROPE [-0.60, 0.60]:
+#&gt; 
+#&gt; </span><span>   Parameter inside ROPE
+#&gt;  (Intercept)      0.00 %
+#&gt;           wt      0.00 %
+#&gt;         gear     56.98 %
+#&gt; </div><div class='input'><span class='fu'>rope</span>(<span class='no'>model</span>, <span class='kw'>ci</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>.90</span>, <span class='fl'>.95</span>))</div><div class='output co'>#&gt; </span><span style='color: #0000BB;'># Proportions of samples inside the ROPE [-0.60, 0.60]:
+#&gt; 
+#&gt; </span><span style='color: #00BBBB;'>ROPE for the 90% HDI:
+#&gt; 
+#&gt; </span><span>   Parameter inside ROPE
+#&gt;  (Intercept)      0.00 %
+#&gt;           wt      0.00 %
+#&gt;         gear     56.35 %
+#&gt; 
+#&gt; 
+#&gt; </span><span style='color: #00BBBB;'>ROPE for the 95% HDI:
+#&gt; 
+#&gt; </span><span>   Parameter inside ROPE
+#&gt;  (Intercept)      0.00 %
+#&gt;           wt      0.00 %
+#&gt;         gear     53.40 %
+#&gt; 
+#&gt; </div><div class='input'>
+<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>emmeans</span>)
+<span class='fu'>rope</span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/emmeans/topics/emtrends'>emtrends</a></span>(<span class='no'>model</span>, ~<span class='fl'>1</span>, <span class='st'>"wt"</span>), <span class='kw'>ci</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>.90</span>, <span class='fl'>.95</span>))</div><div class='output co'>#&gt; </span><span style='color: #0000BB;'># Proportions of samples inside the ROPE [-0.10, 0.10]:
+#&gt; 
+#&gt; </span><span style='color: #00BBBB;'>ROPE for the 90% HDI:
+#&gt; 
+#&gt; </span><span> Parameter inside ROPE
+#&gt;    overall      0.00 %
+#&gt; 
+#&gt; 
+#&gt; </span><span style='color: #00BBBB;'>ROPE for the 95% HDI:
+#&gt; 
+#&gt; </span><span> Parameter inside ROPE
+#&gt;    overall      0.00 %
 #&gt; 
 #&gt; </div></span><span class='co'># NOT RUN {</span>
-<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>rstanarm</span>)
-<span class='no'>model</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>rstanarm</span><span class='kw ns'>::</span><span class='fu'><a href='https://www.rdocumentation.org/packages/rstanarm/topics/stan_glm'>stan_glm</a></span>(<span class='no'>mpg</span> ~ <span class='no'>wt</span> + <span class='no'>cyl</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>mtcars</span>)
-<span class='fu'>rope</span>(<span class='no'>model</span>)
-<span class='fu'>rope</span>(<span class='no'>model</span>, <span class='kw'>ci</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>.90</span>, <span class='fl'>.95</span>))
-
 <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>brms</span>)
 <span class='no'>model</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>brms</span><span class='kw ns'>::</span><span class='fu'><a href='https://www.rdocumentation.org/packages/brms/topics/brm'>brm</a></span>(<span class='no'>mpg</span> ~ <span class='no'>wt</span> + <span class='no'>cyl</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>mtcars</span>)
 <span class='fu'>rope</span>(<span class='no'>model</span>)

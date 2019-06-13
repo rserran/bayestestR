@@ -5,6 +5,7 @@
 \alias{rope.default}
 \alias{rope.numeric}
 \alias{rope.data.frame}
+\alias{rope.emmGrid}
 \alias{rope.BFBayesFactor}
 \alias{rope.stanreg}
 \alias{rope.brmsfit}
@@ -14,20 +15,23 @@ rope(x, ...)
 
 \method{rope}{default}(x, ...)
 
-\method{rope}{numeric}(x, range = "default", ci = 0.9,
+\method{rope}{numeric}(x, range = "default", ci = 0.89,
   verbose = TRUE, ...)
 
-\method{rope}{data.frame}(x, range = "default", ci = 0.9,
+\method{rope}{data.frame}(x, range = "default", ci = 0.89,
   verbose = TRUE, ...)
 
-\method{rope}{BFBayesFactor}(x, range = "default", ci = 0.9,
+\method{rope}{emmGrid}(x, range = "default", ci = 0.89,
   verbose = TRUE, ...)
 
-\method{rope}{stanreg}(x, range = "default", ci = 0.9,
+\method{rope}{BFBayesFactor}(x, range = "default", ci = 0.89,
+  verbose = TRUE, ...)
+
+\method{rope}{stanreg}(x, range = "default", ci = 0.89,
   effects = c("fixed", "random", "all"), parameters = NULL,
   verbose = TRUE, ...)
 
-\method{rope}{brmsfit}(x, range = "default", ci = 0.9,
+\method{rope}{brmsfit}(x, range = "default", ci = 0.89,
   effects = c("fixed", "random", "all"), component = c("conditional",
   "zi", "zero_inflated", "all"), parameters = NULL, verbose = TRUE,
   ...)
@@ -39,7 +43,7 @@ rope(x, ...)
 
 \item{range}{ROPE's lower and higher bounds. Should be a vector of length two (e.g., \code{c(-0.1, 0.1)}) or \code{"default"}. If \code{"default"}, the range is set to \code{c(-0.1, 0.1)} if input is a vector, and based on \code{\link[=rope_range]{rope_range()}} if a Bayesian model is provided.}
 
-\item{ci}{The Credible Interval (CI) probability, corresponding to the proportion of HDI, to use.}
+\item{ci}{The Credible Interval (CI) probability, corresponding to the proportion of HDI, to use for the percentage in ROPE.}
 
 \item{verbose}{Toggle off warnings.}
 
@@ -61,8 +65,8 @@ Compute the proportion (in percentage) of the HDI (default to the 90\% HDI) of a
 }
 \details{
 Statistically, the probability of a posterior distribution of being
-  different from 0 does not make much sense (the probability of it being
-  different from a single point being infinite). Therefore, the idea
+  different from 0 does not make much sense (the probability of a single value
+  null hypothesis in a continuous distribution is 0). Therefore, the idea
   underlining ROPE is to let the user define an area around the null value
   enclosing values that are \emph{equivalent to the null} value for practical
   purposes (\cite{Kruschke 2010, 2011, 2014}).
@@ -75,11 +79,21 @@ Statistically, the probability of a posterior distribution of being
   \link{rope_range} function.
   \cr \cr
   Kruschke (2010, 2011, 2014) suggests using the proportion of  the 95\%
-  (or 90\%, considered more stable) \link[=hdi]{HDI} that falls within the
+  (or 89\%, considered more stable) \link[=hdi]{HDI} that falls within the
   ROPE as an index for "null-hypothesis" testing (as understood under the
   Bayesian framework, see \code{\link[=equivalence_test]{equivalence_test()}}).
   \cr \cr
-  \strong{Non-independent covariates}
+  \strong{ Sensitivity to parameter's scale}
+  \cr \cr
+  It is important to consider the unit (i.e., the scale) of the predictors
+  when using an index based on the ROPE, as the correct interpretation of the
+  ROPE as representing a region of practical equivalence to zero is dependent
+  on the scale of the predictors. Indeed, the percentage in ROPE depend on
+  the unit of its parameter. In other words, as the ROPE represents a fixed
+  portion of the response's scale, its proximity with a coefficient depends
+  on the scale of the coefficient itself.
+  \cr \cr
+  \strong{Multicollinearity: Non-independent covariates}
   \cr \cr
   When parameters show strong correlations, i.e. when covariates are not
   independent, the joint parameter distributions may shift towards or
@@ -89,9 +103,9 @@ Statistically, the probability of a posterior distribution of being
   overlap with the ROPE region. In case of collinearity, the (joint) distributions
   of these parameters may either get an increased or decreased ROPE, which
   means that inferences based on \code{rope()} are inappropriate
-  (\cite{Kruschke 2015, 340f}).
+  (\cite{Kruschke 2014, 340f}).
   \cr \cr
-  \code{rope()} performs a simple check for pairs of correlating
+  \code{rope()} performs a simple check for pairwise correlations between
   parameters, but as there can be collinearity between more than two variables,
   a first step to check the assumptions of this hypothesis testing is to look
   at different pair plots. An even more sophisticated check is the projection
@@ -104,12 +118,15 @@ rope(x = rnorm(1000, 0, 0.01), range = c(-0.1, 0.1))
 rope(x = rnorm(1000, 0, 1), range = c(-0.1, 0.1))
 rope(x = rnorm(1000, 1, 0.01), range = c(-0.1, 0.1))
 rope(x = rnorm(1000, 1, 1), ci = c(.90, .95))
-\dontrun{
+
 library(rstanarm)
-model <- rstanarm::stan_glm(mpg ~ wt + cyl, data = mtcars)
+model <- stan_glm(mpg ~ wt + gear, data = mtcars, chains = 2, iter = 200)
 rope(model)
 rope(model, ci = c(.90, .95))
 
+library(emmeans)
+rope(emtrends(model, ~1, "wt"), ci = c(.90, .95))
+\dontrun{
 library(brms)
 model <- brms::brm(mpg ~ wt + cyl, data = mtcars)
 rope(model)

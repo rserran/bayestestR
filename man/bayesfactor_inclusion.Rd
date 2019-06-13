@@ -2,32 +2,37 @@
 % Please edit documentation in R/bayesfactor_inclusion.R
 \name{bayesfactor_inclusion}
 \alias{bayesfactor_inclusion}
-\title{Get inclusion BFs for effects across Bayesian models}
+\title{Inclusion Bayes Factors for effects across Bayesian models}
 \usage{
-bayesfactor_inclusion(models, match_models = FALSE, prior_odds = NULL)
+bayesfactor_inclusion(models, match_models = FALSE, prior_odds = NULL,
+  ...)
 }
 \arguments{
-\item{models}{an object of class \link{bayesfactor_models} or \code{BFBayesFactor}.}
+\item{models}{An object of class \code{\link{bayesfactor_models}} or \code{BFBayesFactor}.}
 
-\item{match_models}{If \code{FALSE} (default), Inclustion BFs are computed by
+\item{match_models}{If \code{FALSE} (default), Inclusion BFs are computed by
 comparing all models with an effect against all models without the effect. If \code{TRUE},
 Inclusion BFs are computed by comparing all models with an effect against models without
-the effect AND without any higher-order interactions with the effect.}
+the effect AND without any higher-order interactions with the effect (additionally,
+interactions are compared only to models with the all main effects).}
 
-\item{prior_odds}{optional vector of prior odds for the models. See \code{BayesFactor::priorOdds}}
+\item{prior_odds}{Optional vector of prior odds for the models. See \code{\link[BayesFactor]{priorOdds}}.}
+
+\item{...}{Arguments passed to or from other methods.}
 }
 \value{
 a data frame containing the prior and posterior probabilities, and BF for each effect.
 }
 \description{
-Get inclusion BFs for effects across Bayesian models
+Inclusion Bayes Factors for effects across Bayesian models
 }
 \details{
-Inclusion Bayes factors answer the question: Given the observed data,
-how much more likely have models with a particular effect become, compared to
-models without that particular effect? In other words, on average - are
-models with effect X better than models without effect X? See also
-\href{https://easystats.github.io/bayestestR/articles/bayes_factors.html}{this vignette}.
+Inclusion Bayes factors answer the question: Are the observed data more
+probable under models with a particular effect, than they are under models without
+that particular effect? In other words, on average - are models with effect \eqn{X}
+more likely to have produced the observed data than models without effect \eqn{X}?
+\cr \cr
+See also \href{https://easystats.github.io/bayestestR/articles/bayes_factors.html}{the Bayes factors vignette}.
 }
 \note{
 Random effects in the \code{lme} style will be displayed as interactions:
@@ -36,7 +41,7 @@ i.e., \code{(X|G)} will become \code{1:G} and \code{X:G}.
 \examples{
 library(bayestestR)
 
-# Using with bayesfactor_models:
+# Using bayesfactor_models:
 # ------------------------------
 mo0 <- lm(Sepal.Length ~ 1, data = iris)
 mo1 <- lm(Sepal.Length ~ Species, data = iris)
@@ -46,7 +51,7 @@ mo3 <- lm(Sepal.Length ~ Species * Petal.Length, data = iris)
 BFmodels <- bayesfactor_models(mo1, mo2, mo3, denominator = mo0)
 bayesfactor_inclusion(BFmodels)
 
-# Using with BayesFactor objects:
+# BayesFactor
 # -------------------------------
 library(BayesFactor)
 
@@ -59,17 +64,9 @@ bayesfactor_inclusion(BF, match_models = TRUE)
 }
 \references{
 \itemize{
-  \item Hinne, M., Gronau, Q. F., van den Bergh, D., & Wagenmakers,
-E. (2019, March 25). A conceptual introduction to Bayesian Model
-Averaging. https://doi.org/10.31234/osf.io/wgb64
-
-  \item Clyde, M. A., Ghosh, J., & Littman, M. L. (2011). Bayesian
-adaptive sampling for variable selection and model averaging. Journal
-of Computational and Graphical Statistics, 20(1), 80-101.
-
-  \item Mathot. S. (2017). Bayes like a Baws:
-Interpreting Bayesian Repeated Measures in JASP [Blog post].
-Retrieved from https://www.cogsci.nl/blog/interpreting-bayesian-repeated-measures-in-jasp
+  \item Hinne, M., Gronau, Q. F., van den Bergh, D., and Wagenmakers, E. (2019, March 25). A conceptual introduction to Bayesian Model Averaging. \doi{10.31234/osf.io/wgb64}
+  \item Clyde, M. A., Ghosh, J., & Littman, M. L. (2011). Bayesian adaptive sampling for variable selection and model averaging. Journal of Computational and Graphical Statistics, 20(1), 80-101.
+  \item Mathot. S. (2017). Bayes like a Baws: Interpreting Bayesian Repeated Measures in JASP [Blog post]. Retrieved from https://www.cogsci.nl/blog/interpreting-bayesian-repeated-measures-in-jasp
 }
 }
 \author{

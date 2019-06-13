@@ -2,14 +2,18 @@
 % Please edit documentation in R/estimate_density.R
 \name{estimate_density}
 \alias{estimate_density}
+\alias{estimate_probability}
 \title{Density Estimation}
 \usage{
 estimate_density(x, method = "kernel", precision = 2^10,
   extend = FALSE, extend_scale = 0.1, bw = "SJ", ...)
+
+estimate_probability(x, method = "kernel", precision = 2^10,
+  extend = FALSE, extend_scale = 0.1, bw = "SJ", ...)
 }
 \arguments{
-\item{x}{the data from which the estimate is to be computed.  For the
-    default method a numeric vector: long vectors are not supported.}
+\item{x}{Vector representing a posterior distribution. Can also be a
+\code{stanreg} or \code{brmsfit} model.}
 
 \item{method}{Method of density estimation. Can be \code{"kernel"} (default), \code{"logspline"} or \code{"KernSmooth"}.}
 
@@ -34,7 +38,7 @@ estimate_density(x, method = "kernel", precision = 2^10,
     \code{adjust}.
   }
 
-\item{...}{further arguments for (non-default) methods.}
+\item{...}{Currently not used.}
 }
 \description{
 This function is a wrapper over different methods of density estimation. By default, it uses the base R \link{density} with by default uses a different smoothing bandwidth (\code{"SJ"}) from the legacy default implemented the base R \link{density} function (\code{"nrd0"}). However, Deng \& Wickham suggest that \code{method = "KernSmooth"} is the fastest and the most accurate.
@@ -61,7 +65,27 @@ density_default <- estimate_density(x, extend = FALSE)
 hist(x, prob = TRUE)
 lines(density_extended$x, density_extended$y, col = "red", lwd = 3)
 lines(density_default$x, density_default$y, col = "black", lwd = 3)
+
+df <- data.frame(replicate(4, rnorm(100)))
+head(estimate_density(df))
+
+# rstanarm models
+# -----------------------------------------------
+library(rstanarm)
+model <- stan_glm(mpg ~ wt + gear, data = mtcars, chains = 2, iter = 200)
+head(estimate_density(model))
+
+library(emmeans)
+head(estimate_density(emtrends(model, ~1, "wt")))
+\dontrun{
+# brms models
+# -----------------------------------------------
+library(brms)
+model <- brms::brm(mpg ~ wt + cyl, data = mtcars)
+estimate_density(model)
+}
+
 }
 \references{
-Deng, H., \& Wickham, H. (2011). Density estimation in R. Electronic publication.
+Deng, H., & Wickham, H. (2011). Density estimation in R. Electronic publication.
 }

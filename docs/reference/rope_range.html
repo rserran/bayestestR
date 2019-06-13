@@ -42,22 +42,7 @@
 <meta property="og:title" content="Find Default Equivalence (ROPE) Region Bounds — rope_range" />
 
 <meta property="og:description" content="This function attempts at automatically finding suitable &quot;default&quot;
-  values for the Region Of Practical Equivalence (ROPE). Kruschke (2018) suggests
-  that such null value could be set, by default, to a range from -0.1 to
-  0.1 of a standardized parameter (negligible effect size
-  according to Cohen, 1988), which can be generalised for linear models
-  to -0.1 * SDy, 0.1 * SDy.
-   
-  For logistic models, the parameters expressed in log odds ratio can be
-  converted to standardized difference through the formula
-  sqrt(3)/pi, resulting in a range
-  of -0.055 to -0.055.
-   
-  For other models with binary outcome, it is strongly recommended to
-  manually specify the rope argument. Currently, the same default is applied
-  that for logistic models.
-   
-  For all other models, -0.1, 0.1 is used to determine the ROPE limits." />
+  values for the Region Of Practical Equivalence (ROPE)." />
 
 <meta property="og:image" content="/logo.png" />
 <meta name="twitter:card" content="summary" />
@@ -100,7 +85,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bayestestR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1</span>
       </span>
     </div>
 
@@ -129,10 +114,13 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/example1_LM.html">1. Linear Models</a>
+      <a href="../articles/example1.html">1. Initiation to Bayesian models</a>
     </li>
     <li>
-      <a href="../articles/example2_GLM.html">2. General Linear Models</a>
+      <a href="../articles/example2.html">2. Confirmation of Bayesian skills</a>
+    </li>
+    <li>
+      <a href="../articles/example3.html">3. Become a Bayesian master</a>
     </li>
   </ul>
 </li>
@@ -195,35 +183,39 @@
     <div class="ref-description">
     
     <p>This function attempts at automatically finding suitable "default"
-  values for the Region Of Practical Equivalence (ROPE). Kruschke (2018) suggests
-  that such null value could be set, by default, to a range from <code>-0.1</code> to
-  <code>0.1</code> of a standardized parameter (negligible effect size
-  according to Cohen, 1988), which can be generalised for linear models
-  to -0.1 * SD<sub>y</sub>, 0.1 * SD<sub>y</sub>.
-  <br /> <br />
-  For logistic models, the parameters expressed in log odds ratio can be
-  converted to standardized difference through the formula
-  sqrt(3)/pi, resulting in a range
-  of <code>-0.055</code> to <code>-0.055</code>.
-  <br /> <br />
-  For other models with binary outcome, it is strongly recommended to
-  manually specify the rope argument. Currently, the same default is applied
-  that for logistic models.
-  <br /> <br />
-  For all other models, <code>-0.1, 0.1</code> is used to determine the ROPE limits.</p>
+  values for the Region Of Practical Equivalence (ROPE).</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>rope_range</span>(<span class='no'>x</span>)</pre>
+    <pre class="usage"><span class='fu'>rope_range</span>(<span class='no'>x</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>Vector representing a posterior distribution. Can also be a <code>stanreg</code> or <code>brmsfit</code> model.</p></td>
+      <td><p>A <code>stanreg</code>, <code>brmsfit</code> or <code>BFBayesFactor</code> object.</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>Currently not used.</p></td>
     </tr>
     </table>
+    
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p><cite>Kruschke (2018)</cite> suggests that the region of practical
+  equivalence could be set, by default, to a range from <code>-0.1</code> to
+  <code>0.1</code> of a standardized parameter (negligible effect size
+  according to Cohen, 1988).</p>
+<p></p><ul>
+<li><p>For <strong>linear models (lm)</strong>, this can be generalised to -0.1 * SD<sub>y</sub>, 0.1 * SD<sub>y</sub>.</p></li>
+<li><p>For <strong>logistic models</strong>, the parameters expressed in log odds ratio can be converted to standardized difference through the formula &radic;(3)/&pi;, resulting in a range of <code>-0.055</code> to <code>-0.055</code>.</p></li>
+<li><p>For other models with <strong>binary outcome</strong>, it is strongly recommended to manually specify the rope argument. Currently, the same default is applied that for logistic models.</p></li>
+<li><p>For <strong>t-tests</strong>, the standard deviation of the response is used, similarly to linear models (see above).</p></li>
+<li><p>For <strong>correlations</strong>, <code>-0.05, 0.05</code> is used, i.e., half the value of a negligible correlation as suggested by Cohen's (1988) rules of thumb.</p></li>
+<li><p>For all other models, <code>-0.1, 0.1</code> is used to determine the ROPE limits, but it is strongly advised to specify it manually.</p></li>
+</ul>
     
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
@@ -232,14 +224,84 @@
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><span class='co'># NOT RUN {</span>
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>rstanarm</span>)
+<span class='no'>model</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/rstanarm/topics/stan_glm'>stan_glm</a></span>(<span class='no'>mpg</span> ~ <span class='no'>wt</span> + <span class='no'>gear</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>mtcars</span>, <span class='kw'>chains</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>iter</span> <span class='kw'>=</span> <span class='fl'>200</span>)</div><div class='output co'>#&gt; 
+#&gt; SAMPLING FOR MODEL 'continuous' NOW (CHAIN 1).
+#&gt; Chain 1: 
+#&gt; Chain 1: Gradient evaluation took 0 seconds
+#&gt; Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0 seconds.
+#&gt; Chain 1: Adjust your expectations accordingly!
+#&gt; Chain 1: 
+#&gt; Chain 1: 
+#&gt; Chain 1: WARNING: There aren't enough warmup iterations to fit the
+#&gt; Chain 1:          three stages of adaptation as currently configured.
+#&gt; Chain 1:          Reducing each adaptation stage to 15%/75%/10% of
+#&gt; Chain 1:          the given number of warmup iterations:
+#&gt; Chain 1:            init_buffer = 15
+#&gt; Chain 1:            adapt_window = 75
+#&gt; Chain 1:            term_buffer = 10
+#&gt; Chain 1: 
+#&gt; Chain 1: Iteration:   1 / 200 [  0%]  (Warmup)
+#&gt; Chain 1: Iteration:  20 / 200 [ 10%]  (Warmup)
+#&gt; Chain 1: Iteration:  40 / 200 [ 20%]  (Warmup)
+#&gt; Chain 1: Iteration:  60 / 200 [ 30%]  (Warmup)
+#&gt; Chain 1: Iteration:  80 / 200 [ 40%]  (Warmup)
+#&gt; Chain 1: Iteration: 100 / 200 [ 50%]  (Warmup)
+#&gt; Chain 1: Iteration: 101 / 200 [ 50%]  (Sampling)
+#&gt; Chain 1: Iteration: 120 / 200 [ 60%]  (Sampling)
+#&gt; Chain 1: Iteration: 140 / 200 [ 70%]  (Sampling)
+#&gt; Chain 1: Iteration: 160 / 200 [ 80%]  (Sampling)
+#&gt; Chain 1: Iteration: 180 / 200 [ 90%]  (Sampling)
+#&gt; Chain 1: Iteration: 200 / 200 [100%]  (Sampling)
+#&gt; Chain 1: 
+#&gt; Chain 1:  Elapsed Time: 0.012 seconds (Warm-up)
+#&gt; Chain 1:                0.012 seconds (Sampling)
+#&gt; Chain 1:                0.024 seconds (Total)
+#&gt; Chain 1: 
+#&gt; 
+#&gt; SAMPLING FOR MODEL 'continuous' NOW (CHAIN 2).
+#&gt; Chain 2: 
+#&gt; Chain 2: Gradient evaluation took 0 seconds
+#&gt; Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 0 seconds.
+#&gt; Chain 2: Adjust your expectations accordingly!
+#&gt; Chain 2: 
+#&gt; Chain 2: 
+#&gt; Chain 2: WARNING: There aren't enough warmup iterations to fit the
+#&gt; Chain 2:          three stages of adaptation as currently configured.
+#&gt; Chain 2:          Reducing each adaptation stage to 15%/75%/10% of
+#&gt; Chain 2:          the given number of warmup iterations:
+#&gt; Chain 2:            init_buffer = 15
+#&gt; Chain 2:            adapt_window = 75
+#&gt; Chain 2:            term_buffer = 10
+#&gt; Chain 2: 
+#&gt; Chain 2: Iteration:   1 / 200 [  0%]  (Warmup)
+#&gt; Chain 2: Iteration:  20 / 200 [ 10%]  (Warmup)
+#&gt; Chain 2: Iteration:  40 / 200 [ 20%]  (Warmup)
+#&gt; Chain 2: Iteration:  60 / 200 [ 30%]  (Warmup)
+#&gt; Chain 2: Iteration:  80 / 200 [ 40%]  (Warmup)
+#&gt; Chain 2: Iteration: 100 / 200 [ 50%]  (Warmup)
+#&gt; Chain 2: Iteration: 101 / 200 [ 50%]  (Sampling)
+#&gt; Chain 2: Iteration: 120 / 200 [ 60%]  (Sampling)
+#&gt; Chain 2: Iteration: 140 / 200 [ 70%]  (Sampling)
+#&gt; Chain 2: Iteration: 160 / 200 [ 80%]  (Sampling)
+#&gt; Chain 2: Iteration: 180 / 200 [ 90%]  (Sampling)
+#&gt; Chain 2: Iteration: 200 / 200 [100%]  (Sampling)
+#&gt; Chain 2: 
+#&gt; Chain 2:  Elapsed Time: 0.013 seconds (Warm-up)
+#&gt; Chain 2:                0.011 seconds (Sampling)
+#&gt; Chain 2:                0.024 seconds (Total)
+#&gt; Chain 2: </div><div class='input'><span class='fu'>rope_range</span>(<span class='no'>model</span>)</div><div class='output co'>#&gt; [1] -0.6026948  0.6026948</div><span class='co'># NOT RUN {</span>
 <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>rstanarm</span>)
-<span class='no'>model</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>rstanarm</span><span class='kw ns'>::</span><span class='fu'><a href='https://www.rdocumentation.org/packages/rstanarm/topics/stan_glm'>stan_glm</a></span>(<span class='no'>vs</span> ~ <span class='no'>mpg</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>mtcars</span>, <span class='kw'>family</span> <span class='kw'>=</span> <span class='st'>"binomial"</span>)
+<span class='no'>model</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/rstanarm/topics/stan_glm'>stan_glm</a></span>(<span class='no'>vs</span> ~ <span class='no'>mpg</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>mtcars</span>, <span class='kw'>family</span> <span class='kw'>=</span> <span class='st'>"binomial"</span>)
 <span class='fu'>rope_range</span>(<span class='no'>model</span>)
 
 <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>brms</span>)
-<span class='no'>model</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>brms</span><span class='kw ns'>::</span><span class='fu'><a href='https://www.rdocumentation.org/packages/brms/topics/brm'>brm</a></span>(<span class='no'>mpg</span> ~ <span class='no'>wt</span> + <span class='no'>cyl</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>mtcars</span>)
+<span class='no'>model</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/brms/topics/brm'>brm</a></span>(<span class='no'>mpg</span> ~ <span class='no'>wt</span> + <span class='no'>cyl</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>mtcars</span>)
 <span class='fu'>rope_range</span>(<span class='no'>model</span>)
+
+<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>BayesFactor</span>)
+<span class='no'>bf</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/BayesFactor/topics/ttestBF'>ttestBF</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/Normal'>rnorm</a></span>(<span class='fl'>100</span>, <span class='fl'>1</span>, <span class='fl'>1</span>))
+<span class='fu'>rope_range</span>(<span class='no'>bf</span>)
 <span class='co'># }</span><div class='input'>
 </div></pre>
   </div>
@@ -248,6 +310,8 @@
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
       
+      <li><a href="#details">Details</a></li>
+
       <li><a href="#references">References</a></li>
       
       <li><a href="#examples">Examples</a></li>

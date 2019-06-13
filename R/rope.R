@@ -4,13 +4,13 @@
 #'
 #' @param x Vector representing a posterior distribution. Can also be a \code{stanreg} or \code{brmsfit} model.
 #' @param range ROPE's lower and higher bounds. Should be a vector of length two (e.g., \code{c(-0.1, 0.1)}) or \code{"default"}. If \code{"default"}, the range is set to \code{c(-0.1, 0.1)} if input is a vector, and based on \code{\link[=rope_range]{rope_range()}} if a Bayesian model is provided.
-#' @param ci The Credible Interval (CI) probability, corresponding to the proportion of HDI, to use.
+#' @param ci The Credible Interval (CI) probability, corresponding to the proportion of HDI, to use for the percentage in ROPE.
 #'
 #' @inheritParams hdi
 #'
 #' @details Statistically, the probability of a posterior distribution of being
-#'   different from 0 does not make much sense (the probability of it being
-#'   different from a single point being infinite). Therefore, the idea
+#'   different from 0 does not make much sense (the probability of a single value
+#'   null hypothesis in a continuous distribution is 0). Therefore, the idea
 #'   underlining ROPE is to let the user define an area around the null value
 #'   enclosing values that are \emph{equivalent to the null} value for practical
 #'   purposes (\cite{Kruschke 2010, 2011, 2014}).
@@ -23,11 +23,21 @@
 #'   \link{rope_range} function.
 #'   \cr \cr
 #'   Kruschke (2010, 2011, 2014) suggests using the proportion of  the 95\%
-#'   (or 90\%, considered more stable) \link[=hdi]{HDI} that falls within the
+#'   (or 89\%, considered more stable) \link[=hdi]{HDI} that falls within the
 #'   ROPE as an index for "null-hypothesis" testing (as understood under the
 #'   Bayesian framework, see \code{\link[=equivalence_test]{equivalence_test()}}).
 #'   \cr \cr
-#'   \strong{Non-independent covariates}
+#'   \strong{ Sensitivity to parameter's scale}
+#'   \cr \cr
+#'   It is important to consider the unit (i.e., the scale) of the predictors
+#'   when using an index based on the ROPE, as the correct interpretation of the
+#'   ROPE as representing a region of practical equivalence to zero is dependent
+#'   on the scale of the predictors. Indeed, the percentage in ROPE depend on
+#'   the unit of its parameter. In other words, as the ROPE represents a fixed
+#'   portion of the response's scale, its proximity with a coefficient depends
+#'   on the scale of the coefficient itself.
+#'   \cr \cr
+#'   \strong{Multicollinearity: Non-independent covariates}
 #'   \cr \cr
 #'   When parameters show strong correlations, i.e. when covariates are not
 #'   independent, the joint parameter distributions may shift towards or
@@ -37,9 +47,9 @@
 #'   overlap with the ROPE region. In case of collinearity, the (joint) distributions
 #'   of these parameters may either get an increased or decreased ROPE, which
 #'   means that inferences based on \code{rope()} are inappropriate
-#'   (\cite{Kruschke 2015, 340f}).
+#'   (\cite{Kruschke 2014, 340f}).
 #'   \cr \cr
-#'   \code{rope()} performs a simple check for pairs of correlating
+#'   \code{rope()} performs a simple check for pairwise correlations between
 #'   parameters, but as there can be collinearity between more than two variables,
 #'   a first step to check the assumptions of this hypothesis testing is to look
 #'   at different pair plots. An even more sophisticated check is the projection
@@ -61,12 +71,15 @@
 #' rope(x = rnorm(1000, 0, 1), range = c(-0.1, 0.1))
 #' rope(x = rnorm(1000, 1, 0.01), range = c(-0.1, 0.1))
 #' rope(x = rnorm(1000, 1, 1), ci = c(.90, .95))
-#' \dontrun{
+#'
 #' library(rstanarm)
-#' model <- rstanarm::stan_glm(mpg ~ wt + cyl, data = mtcars)
+#' model <- stan_glm(mpg ~ wt + gear, data = mtcars, chains = 2, iter = 200)
 #' rope(model)
 #' rope(model, ci = c(.90, .95))
 #'
+#' library(emmeans)
+#' rope(emtrends(model, ~1, "wt"), ci = c(.90, .95))
+#' \dontrun{
 #' library(brms)
 #' model <- brms::brm(mpg ~ wt + cyl, data = mtcars)
 #' rope(model)
@@ -103,7 +116,7 @@ rope.default <- function(x, ...) {
 
 #' @rdname rope
 #' @export
-rope.numeric <- function(x, range = "default", ci = .90, verbose = TRUE, ...) {
+rope.numeric <- function(x, range = "default", ci = .89, verbose = TRUE, ...) {
   if (all(range == "default")) {
     range <- c(-0.1, 0.1)
   } else if (!all(is.numeric(range)) || length(range) != 2) {
@@ -140,7 +153,7 @@ rope.numeric <- function(x, range = "default", ci = .90, verbose = TRUE, ...) {
 
 #' @rdname rope
 #' @export
-rope.data.frame <- function(x, range = "default", ci = .90, verbose = TRUE, ...) {
+rope.data.frame <- function(x, range = "default", ci = .89, verbose = TRUE, ...) {
   out <- .prepare_rope_df(x, range, ci, verbose)
   HDI_area_attributes <- .compact_list(out$HDI_area)
   dat <- data.frame(
@@ -157,18 +170,31 @@ rope.data.frame <- function(x, range = "default", ci = .90, verbose = TRUE, ...)
   dat
 }
 
+#' @rdname rope
+#' @export
+rope.emmGrid <- function(x, range = "default", ci = .89, verbose = TRUE, ...) {
+  if (!requireNamespace("emmeans")) {
+    stop("Package \"emmeans\" needed for this function to work. Please install it.")
+  }
+  xdf <- as.data.frame(as.matrix(emmeans::as.mcmc.emmGrid(x, names = FALSE)))
+
+  dat <- rope(xdf, range = range, ci = ci, verbose = verbose, ...)
+  attr(dat, "object_name") <- deparse(substitute(x), width.cutoff = 500)
+  dat
+}
+
 
 
 #' @rdname rope
 #' @export
-rope.BFBayesFactor <- function(x, range = "default", ci = .90, verbose = TRUE, ...) {
+rope.BFBayesFactor <- function(x, range = "default", ci = .89, verbose = TRUE, ...) {
   out <- rope(insight::get_parameters(x), range = range, ci = ci, verbose = verbose, ...)
   out
 }
 
 
 
-.rope <- function(x, range = c(-0.1, 0.1), ci = .90, verbose = TRUE) {
+.rope <- function(x, range = c(-0.1, 0.1), ci = .89, verbose = TRUE) {
   HDI_area <- .hdi_area <- hdi(x, ci, verbose)
 
   if (anyNA(HDI_area)) {
@@ -196,7 +222,7 @@ rope.BFBayesFactor <- function(x, range = "default", ci = .90, verbose = TRUE, .
 
 #' @rdname rope
 #' @export
-rope.stanreg <- function(x, range = "default", ci = .90, effects = c("fixed", "random", "all"), parameters = NULL, verbose = TRUE, ...) {
+rope.stanreg <- function(x, range = "default", ci = .89, effects = c("fixed", "random", "all"), parameters = NULL, verbose = TRUE, ...) {
   effects <- match.arg(effects)
 
   if (all(range == "default")) {
@@ -264,7 +290,7 @@ rope.stanreg <- function(x, range = "default", ci = .90, effects = c("fixed", "r
 
 #' @rdname rope
 #' @export
-rope.brmsfit <- function(x, range = "default", ci = .90, effects = c("fixed", "random", "all"), component = c("conditional", "zi", "zero_inflated", "all"), parameters = NULL, verbose = TRUE, ...) {
+rope.brmsfit <- function(x, range = "default", ci = .89, effects = c("fixed", "random", "all"), component = c("conditional", "zi", "zero_inflated", "all"), parameters = NULL, verbose = TRUE, ...) {
   effects <- match.arg(effects)
   component <- match.arg(component)
 

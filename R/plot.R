@@ -35,7 +35,7 @@ plot.hdi <- function(x, ...) {
 
 
 #' @export
-plot.ci <- function(x, ...) {
+plot.bayestestR_ci <- function(x, ...) {
   if (!requireNamespace("see", quietly = TRUE)) {
     stop("Package 'see' needed to plot credible intervals. Please install it.")
   }
@@ -46,6 +46,22 @@ plot.ci <- function(x, ...) {
 plot.bayesfactor_savagedickey <- function(x, ...) {
   if (!requireNamespace("see", quietly = TRUE)) {
     stop("Package 'see' needed to plot Savage-Dickey Bayes factor. Please install it.")
+  }
+  NextMethod()
+}
+
+#' @export
+plot.bayesfactor_models <- function(x, ...) {
+  if (!requireNamespace("see", quietly = TRUE)) {
+    stop("Package 'see' needed to plot models' Bayes factors. Please install it.")
+  }
+  NextMethod()
+}
+
+#' @export
+plot.estimate_density <- function(x, ...) {
+  if (!requireNamespace("see", quietly = TRUE)) {
+    stop("Package 'see' needed to plot densities. Please install it.")
   }
   NextMethod()
 }

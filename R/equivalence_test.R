@@ -8,29 +8,29 @@
 #'   \item \href{https://easystats.github.io/parameters/reference/equivalence_test.lm.html}{Frequentist models}
 #' }
 #'
-#' For Bayesian models, the \strong{Test for Practical Equivalence} is based on the \emph{"HDI+ROPE decision rule"} (\cite{Kruschke, 2015, 2018}) to check whether parameter values should be accepted or rejected against an explicitly formulated "null hypothesis" (i.e., a ROPE).
+#' For Bayesian models, the \strong{Test for Practical Equivalence} is based on the \emph{"HDI+ROPE decision rule"} (\cite{Kruschke, 2014, 2018}) to check whether parameter values should be accepted or rejected against an explicitly formulated "null hypothesis" (i.e., a ROPE). In other words, it checks the percentage of the 89\% \link[=hdi]{HDI} that is the null region (the ROPE). If this percentage is sufficiently low, the null hypothesis is rejected. If this percentage is sufficiently high, the null hypothesis is accepted.
 #'
 #'
 #' @inheritParams rope
 #'
 #' @details Using the \link[=rope]{ROPE} and the \link[=hdi]{HDI}, \cite{Kruschke (2018)}
-#'   suggests using the percentage of the 95\% (or 90\%, considered more stable)
+#'   suggests using the percentage of the 95\% (or 89\%, considered more stable)
 #'   HDI that falls within the ROPE as a decision rule. If the HDI
 #'   is completely outside the ROPE, the "null hypothesis" for this parameter is
-#'   "rejected". If the ROPE completely covers the HDI, i.e. all most credible
+#'   "rejected". If the ROPE completely covers the HDI, i.e., all most credible
 #'   values of a parameter are inside the region of practical equivalence, the
 #'   null hypothesis is accepted. Else, it’s undecided whether to accept or
 #'   reject the null hypothesis. If the full ROPE is used (i.e., 100\% of the
 #'   HDI), then the null hypothesis is rejected or accepted if the percentage
 #'   of the posterior within the ROPE is smaller than to 2.5\% or greater than
 #'   97.5\%. Desirable results are low proportions inside the ROPE  (the closer
-#'   to zero the better) and the null hypothesis should be rejected.
+#'   to zero the better).
 #'   \cr \cr
 #'   Some attention is required for finding suitable values for the ROPE limits
 #'   (argument \code{range}). See 'Details' in \code{\link[=rope_range]{rope_range()}}
 #'   for further information.
 #'   \cr \cr
-#'   \strong{Non-independent covariates}
+#'   \strong{Multicollinearity: Non-independent covariates}
 #'   \cr \cr
 #'   When parameters show strong correlations, i.e. when covariates are not
 #'   independent, the joint parameter distributions may shift towards or
@@ -39,10 +39,10 @@
 #'   testing based on univariate marginals, as the probabilities are conditional
 #'   on independence. Most problematic are the results of the "undecided"
 #'   parameters, which may either move further towards "rejection" or away
-#'   from it (\cite{Kruschke 2015, 340f}).
+#'   from it (\cite{Kruschke 2014, 340f}).
 #'   \cr \cr
-#'   \code{equivalence_test()} performs a simple check for pairs of correlating
-#'   parameters, but as there can be collinearity between more than two variables,
+#'   \code{equivalence_test()} performs a simple check for pairwise correlations
+#'   between parameters, but as there can be collinearity between more than two variables,
 #'   a first step to check the assumptions of this hypothesis testing is to look
 #'   at different pair plots. An even more sophisticated check is the projection
 #'   predictive variable selection (\cite{Piironen and Vehtari 2017}).
@@ -50,7 +50,7 @@
 #'
 #' @references \itemize{
 #'   \item Kruschke, J. K. (2018). Rejecting or accepting parameter values in Bayesian estimation. Advances in Methods and Practices in Psychological Science, 1(2), 270-280. \doi{10.1177/2515245918771304}
-#'   \item Kruschke, J. (2015). Doing Bayesian data analysis: A tutorial with R, JAGS, and Stan. Academic Press
+#'   \item Kruschke, J. (2014). Doing Bayesian data analysis: A tutorial with R, JAGS, and Stan. Academic Press
 #'   \item Piironen, J., & Vehtari, A. (2017). Comparison of Bayesian predictive methods for model selection. Statistics and Computing, 27(3), 711–735. \doi{10.1007/s11222-016-9649-y}
 #' }
 #'
@@ -89,6 +89,9 @@
 #' test <- equivalence_test(model)
 #' plot(test)
 #'
+#' library(emmeans)
+#' equivalence_test(emtrends(model, ~1, "wt"))
+#'
 #' library(brms)
 #' model <- brms::brm(mpg ~ wt + cyl, data = mtcars)
 #' equivalence_test(model)
@@ -119,7 +122,7 @@ equivalence_test.default <- function(x, ...) {
 
 #' @rdname equivalence_test
 #' @export
-equivalence_test.numeric <- function(x, range = "default", ci = .95, verbose = TRUE, ...) {
+equivalence_test.numeric <- function(x, range = "default", ci = .89, verbose = TRUE, ...) {
   rope_data <- rope(x, range = range, ci = ci)
   out <- as.data.frame(rope_data)
 
@@ -149,7 +152,7 @@ equivalence_test.numeric <- function(x, range = "default", ci = .95, verbose = T
 
 #' @rdname equivalence_test
 #' @export
-equivalence_test.data.frame <- function(x, range = "default", ci = .95, verbose = TRUE, ...) {
+equivalence_test.data.frame <- function(x, range = "default", ci = .89, verbose = TRUE, ...) {
   l <- .compact_list(lapply(
     x,
     equivalence_test,
@@ -171,11 +174,23 @@ equivalence_test.data.frame <- function(x, range = "default", ci = .95, verbose 
   out
 }
 
+#' @rdname equivalence_test
+#' @export
+equivalence_test.emmGrid <- function(x, range = "default", ci = .89, verbose = TRUE, ...) {
+  if (!requireNamespace("emmeans")) {
+    stop("Package \"emmeans\" needed for this function to work. Please install it.")
+  }
+  xdf <- as.data.frame(as.matrix(emmeans::as.mcmc.emmGrid(x, names = FALSE)))
+
+  out <- equivalence_test(xdf, range = range, ci = ci, verbose = verbose, ...)
+  attr(out, "object_name") <- deparse(substitute(x), width.cutoff = 500)
+  out
+}
 
 
 #' @rdname equivalence_test
 #' @export
-equivalence_test.BFBayesFactor <- function(x, range = "default", ci = .90, verbose = TRUE, ...) {
+equivalence_test.BFBayesFactor <- function(x, range = "default", ci = .89, verbose = TRUE, ...) {
   out <- equivalence_test(insight::get_parameters(x), range = range, ci = ci, verbose = verbose, ...)
   out
 }
@@ -185,7 +200,7 @@ equivalence_test.BFBayesFactor <- function(x, range = "default", ci = .90, verbo
 
 #' @importFrom stats sd
 #' @keywords internal
-.equivalence_test_models <- function(x, range = "default", ci = .95, parameters = NULL, verbose = TRUE) {
+.equivalence_test_models <- function(x, range = "default", ci = .89, parameters = NULL, verbose = TRUE) {
   if (all(range == "default")) {
     range <- rope_range(x)
   } else if (!all(is.numeric(range)) || length(range) != 2) {
@@ -217,7 +232,7 @@ equivalence_test.BFBayesFactor <- function(x, range = "default", ci = .90, verbo
 
 #' @rdname equivalence_test
 #' @export
-equivalence_test.stanreg <- function(x, range = "default", ci = .95, parameters = NULL, verbose = TRUE, ...) {
+equivalence_test.stanreg <- function(x, range = "default", ci = .89, parameters = NULL, verbose = TRUE, ...) {
   out <- .equivalence_test_models(x, range, ci, parameters, verbose)
   attr(out, "object_name") <- deparse(substitute(x), width.cutoff = 500)
   out
@@ -226,7 +241,7 @@ equivalence_test.stanreg <- function(x, range = "default", ci = .95, parameters 
 
 #' @rdname equivalence_test
 #' @export
-equivalence_test.brmsfit <- function(x, range = "default", ci = .95, parameters = NULL, verbose = TRUE, ...) {
+equivalence_test.brmsfit <- function(x, range = "default", ci = .89, parameters = NULL, verbose = TRUE, ...) {
   out <- .equivalence_test_models(x, range, ci, parameters, verbose)
   attr(out, "object_name") <- deparse(substitute(x), width.cutoff = 500)
   out

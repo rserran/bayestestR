@@ -82,7 +82,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bayestestR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1</span>
       </span>
     </div>
 
@@ -111,10 +111,13 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/example1_LM.html">1. Linear Models</a>
+      <a href="../articles/example1.html">1. Initiation to Bayesian models</a>
     </li>
     <li>
-      <a href="../articles/example2_GLM.html">2. General Linear Models</a>
+      <a href="../articles/example2.html">2. Confirmation of Bayesian skills</a>
+    </li>
+    <li>
+      <a href="../articles/example3.html">3. Become a Bayesian master</a>
     </li>
   </ul>
 </li>
@@ -173,14 +176,57 @@
       <small>Source: <a href='https://github.com/easystats/bayestestR/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
-    <div id="bayestestr-015" class="section level1">
+    <div id="bayestestr-021" class="section level1">
 <h1 class="page-header">
-<a href="#bayestestr-015" class="anchor"></a>bayestestR 0.1.5<small> Unreleased </small>
+<a href="#bayestestr-021" class="anchor"></a>bayestestR 0.2.1<small> Unreleased </small>
 </h1>
 <div id="breaking-changes" class="section level2">
 <h2 class="hasAnchor">
 <a href="#breaking-changes" class="anchor"></a>Breaking changes</h2>
 <ul>
+<li>
+<code>describe_posterior.numeric</code>: <code>dispersion</code> defaults to FALSE for consistency with the other methods</li>
+</ul>
+</div>
+<div id="new-functions--features" class="section level2">
+<h2 class="hasAnchor">
+<a href="#new-functions--features" class="anchor"></a>New functions / features</h2>
+<ul>
+<li>
+<code>pd_to_p</code> and <code>p_to_pd</code>: Functions to convert between probability of direction (pd) and p-value</li>
+<li>Support of <code>emmGrid</code> objects: <code>ci</code>, <code>rope</code>, <code>bayesfactor_savagedickey</code>, <code>describe_posterior</code>, …</li>
+</ul>
+</div>
+<div id="minor-changes" class="section level2">
+<h2 class="hasAnchor">
+<a href="#minor-changes" class="anchor"></a>Minor changes</h2>
+</div>
+<div id="bug-fixes" class="section level2">
+<h2 class="hasAnchor">
+<a href="#bug-fixes" class="anchor"></a>Bug fixes</h2>
+<ul>
+<li>
+<code>describe_posterior</code>: Fixed column order restoration</li>
+<li>
+<code>bayesfactor_inclusion</code>: Inclusion BFs for matched models are more inline with JASP results.</li>
+</ul>
+</div>
+</div>
+    <div id="bayestestr-020" class="section level1">
+<h1 class="page-header">
+<a href="#bayestestr-020" class="anchor"></a>bayestestR 0.2.0<small> 2019-05-29 </small>
+</h1>
+<div id="breaking-changes-1" class="section level2">
+<h2 class="hasAnchor">
+<a href="#breaking-changes-1" class="anchor"></a>Breaking changes</h2>
+<ul>
+<li>plotting functions now require the installation of the <code>see</code> package</li>
+<li>
+<code>estimate</code> argument name in <code>describe_posterior</code> and <code>point_estimate</code> changed to <code>centrality</code>
+</li>
+<li>
+<code><a href="../reference/hdi.html">hdi()</a></code>, <code><a href="../reference/ci.html">ci()</a></code>, <code><a href="../reference/rope.html">rope()</a></code> and <code><a href="../reference/equivalence_test.html">equivalence_test()</a></code> default <code>ci</code> to <code>0.89</code>
+</li>
 <li>
 <code><a href="../reference/distribution.html">rnorm_perfect()</a></code> deprecated in favour of <code><a href="../reference/distribution.html">distribution_normal()</a></code>
 </li>
@@ -189,10 +235,12 @@
 </li>
 </ul>
 </div>
-<div id="new-functions--features" class="section level2">
+<div id="new-functions--features-1" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-functions--features" class="anchor"></a>New functions / features</h2>
+<a href="#new-functions--features-1" class="anchor"></a>New functions / features</h2>
 <ul>
+<li>
+<code><a href="../reference/describe_posterior.html">describe_posterior()</a></code>, <code><a href="../reference/describe_prior.html">describe_prior()</a></code>, <code><a href="../reference/diagnostic_posterior.html">diagnostic_posterior()</a></code>: added wrapper function</li>
 <li>
 <code><a href="../reference/point_estimate.html">point_estimate()</a></code> added function to compute point estimates</li>
 <li>
@@ -202,33 +250,38 @@
 <li>
 <code><a href="../reference/distribution.html">distribution()</a></code> functions have been added</li>
 <li>
-<code>bayesfactor()</code> function has been added</li>
+<code><a href="../reference/bayesfactor_savagedickey.html">bayesfactor_savagedickey()</a></code>, <code><a href="../reference/bayesfactor_models.html">bayesfactor_models()</a></code> and <code><a href="../reference/bayesfactor_inclusion.html">bayesfactor_inclusion()</a></code> functions has been added</li>
 <li>Started adding plotting methods (currently in the <a href="https://github.com/easystats/see"><code>see</code></a> package) for <code><a href="../reference/p_direction.html">p_direction()</a></code> and <code><a href="../reference/hdi.html">hdi()</a></code>
 </li>
 <li>
 <code><a href="../reference/density_at.html">probability_at()</a></code> as alias for <code><a href="../reference/density_at.html">density_at()</a></code>
 </li>
+<li>
+<code><a href="../reference/effective_sample.html">effective_sample()</a></code> to return the effective sample size of Stan-models</li>
+<li>
+<code><a href="../reference/mcse.html">mcse()</a></code> to return the Monte Carlo standard error of Stan-models</li>
 </ul>
 </div>
-<div id="minor-changes" class="section level2">
+<div id="minor-changes-1" class="section level2">
 <h2 class="hasAnchor">
-<a href="#minor-changes" class="anchor"></a>Minor changes</h2>
+<a href="#minor-changes-1" class="anchor"></a>Minor changes</h2>
 <ul>
 <li>Improved documentation</li>
+<li>Improved testing</li>
 <li>
 <code><a href="../reference/p_direction.html">p_direction()</a></code>: improved printing</li>
-<li>Improved testing</li>
 <li>
 <code><a href="../reference/rope.html">rope()</a></code> for model-objects now returns the HDI values for all parameters as attribute in a consistent way</li>
 <li>Changes legend-labels in <code>plot.equivalence_test()</code> to align plots with the output of the <code><a href="https://www.rdocumentation.org/packages/base/topics/print">print()</a></code>-method (<a href='https://github.com/easystats/bayestestR/issues/78'>#78</a>)</li>
 </ul>
 </div>
-<div id="bug-fixes" class="section level2">
+<div id="bug-fixes-1" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fixes" class="anchor"></a>Bug fixes</h2>
+<a href="#bug-fixes-1" class="anchor"></a>Bug fixes</h2>
 <ul>
 <li>
 <code><a href="../reference/hdi.html">hdi()</a></code> returned multiple class attributes (<a href='https://github.com/easystats/bayestestR/issues/72'>#72</a>)</li>
+<li>Printing results from <code><a href="../reference/hdi.html">hdi()</a></code> failed when <code>ci</code>-argument had fractional parts for percentage values (e.g. <code>ci = .995</code>).</li>
 <li>
 <code>plot.equivalence_test()</code> did not work properly for <em>brms</em>-models (<a href='https://github.com/easystats/bayestestR/issues/76'>#76</a>).</li>
 </ul>
@@ -250,7 +303,8 @@
     <div id="tocnav">
       <h2>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
-        <li><a href="#bayestestr-015">0.1.5</a></li>
+        <li><a href="#bayestestr-021">0.2.1</a></li>
+        <li><a href="#bayestestr-020">0.2.0</a></li>
         <li><a href="#bayestestr-010">0.1.0</a></li>
       </ul>
     </div>
