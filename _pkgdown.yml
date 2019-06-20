@@ -5,12 +5,61 @@ authors:
     href: https://github.com/strengejacke
   Mattan S. Ben-Shachar:
     href: https://github.com/mattansb
+  Michael D. Wilson:
+    href: http://www.humanfactors.io
 
 template:
   params:
     ganalytics: UA-97457476-7
     bootswatch: cosmo
-    
+
+
+reference:
+- title: "Posterior Description"
+  contents:
+  - describe_posterior
+  - point_estimate
+  - map_estimate
+  - hdi
+  - ci
+  
+- title: "Effect Existence and Significance"
+  contents:
+  - p_direction
+  - convert_pd_to_p
+  - rope
+  - rope_range
+  - equivalence_test
+  - p_rope
+  - p_map
+  - bayesfactor
+  - bayesfactor_savagedickey
+  - bayesfactor_inclusion
+  - bayesfactor_models
+  
+- title: "Model Diagnostics"
+  contents:
+  - diagnostic_posterior
+  - describe_prior
+  - effective_sample
+  - mcse
+  
+- title: "Density Estimation"
+  contents:
+  - estimate_density
+  - density_at
+  - area_under_curve
+  
+- title: "Distributions"
+  contents:
+  - distribution
+  
+- title: "Utilities"
+  contents:
+  - as.numeric.p_direction
+  - as.data.frame.density
+  
+  
 navbar:
   type: default
   left:
@@ -32,13 +81,13 @@ navbar:
         href: articles/example3.html
   - text: Articles
     menu:
-      - text: 'Credible Intervals'
+      - text: 'Credible Intervals (CI)'
         href: articles/credible_interval.html
-      - text: 'Region of Practical Equivalence'
+      - text: 'Region of Practical Equivalence (ROPE)'
         href: articles/region_of_practical_equivalence.html
-      - text: 'Probability of Direction'
+      - text: 'Probability of Direction (pd)'
         href: articles/probability_of_direction.html
-      - text: 'Bayes Factors'
+      - text: 'Bayes Factors (BF)'
         href: articles/bayes_factors.html
       - text: 'Comparison of Point-Estimates'
         href: articles/indicesEstimationComparison.html

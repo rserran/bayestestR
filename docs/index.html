@@ -44,7 +44,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">bayestestR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.2</span>
       </span>
     </div>
 
@@ -91,16 +91,16 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="articles/credible_interval.html">Credible Intervals</a>
+      <a href="articles/credible_interval.html">Credible Intervals (CI)</a>
     </li>
     <li>
-      <a href="articles/region_of_practical_equivalence.html">Region of Practical Equivalence</a>
+      <a href="articles/region_of_practical_equivalence.html">Region of Practical Equivalence (ROPE)</a>
     </li>
     <li>
-      <a href="articles/probability_of_direction.html">Probability of Direction</a>
+      <a href="articles/probability_of_direction.html">Probability of Direction (pd)</a>
     </li>
     <li>
-      <a href="articles/bayes_factors.html">Bayes Factors</a>
+      <a href="articles/bayes_factors.html">Bayes Factors (BF)</a>
     </li>
     <li>
       <a href="articles/indicesEstimationComparison.html">Comparison of Point-Estimates</a>
@@ -170,7 +170,7 @@
 <h4 class="hasAnchor">
 <a href="#articles" class="anchor"></a>Articles</h4>
 <ul>
-<li><a href="https://easystats.github.io/bayestestR/articles/credible_interval.html">Credible Intervals (CIs)</a></li>
+<li><a href="https://easystats.github.io/bayestestR/articles/credible_interval.html">Credible Intervals (CI)</a></li>
 <li><a href="https://easystats.github.io/bayestestR/articles/probability_of_direction.html">Probability of Direction (pd)</a></li>
 <li><a href="https://easystats.github.io/bayestestR/articles/region_of_practical_equivalence.html">Region of Practical Equivalence (ROPE)</a></li>
 <li><a href="https://easystats.github.io/bayestestR/articles/bayes_factors.html">Bayes Factors (BF)</a></li>
@@ -240,7 +240,7 @@
 <div id="bayes-factor" class="section level3">
 <h3 class="hasAnchor">
 <a href="#bayes-factor" class="anchor"></a>Bayes Factor</h3>
-<p><a href="https://easystats.github.io/bayestestR/reference/bayesfactor_savagedickey.html"><strong><code><a href="reference/bayesfactor_savagedickey.html">bayesfactor_savagedickey()</a></code></strong></a> computes the ratio between the density of a single value (typically the null) in two distributions, typically the posterior vs. the prior distributions. This method is used to examine if the hypothesis value is less or more likely given the observed data.</p>
+<p><a href="https://easystats.github.io/bayestestR/reference/bayesfactor_savagedickey.html"><strong><code><a href="reference/bayesfactor_savagedickey.html">bayesfactor_savagedickey()</a></code></strong></a> computes the ratio between the density of a single value (typically the null) of two distributions. When the compared distributions are the posterior and the prior distributions, this results is an approximation of a Bayes factor comparing the model against a model in which the parameter of choice is restricted to the point null.</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1">prior &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Normal">rnorm</a></span>(<span class="dv">1000</span>, <span class="dt">mean =</span> <span class="dv">0</span>, <span class="dt">sd =</span> <span class="dv">1</span>)</a>
 <a class="sourceLine" id="cb9-2" title="2">posterior &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Normal">rnorm</a></span>(<span class="dv">1000</span>, <span class="dt">mean =</span> <span class="dv">1</span>, <span class="dt">sd =</span> <span class="fl">0.7</span>)</a>
 <a class="sourceLine" id="cb9-3" title="3"></a>
@@ -326,6 +326,8 @@
 <a href="https://github.com/strengejacke">Daniel Lüdecke</a> <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0002-8895-3206" target="orcid.widget"><img src="https://members.orcid.org/sites/default/files/vector_iD_icon.svg" class="orcid" alt="ORCID" height="16"></a> </li>
 <li>
 <a href="https://github.com/mattansb">Mattan S. Ben-Shachar</a> <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0002-4287-4801" target="orcid.widget"><img src="https://members.orcid.org/sites/default/files/vector_iD_icon.svg" class="orcid" alt="ORCID" height="16"></a> </li>
+<li>
+<a href="http://www.humanfactors.io">Michael D. Wilson</a> <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0003-4143-7308" target="orcid.widget"><img src="https://members.orcid.org/sites/default/files/vector_iD_icon.svg" class="orcid" alt="ORCID" height="16"></a> </li>
 </ul>
 </div>
 
@@ -345,7 +347,7 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by <a href="https://dominiquemakowski.github.io/">Dominique Makowski</a>, <a href="https://github.com/strengejacke">Daniel Lüdecke</a>, <a href="https://github.com/mattansb">Mattan S. Ben-Shachar</a>.</p>
+  <p>Developed by <a href="https://dominiquemakowski.github.io/">Dominique Makowski</a>, <a href="https://github.com/strengejacke">Daniel Lüdecke</a>, <a href="https://github.com/mattansb">Mattan S. Ben-Shachar</a>, <a href="http://www.humanfactors.io">Michael D. Wilson</a>.</p>
 </div>
 
 <div class="pkgdown">
