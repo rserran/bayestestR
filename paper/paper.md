@@ -1,5 +1,5 @@
 ---
-title: "Understanding and Describing Bayesian Models with bayestestR"
+title: "bayestestR: Describing Effects and their Uncertainty, Existence and Significance within the Bayesian Framework"
 authors:
 - affiliation: 1
   name: Dominique Makowski
@@ -13,6 +13,7 @@ authors:
 date: "09 June 2019"
 output: pdf_document
 bibliography: paper.bib
+csl: apa.csl
 tags:
 - R
 - Bayesian statistics
@@ -34,234 +35,155 @@ affiliations:
 
 # Introduction
 
-The Bayesian framework for statistics is quickly gaining in popularity among scientists, for reasons such as reliability and accuracy (particularly in noisy data and small samples), the possibility to incorporate prior knowledge into the analysis or the intuitive interpretation of results [@andrews2013prior; @etz2016bayesian; @kruschke2010believe; @kruschke2012time; @wagenmakers2018bayesian]. Adopting the Bayesian framework is more of a shift in the paradigm than a change in the methodology. All the common statistical procedures (*t*-tests, correlations, ANOVAs, regressions, ...) can also be achieved within the Bayesian framework. One of the core difference is that in the *frequentist* view, the effects are fixed (but unknown) and data are random. On the contrary, the Bayesian inference process computes the probability of different effects *given the observed data*. Instead of having estimates of the "true effect", the probabilistic approach gives a distribution of possible values for the parameters, called the *posterior distribution*. 
+The Bayesian framework for statistics is quickly gaining in popularity among scientists, for reasons such as reliability and accuracy (particularly in noisy data and small samples), the possibility of incorporating prior knowledge into the analysis and the intuitive interpretation of results [@andrews2013prior; @etz2016bayesian; @kruschke2010believe; @kruschke2012time; @wagenmakers2018bayesian]. Adopting the Bayesian framework is more of a shift in the paradigm than a change in the methodology; All the common statistical procedures (*t*-tests, correlations, ANOVAs, regressions, etc.) can also be achieved within the Bayesian framework. One of the core difference is that in the *frequentist* view, the effects are fixed (but unknown) and data are random. On the other hand, instead of having single estimates of the "true effect", the Bayesian inference process computes the probability of different effects *given the observed data*, resulting in a distribution of possible values for the parameters, called the *posterior distribution*. 
 
-The uncertainty in Bayesian inference can be summarized, for instance, by the *median* of the distribution, as well as a range of values of the posterior distribution that includes the 95\% most probable values (the 95\% *credible interval*). Cum grano salis, these are considered the counterparts to the point-estimate and confidence interval in a frequentist framework. To illustrate the difference of interpretation, the Bayesian framework allows to say *"given the observed data, the effect has 95\% probability of falling within this range"*, while the frequentist less straightforward alternative would be *"there is a 95\% probability that when repeatedly computing a confidence interval from data of this sort, the effect falls within this range"*. In essence, the Bayesian sampling algorithms (such as MCMC sampling) return a probability distribution (*the posterior*) of an effect that is compatible with the observed data. The effect can be described by [characterizing the posterior distribution](https://easystats.github.io/bayestestR/articles/guidelines.html) of the related effect in relation to its centrality (point-estimates), uncertainty, existence and significance 
+Effects in the Bayesian framework can be described by [characterizing their posterior distribution](https://easystats.github.io/bayestestR/articles/guidelines.html). Commonly reported indices include measures of centrality (e.g., the median, mean or MAP estimate) and uncertainty (the [*credible* interval](https://easystats.github.io/bayestestR/articles/credible_interval.html) - CI). Cum grano salis, these are considered the counterparts to the coefficient point-estimates and confidence intervals of the frequentist framework. Additionally, **bayestestR** also focuses on implementing a Bayesian null-hypothesis testing framework (in a Bayesian sense, i.e., extended to general testing of "effect existence") by providing access to both established and exploratory indices of effect *existence* and *significance* [such as the Bayes factor, @morey2011bayes; the ROPE, @kruschke2018bayesian; the MAP-based *p*-value, @mills2018objective, or the Probability of Direction - *pd*].
 
-***Needs better wording***
+Existing R packages allow users to easily fit a large variety of models and extract and visualize the posterior draws. However, most of these packages only return a limited set of indices (e.g., point-estimates and CIs). **bayestestR** provides a comprehensive and consistent set of functions to analyze and describe posterior distributions generated by a variety of models objects, including popular modeling packages such as **rstanarm** [@goodrich2018rstanarm], **brms** [@burkner2017brms] or **BayesFactor** [@morey2018bayesfactor], thus appearing as a useful tool supporting the usage and developpment of Bayesian statistics. The main functions are described below, and a full documentation is available on the [package's website](https://easystats.github.io/bayestestR).
 
-(null-hypothesis significance testing, though in a Bayesian framework there is not necessarily a null-hypothesis, nor is statistical significance in its classical meaning, with associated p-values).
+# Examples of Features
 
-
-Existing R packages allow users to easily fit a large variety of models and extract, and visualize, the posterior draws. However, most of these packages only return a limited set of indices (*e.g.*, point-estimates and CI). `bayestestR` provides a comprehensive and consistent set of functions to analyze and describe a variety of models objects, including popular modeling packages such as `rstanarm` [@goodrich2018rstanarm], `brms` [@burkner2017brms] or `BayesFactor` [@morey2014bayesfactor]. Beyond computing point-estimates (mean, median or MAP estimate) and quantifying the related uncertainty (with different types of CIs), `bayestestR` focuses on implementing a null-hypothesis testing framework. By providing access to both established and exploratory indices of effect existence and significance, `bayestestR` appears as a useful tool supporting Bayesian statistics. The main functions are described below, and a full documentation is available on the [package's website](https://easystats.github.io/bayestestR).
-
-# Features
-
-<!-- Need a introductory paragraph -->
+The following demonstration of functions is accompanied by figures to illustrate the conceptional ideas behind the related indices. However, **bayestestR** functions also include plotting capabilities via the [**see** package](https://easystats.github.io/see/) [@ludecke2019see].
 
 ## Indices of Centrality: Point-estimates
 
-<!-- Need a introductory paragraph -->
+**bayestestR** offers two functions to compute point-estimates from posterior distributions: `map_estimate()` and `point_estimate()`, the latter providing options to calculate the mean, median or MAP estimate of a posterior distribution. [`map_estimate()`](https://easystats.github.io/bayestestR/reference/map_estimate.html) is a convenient function to calculate the **Maximum A Posteriori** (MAP) estimate directly.
 
-### MAP Estimate
-
-[**`map_estimate()`**](https://easystats.github.io/bayestestR/reference/map_estimate.html)
-finds the **Highest Maximum A Posteriori (MAP)** estimate of a posterior distribution,
-i.e., its most probable value.
+The **posterior mean** minimizes expected _squared_ error, whereas the **posterior median** minimizes expected _absolute_ error (i.e. the difference of estimates from true values over samples). The **MAP estimate** is the most probable value of a posterior distribution.
 
 ``` r
-map_estimate(rnorm(1000, .4, 1))
-#> MAP = 0.39
+set.seed(1)
+posterior <- rchisq(100, 3)
+map_estimate(posterior)
+#> MAP = 1.46
+
+point_estimate(posterior)
+#> Median = 2.31
+
+point_estimate(posterior, centrality = "mean")
+#> Mean = 2.96
+
+point_estimate(posterior, centrality = "map")
+#> MAP = 1.46
 ```
 
-![](Figure1.png)<!-- -->
+![Indices of centrality of the posterior distribution that are often used as point-estimates: the mean (in green), median (in red), and MAP estimate (in blue)](Figure1.png)
 
-## Indices of Uncertainty
+## Quantifying Uncertainty: The Credible Interval (CI)
 
-### Highest Density Interval (HDI) - Credible Interval (CI)
+In order to measure the uncertainty associated with the estimation, **bayestestR** provides two functions: `eti()`, the Equal-Tailed Interval **ETI**, and `hdi()`, the **Highest Density Interval (HDI)**. Both indices (accessible via the `method` argument in the `ci()` function) can be used in the context of Bayesian posterior characterisation as **Credible Interval (CI)**.
 
-[**`hdi()`**](https://easystats.github.io/bayestestR/reference/hdi.html)
-computes the **Highest Density Interval (HDI)** of a posterior
-distribution, i.e., the interval which contains all points within the
-interval have a higher probability density than points outside the
-interval. The HDI can be used in the context of Bayesian posterior
-characterisation as **Credible Interval (CI)**.
+[`hdi()`](https://easystats.github.io/bayestestR/reference/hdi.html)
+computes the HDI of a posterior distribution, i.e., the interval which contains all points within the interval have a higher probability density than points outside the interval. HDIs have a particular property: Unlike an equal-tailed interval (computed by [`eti()`](https://easystats.github.io/bayestestR/reference/eti.html)) that typically exclude 2.5% from each tail of the distribution, the HDI is *not* equal-tailed and therefore always includes the mode(s) of posterior distributions.
 
-Unlike equal-tailed intervals (see
-[ci](https://easystats.github.io/bayestestR/reference/ci.html)) that
-typically exclude 2.5% from each tail of the distribution, the HDI is
-*not* equal-tailed and therefore always includes the mode(s) of
-posterior distributions.
-
-By default, `hdi()` returns the 89% intervals (`ci = 0.89`), deemed to
-be more stable than, for instance, 95% intervals (Kruschke, 2014). An
-effective sample size of at least 10.000 is recommended if 95% intervals
-should be computed (Kruschke 2014, p. 183ff). Moreover, 89 is the
-highest prime number that does not exceed the already unstable 95%
-threshold (McElreath, 2015).
+By default, `hdi()` and `eti()` return the 89% intervals (`ci = 0.89`), deemed to be more stable than, for instance, 95% intervals. An effective sample size of at least 10.000 is recommended if 95% intervals should be computed [@kruschke2015doing]. Moreover, 89 is the highest prime number that does not exceed the already unstable and arbritrary 95% threshold [@mcelreath2018statistical].
 
 ``` r
-hdi(rnorm(1000), ci = .89)
+hdi(posterior)
+#> # Highest Density Interval
+#> 
+#>       89% HDI
+#>  [0.11, 6.05]
+
+eti(posterior)
+#> # Equal-Tailed Interval
+#> 
+#>       89% ETI
+#>  [0.42, 7.27]
 ```
 
-![](Figure2.png)<!-- -->
+![Indices of uncertainty that can be used as Credible Intervals (CIs): (A) the 89% Highest Density Interval (HDI); (B) the 89% Equal-Tailed Interval (ETI).](Figure2.png)
 
 ## Null-Hypothesis Significance Testing (NHST)
 
-### ROPE
+The Bayesian framework allows to neatly delineate and quantify different aspects of hypothesis testing, including effect *existence* and *significance*, and different indices have been developped to describe them.
 
-[**`rope()`**](https://easystats.github.io/bayestestR/reference/rope.html)
-computes the proportion (in percentage) of the HDI (default to the 89%
-HDI) of a posterior distribution that lies within a region of practical
-equivalence.
 
-Statistically, the probability of a posterior distribution of being
-different from 0 does not make much sense (the probability of it being
-different from a single point being infinite). Therefore, the idea
-underlining ROPE is to let the user define an area around the null value
-enclosing values that are *equivalent to the null* value for practical
-purposes (Kruschke 2010, 2011, 2014).
+### ROPE and Test for Practical Equivalence
 
-Kruschke (2018) suggests that such null value could be set, by default,
-to the -0.1 to 0.1 range of a standardized parameter (negligible effect
-size according to Cohen, 1988). This could be generalized: For instance,
-for linear models, the ROPE could be set as `0 +/- .1 * sd(y)`. This
-ROPE range can be automatically computed for models using the
-[rope\_range](https://easystats.github.io/bayestestR/reference/rope_range.html)
-function.
+[`rope()`](https://easystats.github.io/bayestestR/reference/rope.html) computes the proportion of the HDI (default to the 89% HDI) of a posterior distribution that lies within a Region Of Practical Equivalence (the **ROPE**; see figure 3, panel A).
 
-Kruschke (2010, 2011, 2014) suggests using the proportion of the 95% (or
-90%, considered more stable) HDI that falls within the ROPE as an index
-for “null-hypothesis” testing (as understood under the Bayesian
-framework, see
-[equivalence\_test](https://easystats.github.io/bayestestR/reference/equivalence_test.html)).
+Statistically, the probability of a posterior distribution of being different from 0 does not make much sense (the probability of it being different from a single point being infinite). Therefore, the idea underlining ROPE is to let the user define an area around the null value enclosing values that are *equivalent to the null* value for practical purposes [@kruschke2018bayesian; @kruschke2018rejecting]. Nevertheless, in the absence of user-provided values, **bayestestR** will automatically find an appropriate range for the ROPE using the  [`rope_range()`](https://easystats.github.io/bayestestR/reference/rope_range.html) function.
 
 ``` r
-rope(rnorm(1000, 1, 1), range = c(-0.1, 0.1))
+rope(distribution_normal(1000, mean = 1), range = c(-0.5, 0.5))
+#> # Proportion of samples inside the ROPE [-0.50, 0.50]:
+#> 
+#>  inside ROPE
+#>      27.16 %
 ```
 
-![](Figure3.png)<!-- -->
+![Posterior distributions (in yellow) of effects (the x-axis) with the illustration of indices of Null-Hypothesis Significance Testing: (A) The ROPE; (B) The Probability of Direction - pd; (C) The Savage-Dickey Bayes factor; (D) The MAP-based p-value.](Figure3.png)
 
-### Equivalence test
 
-[**`equivalence_test()`**](https://easystats.github.io/bayestestR/reference/equivalence_test.html)
-a **Test for Practical Equivalence** based on the *“HDI+ROPE decision
-rule”* (Kruschke, 2018) to check whether parameter values should be
-accepted or rejected against an explicitly formulated “null hypothesis”
-(i.e., a
-[ROPE](https://easystats.github.io/bayestestR/reference/rope.html)).
+The proportion of HDI lying within this "null" region can be used as an decision criterion for "null-hypothesis" testing. Such **Test for Practical Equivalence**, implemented via [`equivalence_test()`](https://easystats.github.io/bayestestR/reference/equivalence_test.html), is based on the “HDI+ROPE decision rule” [@kruschke2018rejecting] to check whether parameter values should be accepted or rejected against an explicitly formulated “null hypothesis” (i.e., a [ROPE](https://easystats.github.io/bayestestR/reference/rope.html)). If the HDI is completely outside the ROPE, the "null hypothesis" for this parameter is "rejected". If the ROPE completely covers the HDI, i.e., all most credible values of a parameter are inside the ROPE, the null hypothesis is accepted. Else, it’s undecided whether to accept or reject the null hypothesis.
 
 ``` r
-equivalence_test(rnorm(1000, 1, 1), range = c(-0.1, 0.1))
+library(rstanarm)
+model <- stan_glm(mpg ~ wt + gear, data = mtcars)
+equivalence_test(model)
+#> # Test for Practical Equivalence
+#> 
+#>   ROPE: [-0.60 0.60]
+#> 
+#>    Parameter        H0 inside ROPE       89% HDI
+#>  (Intercept)  Rejected      0.00 % [30.82 47.02]
+#>           wt  Rejected      0.00 % [-6.63 -4.39]
+#>         gear Undecided     52.54 % [-1.76  1.23]
 ```
 
-### Probability of Direction (*p*d)
 
-[**`p_direction()`**](https://easystats.github.io/bayestestR/reference/p_direction.html)
-computes the **Probability of Direction** (***p*d**, also known as the
-Maximum Probability of Effect - *MPE*). It varies between 50% and 100% (*i.e.*, `0.5` and `1`)
-and can be interpreted as the probability (expressed in percentage) that
-a parameter (described by its posterior distribution) is strictly
-positive or negative (whichever is the most probable). It is
-mathematically defined as the proportion of the posterior distribution
-that is of the median’s sign. Although differently expressed, this index
-is fairly similar (i.e., is strongly correlated) to the frequentist
-***p*-value**.
 
-**Relationship with the p-value**: In most cases, it seems that the *pd*
-corresponds to the frequentist one-sided *p*-value through the formula
-`p-value = (1-pd/100)` and to the two-sided *p*-value (the most commonly
-reported) through the formula `p-value = 2*(1-pd/100)`. Thus, a `pd` of
-`95%`, `97.5%` `99.5%` and `99.95%` corresponds approximately to a
-two-sided *p*-value of respectively `.1`, `.05`, `.01` and `.001`. See
-the [*reporting
-guidelines*](https://easystats.github.io/bayestestR/articles/guidelines.html).
+### Probability of Direction (*pd*)
+
+[`p_direction()`](https://easystats.github.io/bayestestR/reference/p_direction.html) computes the **Probability of Direction** (*pd*, also known as the Maximum Probability of Effect - *MPE*). This index of effect existence varies between 50% and 100% and can be interpreted as the probability that a parameter (described by its posterior distribution) is strictly positive or negative (whichever is the most probable). It is mathematically defined as the proportion of the posterior distribution that is of the median's sign (see figure 3, panel B).
 
 ``` r
-p_direction(rnorm(1000, mean = 1, sd = 1))
+p_direction(distribution_normal(100, 0.4, 0.2))
+#> # Probability of Direction (pd)
+#> 
+#> pd = 98.00%
 ```
-
-![](Figure4.png)<!-- -->
 
 ### Bayes Factor
 
-[**`bayesfactor_savagedickey()`**](https://easystats.github.io/bayestestR/reference/bayesfactor_savagedickey.html)
-computes the ratio between the density of a single value (typically the
-null) in two distributions, typically the posterior vs. the prior
-distributions. This method is used to examine if the hypothesis value is
-less or more likely given the observed data, and is an approximation of a Bayes factor comparing 
-the model against a model in which the parameter of choice is restricted to the point null. 
+[`bayesfactor_savagedickey()`](https://easystats.github.io/bayestestR/reference/bayesfactor_savagedickey.html) computes the ratio between the density of a single value (typically the
+null) in two distributions. When these distributions are the prior and the posterior
+distributions, this ratio can be used to examine the degree by which the mass of
+the posterior distribution has shifted further away from or closer to the null value
+(relative to the prior distribution), thus indicating if the null value has become
+less or more likely given the observed data (see figure 3, panel C). The Savage-Dickey density ratio is also an approximation of a Bayes factor comparing the marginal likelihoods of the model against a model in which the tested parameter has been restricted to the point null [@wagenmakers2010bayesian].
 
 ``` r
-prior <- rnorm(1000, mean = 0, sd = 1)
-posterior <- rnorm(1000, mean = 1, sd = 0.7)
+prior <- distribution_normal(1000, mean = 0, sd = 1)
+posterior <- distribution_normal(1000, mean = 1, sd = 0.7)
 
 bayesfactor_savagedickey(posterior, prior, direction = "two-sided", hypothesis = 0)
+#> # Bayes Factor (Savage-Dickey density ratio)
+#> 
+#>  Bayes Factor
+#>          1.98
+#> ---
+#> Evidence Against Test Value:  0 
 ```
-
-![](Figure5.png)<!-- -->
 
 ### MAP-based *p*-value
 
-[**`p_map()`**](https://easystats.github.io/bayestestR/reference/p_map.html)
-computes a Bayesian equivalent of the p-value, related to the odds that
-a parameter (described by its posterior distribution) has against the
-null hypothesis (*h0*) using Mills’ (2014, 2017) *Objective Bayesian
-Hypothesis Testing* framework. It is mathematically based on the density
-at the Maximum A Priori (MAP) and corresponds to the density value at 0
-divided by the density of the MAP estimate.
+[`p_map()`](https://easystats.github.io/bayestestR/reference/p_map.html) computes the odds that a parameter (described by its posterior distribution) has against the null hypothesis (*h0*) using Mills’ *Objective Bayesian Hypothesis Testing* framework [@mills2018objective; @mills2014bayesian]. It is mathematically based on the density at the Maximum A Priori (MAP) and corresponds to the density value at 0 divided by the density at the MAP estimate (see figure 3, panel D).
 
 ``` r
-p_map(rnorm(1000, 1, 1))
+p_map(distribution_normal(1000, mean = 1))
+#> # MAP-based p-value
+#> 
+#> p (MAP) = 0.629
 ```
-
-![](Figure6.png)<!-- -->
-
-## Utilities
-
-### Find ROPE’s appropriate range
-
-[**`rope_range()`**](https://easystats.github.io/bayestestR/reference/rope_range.html):
-This function attempts at automatically finding suitable “default”
-values for the Region Of Practical Equivalence (ROPE). Kruschke (2018)
-suggests that such null value could be set, by default, to a range from
-`-0.1` to `0.1` of a standardized parameter (negligible effect size
-according to Cohen, 1988), which can be generalised for linear models to
-`-0.1 * sd(y), 0.1 * sd(y)`. For logistic models, the parameters
-expressed in log odds ratio can be converted to standardized difference
-through the formula `sqrt(3)/pi`, resulting in a range of `-0.05` to
-`-0.05`.
-
-``` r
-rope_range(model)
-```
-
-### Density Estimation
-
-[**`estimate_density()`**](https://easystats.github.io/bayestestR/reference/estimate_density.html):
-This function is a wrapper over different methods of density estimation.
-By default, it uses the base R `density` with by default uses a
-different smoothing bandwidth (`"SJ"`) from the legacy default
-implemented the base R `density` function (`"nrd0"`). However, Deng &
-Wickham suggest that `method = "KernSmooth"` is the fastest and the most
-accurate.
-
-### Perfect Distributions
-
-[**`distribution()`**](https://easystats.github.io/bayestestR/reference/distribution.html):
-Generate a sample of size n with near-perfect distributions.
-
-``` r
-distribution(n = 10)
-```
-
-### Probability of a Value
-
-[**`density_at()`**](https://easystats.github.io/bayestestR/reference/density_at.html):
-Compute the density of a given point of a distribution.
-
-``` r
-density_at(rnorm(1000, 1, 1), 1)
-```
-
-
 
 # Licensing and Availability
 
-**bayestestR** is licensed under the GNU General Public License (v3.0), with all source code stored at GitHub (https://github.com/easystats/bayestestR), with a corresponding issue tracker for bug-reporting and feature enhancements. In the spirit of open science and research, we encourage interaction with our package through requests/tips for fixes, feature updates, as well as general questions and concerns via direct interaction with contributors and developers.
+**bayestestR** is licensed under the GNU General Public License (v3.0), with all source code stored at GitHub (https://github.com/easystats/bayestestR), with a corresponding issue tracker for bug-reporting and feature enhancements. In the spirit of honest and open science, we encourage requests/tips for fixes, feature updates, as well as general questions and concerns via direct interaction with contributors and developers.
 
 # Acknowledgments
 
-We would like to thank the [council of masters](https://github.com/orgs/easystats/people) of easystats, all other padawan contributors as well as the users.
+**bayestestR** is part of the [*easystats*](`https://github.com/easystats/easystats`) ecosystem [relying on the **insight** package to access information contained in models; @ludecke2019insight], a collaborative project created to facilitate the usage of R. Thus, we would like to thank the [council of masters](https://github.com/orgs/easystats/people) of easystats, all other padawan contributors, as well as the users.
 
 # References

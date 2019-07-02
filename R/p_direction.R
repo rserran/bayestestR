@@ -98,7 +98,7 @@ p_direction.numeric <- function(x, method = "direct", ...) {
       dens <- dens[dens$x < 0, ]
     }
     pdir <- area_under_curve(dens$x, dens$y, method = "spline")
-    if (pdir >= 1) pdir <- 1  # Enforce bounds
+    if (pdir >= 1) pdir <- 1 # Enforce bounds
   }
 
   attr(pdir, "method") <- method
@@ -141,7 +141,7 @@ p_direction.data.frame <- function(x, method = "direct", ...) {
 #' @export
 p_direction.emmGrid <- function(x, method = "direct", ...) {
   if (!requireNamespace("emmeans")) {
-    stop("Package \"emmeans\" needed for this function to work. Please install it.")
+    stop("Package 'emmeans' required for this function to work. Please install it by running `install.packages('emmeans')`.")
   }
   xdf <- as.data.frame(as.matrix(emmeans::as.mcmc.emmGrid(x, names = FALSE)))
   out <- p_direction(xdf, method = method, ...)
