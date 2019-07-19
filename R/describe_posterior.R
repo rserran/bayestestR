@@ -106,9 +106,9 @@ describe_posterior <- function(posteriors, centrality = "median", dispersion = F
   if (!is.null(ci)) {
     ci_method <- match.arg(tolower(ci_method), c("hdi", "quantile", "ci", "eti"))
     if (ci_method == "hdi") {
-      uncertainty <- hdi(x, ci = ci)
+      uncertainty <- hdi(x, ci = ci, ...)
     } else {
-      uncertainty <- ci(x, ci = ci)
+      uncertainty <- eti(x, ci = ci, ...)
     }
     if (!"Parameter" %in% names(uncertainty)) {
       uncertainty <- cbind(data.frame("Parameter" = "Posterior"), uncertainty)
@@ -185,7 +185,7 @@ describe_posterior <- function(posteriors, centrality = "median", dispersion = F
     # Bayes Factors
 
     if (any(c("bf", "bayesfactor", "bayes_factor") %in% test)) {
-      test_bf <- bayesfactor_savagedickey(x, prior = bf_prior, ...)
+      test_bf <- bayesfactor_parameters(x, prior = bf_prior, ...)
       if (!"Parameter" %in% names(test_bf)) {
         test_bf <- cbind(data.frame("Parameter" = "Posterior"), test_bf)
       }
