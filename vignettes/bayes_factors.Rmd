@@ -7,10 +7,9 @@ output:
     fig_height: 6
   rmarkdown::html_vignette:
     toc: true
+    toc_depth: 2
     fig_width: 10.08
     fig_height: 6
-toc:
-  depth: 3
 tags: [r, bayesian, bayes factors]
 vignette: >
   \usepackage[utf8]{inputenc}
@@ -24,7 +23,7 @@ csl: apa.csl
 
 This vignette can be referred to by citing the package:
 
-- Makowski, D., Ben-Shachar M. S. \& Lüdecke, D. (2019). *Understand and Describe Bayesian Models and Posterior Distributions using bayestestR*. Available from https://github.com/easystats/bayestestR. DOI: [10.5281/zenodo.2556486](https://zenodo.org/record/2556486).
+- Makowski, Ben-Shachar, \& Lüdecke (2019). *bayestestR: Describing Effects and their Uncertainty, Existence and Significance within the Bayesian Framework*. Journal of Open Source Software, 4(40), 1541, https://doi.org/10.21105/joss.01541
 
 ---
 
@@ -42,6 +41,7 @@ library(BayesFactor)
 options(knitr.kable.NA = '')
 opts_chunk$set(echo = TRUE)
 opts_chunk$set(comment = ">")
+knitr::opts_chunk$set(dpi=300)
 theme_set(see::theme_modern())
 options(digits = 2)
 set.seed(5)
@@ -84,7 +84,7 @@ A ***Bayes factor for a single parameter*** can be used to answer the question:
 
 
 ```{r echo=FALSE, fig.cap="Bayesian analysis of the Students' (1908) Sleep data set.", fig.align='center', out.width="80%"}
-knitr::include_graphics("https://github.com/easystats/easystats/raw/master/man/figures/bayestestR/deathsticks.png")
+knitr::include_graphics("https://github.com/easystats/easystats/raw/master/man/figures/bayestestR/deathsticks.jpg")
 ```
 
 
@@ -202,15 +202,23 @@ All of this can be achieved with the function `bayesfactor_parameters()`, which 
 My_first_BF <- bayesfactor_parameters(model, null = c(-.5,.5))
 My_first_BF
 ```
+
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 print(My_first_BF)
+```
 
+```{r, echo=TRUE, eval=FALSE}
+plot(My_first_BF)
+```
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
 plot(bayesfactor_parameters(
   data.frame(group2 = posterior),
   data.frame(group2 = prior),
   null = c(-.5,.5))) + 
   theme(legend.position = c(0.2, 0.8))
 ```
+
 
 ### Testing against the null as a single point (0)
 
@@ -221,6 +229,10 @@ plot(bayesfactor_parameters(
 ```{r, message=FALSE, warning=FALSE}
 My_second_BF <- bayesfactor_parameters(model, null = 0)
 My_second_BF
+```
+
+```{r, echo=TRUE, eval=FALSE}
+plot(My_second_BF)
 ```
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
@@ -414,7 +426,7 @@ bayesfactor_inclusion(BF_ToothGrowth)
 ```
 
 ```{r JASP_all_fig, echo=FALSE, message=FALSE, warning=FALSE}
-knitr::include_graphics("https://github.com/easystats/bayestestR/raw/master/man/figures/JASP1.PNG")
+knitr::include_graphics("https://github.com/easystats/easystats/raw/master/man/figures/bayestestR/JASP1.PNG")
 ```
 
 2. Across matched models:
@@ -425,7 +437,7 @@ bayesfactor_inclusion(BF_ToothGrowth, match_models = TRUE)
 
 
 ```{r JASP_matched_fig, echo=FALSE, message=FALSE, warning=FALSE}
-knitr::include_graphics("https://github.com/easystats/bayestestR/raw/master/man/figures/JASP2.PNG")
+knitr::include_graphics("https://github.com/easystats/easystats/raw/master/man/figures/bayestestR/JASP2.PNG")
 ```
 
 3. With Nuisance Effects:
@@ -444,7 +456,7 @@ bayesfactor_inclusion(BF_ToothGrowth_against_dose)
 ```
 
 ```{r JASP_Nuisance_fig, echo=FALSE, message=FALSE, warning=FALSE}
-knitr::include_graphics("https://github.com/easystats/bayestestR/raw/master/man/figures/JASP3.PNG")
+knitr::include_graphics("https://github.com/easystats/easystats/raw/master/man/figures/bayestestR/JASP3.PNG")
 ```
 
 ### Order Restricted Models

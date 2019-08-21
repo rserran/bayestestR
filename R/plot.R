@@ -26,6 +26,15 @@ plot.point_estimate <- function(x, ...) {
 
 
 #' @export
+plot.map_estimate <- function(x, ...) {
+  if (!requireNamespace("see", quietly = TRUE)) {
+    stop("Package 'see' needed to plot point-estimates. Please install it by running `install.packages('see')`.")
+  }
+  NextMethod()
+}
+
+
+#' @export
 plot.rope <- function(x, ...) {
   if (!requireNamespace("see", quietly = TRUE)) {
     stop("Package 'see' needed to plot ROPE. Please install it by running `install.packages('see')`.")
@@ -44,7 +53,7 @@ plot.hdi <- function(x, ...) {
 
 
 #' @export
-plot.bayestestR_ci <- function(x, ...) {
+plot.eti <- function(x, ...) {
   if (!requireNamespace("see", quietly = TRUE)) {
     stop("Package 'see' needed to plot credible intervals. Please install it by running `install.packages('see')`.")
   }

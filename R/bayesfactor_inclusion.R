@@ -4,7 +4,7 @@
 #' @author Mattan S. Ben-Shachar
 #' @param models An object of class \code{\link{bayesfactor_models}} or \code{BFBayesFactor}.
 #' @param match_models See details.
-#' @param prior_odds Optional vector of prior odds for the models. See \code{\link[BayesFactor]{priorOdds<-}}.
+#' @param prior_odds Optional vector of prior odds for the models. See \code{BayesFactor::priorOdds<-}.
 #' @param ... Arguments passed to or from other methods.
 #'
 #' @return a data frame containing the prior and posterior probabilities, and BF for each effect.
@@ -64,7 +64,6 @@
 bayesfactor_inclusion <- function(models, match_models = FALSE, prior_odds = NULL, ...) {
   UseMethod("bayesfactor_inclusion")
 }
-
 
 
 #' @export
@@ -212,6 +211,8 @@ bayesfactor_inclusion.BFBayesFactor <- function(models, match_models = FALSE, pr
   for (m in seq_len(nrow(df.model))) {
     tmp_terms <- make_terms(df.model$Modelnames[m])
     if (length(tmp_terms) > 0) {
+      missing_terms <- !tmp_terms %in% colnames(df.model) # For R < 3.6.0
+      if (any(missing_terms)) df.model[, tmp_terms[missing_terms]] <- NA # For R < 3.6.0
       df.model[m, tmp_terms] <- TRUE
     }
   }

@@ -41,7 +41,7 @@
   
 <meta property="og:title" content="ROPE-based p-value — p_rope" />
 
-<meta property="og:description" content="Compute the ROPE-based p-value, an exploratory index representing the maximum percentage of HDI that does not contain (positive values) or is entirely contained (negative values) in the negligible values space defined by the ROPE. It differs from the ROPE percentage, i.e., from the proportion of a given CI in the ROPE, as it represents the maximum CI to reach a ROPE proportion of 0% (positive values) or 100% (negative values). A ROPE-based p of 97% means that there is a probability of .97 that a parameter (described by its posterior distribution) is outside the ROPE. On the contrary, a ROPE-based p of -97% means that there is a probability of .97 that the parameter is inside the ROPE." />
+<meta property="og:description" content="The ROPE-based p-value is an exploratory and non-validated index representing the maximum percentage of HDI that does not contain (or is entirely contained, in which case the value is prefixed with a negative sign), in the negligible values space defined by the ROPE. It differs from the ROPE percentage, i.e., from the proportion of a given CI in the ROPE, as it represents the maximum CI values needed to reach a ROPE proportion of 0% or 100%. Whether the index reflects the ROPE reaching 0% or 100% is indicated through the sign: a negative sign is added to indicate that the probability corresponds to the probability of a not significant effect (a percentage in ROPE of 100%). For instance, a ROPE-based p of 97% means that there is a probability of .97 that a parameter (described by its posterior distribution) is outside the ROPE. In other words, the 97% HDI is the maximum HDI level for which the percentage in ROPE is 0%. On the contrary, a ROPE-based p of -97% indicates that there is a probability of .97 that the parameter is inside the ROPE (percentage in ROPE of 100%). A value close to 0% would indicate that the mode of the distribution falls perfectly at the edge of the ROPE, in which case the percentage of HDI needed to be on either side of the ROPE becomes infinitely small. Negative values do not refer to negative values per se, simply indicating that the value corresponds to non-significance rather than significance." />
 
 <meta property="og:image" content="/logo.png" />
 <meta name="twitter:card" content="summary" />
@@ -84,7 +84,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bayestestR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.5</span>
       </span>
     </div>
 
@@ -181,7 +181,7 @@
 
     <div class="ref-description">
     
-    <p>Compute the ROPE-based p-value, an exploratory index representing the maximum percentage of <a href='hdi.html'>HDI</a> that does not contain (positive values) or is entirely contained (negative values) in the negligible values space defined by the <a href='rope.html'>ROPE</a>. It differs from the ROPE percentage, <em>i.e.</em>, from the proportion of a given CI in the ROPE, as it represents the maximum CI to reach a ROPE proportion of 0% (positive values) or 100% (negative values). A ROPE-based <em>p</em> of 97% means that there is a probability of .97 that a parameter (described by its posterior distribution) is outside the ROPE. On the contrary, a ROPE-based p of -97% means that there is a probability of .97 that the parameter is inside the ROPE.</p>
+    <p>The ROPE-based <em>p</em>-value is an exploratory and non-validated index representing the maximum percentage of <a href='hdi.html'>HDI</a> that does not contain (or is entirely contained, in which case the value is prefixed with a negative sign), in the negligible values space defined by the <a href='rope.html'>ROPE</a>. It differs from the ROPE percentage, <em>i.e.</em>, from the proportion of a given CI in the ROPE, as it represents the maximum CI values needed to reach a ROPE proportion of 0% or 100%. Whether the index reflects the ROPE reaching 0% or 100% is indicated through the sign: a negative sign is added to indicate that the probability corresponds to the probability of a not significant effect (a percentage in ROPE of 100%). For instance, a ROPE-based <em>p</em> of 97% means that there is a probability of .97 that a parameter (described by its posterior distribution) is outside the ROPE. In other words, the 97% HDI is the maximum HDI level for which the percentage in ROPE is 0%. On the contrary, a ROPE-based p of -97% indicates that there is a probability of .97 that the parameter is inside the ROPE (percentage in ROPE of 100%). A value close to 0% would indicate that the mode of the distribution falls perfectly at the edge of the ROPE, in which case the percentage of HDI needed to be on either side of the ROPE becomes infinitely small. Negative values do not refer to negative values <em>per se</em>, simply indicating that the value corresponds to non-significance rather than significance.</p>
     
     </div>
 
@@ -214,8 +214,7 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>Vector representing a posterior distribution. Can also be a
-<code>stanreg</code>, <code>brmsfit</code> or a <code>BayesFactor</code> model.</p></td>
+      <td><p>Vector representing a posterior distribution. Can also be a <code>stanreg</code> or <code>brmsfit</code> model.</p></td>
     </tr>
     <tr>
       <th>...</th>
@@ -223,7 +222,7 @@
     </tr>
     <tr>
       <th>range</th>
-      <td><p>ROPE's lower and higher bounds. Should be a list of two values (e.g., <code><a href='https://www.rdocumentation.org/packages/base/topics/c'>c(-0.1, 0.1)</a></code>) or <code>"default"</code>. If <code>"default"</code>, the range is set to <code><a href='https://www.rdocumentation.org/packages/base/topics/c'>c(0.1, 0.1)</a></code> if input is a vector and <code>x +- 0.1*SD(response)</code> if a Bayesian model is provided.</p></td>
+      <td><p>ROPE's lower and higher bounds. Should be a vector of length two (e.g., <code><a href='https://www.rdocumentation.org/packages/base/topics/c'>c(-0.1, 0.1)</a></code>) or <code>"default"</code>. If <code>"default"</code>, the range is set to <code><a href='https://www.rdocumentation.org/packages/base/topics/c'>c(-0.1, 0.1)</a></code> if input is a vector, and based on <code><a href='rope_range.html'>rope_range()</a></code> if a Bayesian model is provided.</p></td>
     </tr>
     <tr>
       <th>precision</th>
@@ -262,81 +261,16 @@ applies to <span class="pkg">brms</span>-models.</p></td>
   <span class='kw'>precision</span> <span class='kw'>=</span> <span class='fl'>1</span>
 )</div><div class='output co'>#&gt; <span style='color: #0000BB;'># ROPE-based p-value
 #&gt; 
-#&gt; </span><span>p (ROPE) = 58.00%</div><div class='input'>
+#&gt; </span><span>p (ROPE) = 61.00%</div><div class='input'>
 <span class='no'>df</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/data.frame'>data.frame</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/lapply'>replicate</a></span>(<span class='fl'>4</span>, <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/Normal'>rnorm</a></span>(<span class='fl'>100</span>)))
 <span class='fu'>p_rope</span>(<span class='no'>df</span>, <span class='kw'>precision</span> <span class='kw'>=</span> <span class='fl'>1</span>)</div><div class='output co'>#&gt; </span><span style='color: #0000BB;'># ROPE-based p-value
 #&gt; 
-#&gt; </span><span>  X1:  4.00%
-#&gt;   X2:  3.00%
-#&gt;   X3: 26.00%
-#&gt;   X4: 29.00%</div><div class='input'>
+#&gt; </span><span>  X1:  5.00%
+#&gt;   X2: 40.00%
+#&gt;   X3:  5.00%
+#&gt;   X4: 26.00%</div><div class='input'>
 <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>rstanarm</span>)
-<span class='no'>model</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/rstanarm/topics/stan_glm'>stan_glm</a></span>(<span class='no'>mpg</span> ~ <span class='no'>wt</span> + <span class='no'>gear</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>mtcars</span>, <span class='kw'>chains</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>iter</span> <span class='kw'>=</span> <span class='fl'>200</span>)</div><div class='output co'>#&gt; 
-#&gt; SAMPLING FOR MODEL 'continuous' NOW (CHAIN 1).
-#&gt; Chain 1: 
-#&gt; Chain 1: Gradient evaluation took 0 seconds
-#&gt; Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0 seconds.
-#&gt; Chain 1: Adjust your expectations accordingly!
-#&gt; Chain 1: 
-#&gt; Chain 1: 
-#&gt; Chain 1: WARNING: There aren't enough warmup iterations to fit the
-#&gt; Chain 1:          three stages of adaptation as currently configured.
-#&gt; Chain 1:          Reducing each adaptation stage to 15%/75%/10% of
-#&gt; Chain 1:          the given number of warmup iterations:
-#&gt; Chain 1:            init_buffer = 15
-#&gt; Chain 1:            adapt_window = 75
-#&gt; Chain 1:            term_buffer = 10
-#&gt; Chain 1: 
-#&gt; Chain 1: Iteration:   1 / 200 [  0%]  (Warmup)
-#&gt; Chain 1: Iteration:  20 / 200 [ 10%]  (Warmup)
-#&gt; Chain 1: Iteration:  40 / 200 [ 20%]  (Warmup)
-#&gt; Chain 1: Iteration:  60 / 200 [ 30%]  (Warmup)
-#&gt; Chain 1: Iteration:  80 / 200 [ 40%]  (Warmup)
-#&gt; Chain 1: Iteration: 100 / 200 [ 50%]  (Warmup)
-#&gt; Chain 1: Iteration: 101 / 200 [ 50%]  (Sampling)
-#&gt; Chain 1: Iteration: 120 / 200 [ 60%]  (Sampling)
-#&gt; Chain 1: Iteration: 140 / 200 [ 70%]  (Sampling)
-#&gt; Chain 1: Iteration: 160 / 200 [ 80%]  (Sampling)
-#&gt; Chain 1: Iteration: 180 / 200 [ 90%]  (Sampling)
-#&gt; Chain 1: Iteration: 200 / 200 [100%]  (Sampling)
-#&gt; Chain 1: 
-#&gt; Chain 1:  Elapsed Time: 0.012 seconds (Warm-up)
-#&gt; Chain 1:                0.013 seconds (Sampling)
-#&gt; Chain 1:                0.025 seconds (Total)
-#&gt; Chain 1: 
-#&gt; 
-#&gt; SAMPLING FOR MODEL 'continuous' NOW (CHAIN 2).
-#&gt; Chain 2: 
-#&gt; Chain 2: Gradient evaluation took 0 seconds
-#&gt; Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 0 seconds.
-#&gt; Chain 2: Adjust your expectations accordingly!
-#&gt; Chain 2: 
-#&gt; Chain 2: 
-#&gt; Chain 2: WARNING: There aren't enough warmup iterations to fit the
-#&gt; Chain 2:          three stages of adaptation as currently configured.
-#&gt; Chain 2:          Reducing each adaptation stage to 15%/75%/10% of
-#&gt; Chain 2:          the given number of warmup iterations:
-#&gt; Chain 2:            init_buffer = 15
-#&gt; Chain 2:            adapt_window = 75
-#&gt; Chain 2:            term_buffer = 10
-#&gt; Chain 2: 
-#&gt; Chain 2: Iteration:   1 / 200 [  0%]  (Warmup)
-#&gt; Chain 2: Iteration:  20 / 200 [ 10%]  (Warmup)
-#&gt; Chain 2: Iteration:  40 / 200 [ 20%]  (Warmup)
-#&gt; Chain 2: Iteration:  60 / 200 [ 30%]  (Warmup)
-#&gt; Chain 2: Iteration:  80 / 200 [ 40%]  (Warmup)
-#&gt; Chain 2: Iteration: 100 / 200 [ 50%]  (Warmup)
-#&gt; Chain 2: Iteration: 101 / 200 [ 50%]  (Sampling)
-#&gt; Chain 2: Iteration: 120 / 200 [ 60%]  (Sampling)
-#&gt; Chain 2: Iteration: 140 / 200 [ 70%]  (Sampling)
-#&gt; Chain 2: Iteration: 160 / 200 [ 80%]  (Sampling)
-#&gt; Chain 2: Iteration: 180 / 200 [ 90%]  (Sampling)
-#&gt; Chain 2: Iteration: 200 / 200 [100%]  (Sampling)
-#&gt; Chain 2: 
-#&gt; Chain 2:  Elapsed Time: 0.014 seconds (Warm-up)
-#&gt; Chain 2:                0.014 seconds (Sampling)
-#&gt; Chain 2:                0.028 seconds (Total)
-#&gt; Chain 2: </div><div class='output co'>#&gt; <span class='warning'>Warning: Bulk Effective Samples Size (ESS) is too low, indicating posterior means and medians may be unreliable.</span>
+<span class='no'>model</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/rstanarm/topics/stan_glm'>stan_glm</a></span>(<span class='no'>mpg</span> ~ <span class='no'>wt</span> + <span class='no'>gear</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>mtcars</span>, <span class='kw'>chains</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>iter</span> <span class='kw'>=</span> <span class='fl'>200</span>, <span class='kw'>refresh</span> <span class='kw'>=</span> <span class='fl'>0</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Bulk Effective Samples Size (ESS) is too low, indicating posterior means and medians may be unreliable.</span>
 #&gt; <span class='warning'>Running the chains for more iterations may help. See</span>
 #&gt; <span class='warning'>http://mc-stan.org/misc/warnings.html#bulk-ess</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Tail Effective Samples Size (ESS) is too low, indicating posterior variances and tail quantiles may be unreliable.</span>
 #&gt; <span class='warning'>Running the chains for more iterations may help. See</span>
@@ -344,7 +278,7 @@ applies to <span class="pkg">brms</span>-models.</p></td>
 #&gt; 
 #&gt; </span><span>  (Intercept): 100.00%
 #&gt;   wt         : 100.00%
-#&gt;   gear       :   1.00%</div><div class='input'>
+#&gt;   gear       :  -7.00%</div><div class='input'>
 <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>emmeans</span>)
 <span class='fu'>p_rope</span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/emmeans/topics/emtrends'>emtrends</a></span>(<span class='no'>model</span>, ~<span class='fl'>1</span>, <span class='st'>"wt"</span>))</div><div class='output co'>#&gt; </span><span style='color: #0000BB;'># ROPE-based p-value
 #&gt; 
