@@ -2,10 +2,12 @@
 % Please edit documentation in R/bayesfactor_inclusion.R
 \name{bayesfactor_inclusion}
 \alias{bayesfactor_inclusion}
+\alias{bf_inclusion}
 \title{Inclusion Bayes Factors for testing predictors across Bayesian models}
 \usage{
-bayesfactor_inclusion(models, match_models = FALSE, prior_odds = NULL,
-  ...)
+bayesfactor_inclusion(models, match_models = FALSE, prior_odds = NULL, ...)
+
+bf_inclusion(models, match_models = FALSE, prior_odds = NULL, ...)
 }
 \arguments{
 \item{models}{An object of class \code{\link{bayesfactor_models}} or \code{BFBayesFactor}.}
@@ -17,32 +19,41 @@ bayesfactor_inclusion(models, match_models = FALSE, prior_odds = NULL,
 \item{...}{Arguments passed to or from other methods.}
 }
 \value{
-a data frame containing the prior and posterior probabilities, and BF for each effect.
+a data frame containing the prior and posterior probabilities, and log(BF) for each effect.
 }
 \description{
-Inclusion Bayes Factors for testing predictors across Bayesian models
+The \code{bf_*} function is an alias of the main function.
+\cr \cr
+For more info, see \href{https://easystats.github.io/bayestestR/articles/bayes_factors.html}{the Bayes factors vignette}.
 }
 \details{
 Inclusion Bayes factors answer the question: Are the observed data more
 probable under models with a particular effect, than they are under models without
 that particular effect? In other words, on average - are models with effect \eqn{X}
 more likely to have produced the observed data than models without effect \eqn{X}?
-\cr \cr
-For more info, see \href{https://easystats.github.io/bayestestR/articles/bayes_factors.html}{the Bayes factors vignette}.
 
 \subsection{Match Models}{
 If \code{match_models=FALSE} (default), Inclusion BFs are computed by comparing all models
-with a predictor against all models without that predictor. If \code{TRUE},
+with a term against all models without that term. If \code{TRUE},
 comparison is restricted to models that (1) do not include any interactions
-with the predictor of interest; (2) for interaction predictors, averaging is done
-only across models that containe the main effect from which the interaction
-predictor is comprised.
+with the term of interest; (2) for interaction terms, averaging is done
+only across models that containe the main effect terms from which the interaction
+term is comprised.
 }
 }
 \note{
-Random effects in the \code{lme} style will be displayed as interactions:
-i.e., \code{(X|G)} will become \code{1:G} and \code{X:G}.
+Random effects in the \code{lmer} style are converted to interaction terms:
+i.e., \code{(X|G)} will become the terms \code{1:G} and \code{X:G}.
 }
+\section{Interpreting Bayes Factors}{
+
+A Bayes factor greater than 1 can be interpreted as evidence against the
+null, at which one convention is that a Bayes factor greater than 3 can be
+considered as "substantial" evidence against the null (and vice versa, a
+Bayes factor smaller than 1/3 indicates substantial evidence in favor of the
+null-model) (\cite{Wetzels et al. 2011}).
+}
+
 \examples{
 library(bayestestR)
 
@@ -72,8 +83,11 @@ bayesfactor_inclusion(BF, match_models = TRUE)
 \itemize{
   \item Hinne, M., Gronau, Q. F., van den Bergh, D., and Wagenmakers, E. (2019, March 25). A conceptual introduction to Bayesian Model Averaging. \doi{10.31234/osf.io/wgb64}
   \item Clyde, M. A., Ghosh, J., & Littman, M. L. (2011). Bayesian adaptive sampling for variable selection and model averaging. Journal of Computational and Graphical Statistics, 20(1), 80-101.
-  \item Mathot. S. (2017). Bayes like a Baws: Interpreting Bayesian Repeated Measures in JASP [Blog post]. Retrieved from https://www.cogsci.nl/blog/interpreting-bayesian-repeated-measures-in-jasp
+  \item Mathot, S. (2017). Bayes like a Baws: Interpreting Bayesian Repeated Measures in JASP [Blog post]. Retrieved from https://www.cogsci.nl/blog/interpreting-bayesian-repeated-measures-in-jasp
 }
+}
+\seealso{
+\code{\link{weighted_posteriors}} for Bayesian parameter averaging.
 }
 \author{
 Mattan S. Ben-Shachar

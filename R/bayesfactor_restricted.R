@@ -3,7 +3,9 @@
 #' This method computes Bayes factors for comparing a model with an order restrictions on its parameters
 #' with the fully unrestricted model. \emph{Note that this method should only be used for confirmatory analyses}.
 #' \cr \cr
-#' For more info, see \href{https://easystats.github.io/bayestestR/articles/bayes_factors.html}{the Bayes factors vignette}.
+#' The \code{bf_*} function is an alias of the main function.
+#' \cr \cr
+#' \strong{For more info, in particular on specifying correct priors for factors with more than 2 levels, see \href{https://easystats.github.io/bayestestR/articles/bayes_factors.html}{the Bayes factors vignette}.}
 #'
 #' @param posterior A \code{stanreg} / \code{brmsfit} object, \code{emmGrid} or a data frame - representing a posterior distribution(s) from (see Details).
 #' @param hypothesis A character vector specifying the restrictions as logical conditions (see examples below).
@@ -13,37 +15,15 @@
 #' @details This method is used to compute Bayes factors for order-restricted models vs un-restricted
 #' models by setting an order restriction on the prior and posterior distributions
 #' (\cite{Morey & Wagenmakers, 2013}).
+#' \cr\cr
+#' (Though it is possible to use \code{bayesfactor_restricted()} to test interval restrictions,
+#' it is more suitable for testing order restrictions; see examples).
 #'
-#' (Though it is possible to use \code{bayesfactor_restricted} to test interval restrictions,
-#' it is more suitable for testing order restrictions (see examples)).
+#' @inheritSection bayesfactor_parameters Setting the correct \code{prior}
 #'
-#' When \code{posterior} is a model (\code{stanreg}, \code{brmsfit}), posterior and prior samples are
-#' extracted for each parameter, and Savage-Dickey Bayes factors are computed for each parameter.
+#' @inheritSection bayesfactor_parameters Interpreting Bayes Factors
 #'
-#' \strong{NOTE:} For \code{brmsfit} models, the model must have been fitted with \emph{custom (non-default)} priors. See example below.
-#'
-#' \subsection{Setting the correct \code{prior}}{
-#' It is important to provide the correct \code{prior} for meaningful results.
-#' \itemize{
-#'   \item When \code{posterior} is a \code{data.frame}, \code{prior} should also be a \code{data.frame}, with matching column order.
-#'   \item When \code{posterior} is a \code{stanreg} or \code{brmsfit} model: \itemize{
-#'     \item \code{prior} can be set to \code{NULL}, in which case prior samples are drawn internally.
-#'     \item \code{prior} can also be a model equvilant to \code{posterior} but with samples from the priors \emph{only}.
-#'   }
-#'   \item When \code{posterior} is an \code{emmGrid} object: \itemize{
-#'     \item \code{prior} should be the \code{stanreg} or \code{brmsfit} model used to create the \code{emmGrid} objects.
-#'     \item \code{prior} can also be an \code{emmGrid} object equvilant to \code{posterior} but created with a model of priors samples \emph{only}.
-#'   }
-#' }}
-#' \subsection{Interpreting Bayes Factors}{
-#' A Bayes factor greater than 1 can be interpereted as evidence against the null,
-#' at which one convention is that a Bayes factor greater than 3 can be considered
-#' as "substantial" evidence against the null (and vice versa, a Bayes factor
-#' smaller than 1/3 indicates substantial evidence in favor of the null-hypothesis)
-#' (\cite{Wetzels et al. 2011}).
-#' }
-#'
-#' @return A data frame containing the Bayes factor representing evidence \emph{against} the un-restricted model.
+#' @return A data frame containing the (log) Bayes factor representing evidence \emph{against} the un-restricted model.
 #'
 #' @examples
 #' library(bayestestR)
@@ -68,39 +48,37 @@
 #' \dontrun{
 #' # rstanarm models
 #' # ---------------
-#' library(rstanarm)
-#' fit_stan <- stan_glm(mpg ~ wt + cyl + am,
-#'   data = mtcars
-#' )
-#' hyps <- c(
-#'   "am > 0 & cyl < 0",
-#'   "cyl < 0",
-#'   "wt - cyl > 0"
-#' )
-#' bayesfactor_restricted(fit_stan, hypothesis = hyps)
+#' if (require("rstanarm") && require("emmeans")) {
+#'   fit_stan <- stan_glm(mpg ~ wt + cyl + am,
+#'     data = mtcars, refresh = 0
+#'   )
+#'   hyps <- c(
+#'     "am > 0 & cyl < 0",
+#'     "cyl < 0",
+#'     "wt - cyl > 0"
+#'   )
+#'   bayesfactor_restricted(fit_stan, hypothesis = hyps)
 #'
-#' # emmGrid objects
-#' # ---------------
-#' library(emmeans)
-#' options(contrasts = c("contr.bayes", "contr.bayes")) # see `bfrms` package
+#'   # emmGrid objects
+#'   # ---------------
+#'   # replicating http://bayesfactor.blogspot.com/2015/01/multiple-comparisons-with-bayesfactor-2.html
+#'   disgust_data <- read.table(url("http://www.learnbayes.org/disgust_example.txt"), header = TRUE)
 #'
-#' # replicating http://bayesfactor.blogspot.com/2015/01/multiple-comparisons-with-bayesfactor-2.html
-#' disgust_data <- read.table(url("http://www.learnbayes.org/disgust_example.txt"), header = TRUE)
+#'   contrasts(disgust_data$condition) <- contr.orthonorm # see vignette
+#'   fit_model <- stan_glm(score ~ condition, data = disgust_data, family = gaussian())
 #'
-#' fit_model <- stan_glm(score ~ condition, data = disgust_data, family = gaussian())
+#'   em_condition <- emmeans(fit_model, ~condition)
+#'   hyps <- c("lemon < control & control < sulfur")
 #'
-#' em_condition <- emmeans(fit_model, ~condition)
-#' hyps <- c("lemon < control & control < sulfur")
-#'
-#' bayesfactor_restricted(em_condition, prior = fit_model, hypothesis = hyps)
-#' # > # Bayes Factor (Order-Restriction)
-#' # >
-#' # >                          Hypothesis P(Prior) P(Posterior) Bayes Factor
-#' # >  lemon < control & control < sulfur     0.17         0.75         4.49
-#' # > ---
-#' # > Bayes factors for the restricted movel vs. the un-restricted model.
+#'   bayesfactor_restricted(em_condition, prior = fit_model, hypothesis = hyps)
+#'   # > # Bayes Factor (Order-Restriction)
+#'   # >
+#'   # >                          Hypothesis P(Prior) P(Posterior)   BF
+#'   # >  lemon < control & control < sulfur     0.17         0.75 4.49
+#'   # > ---
+#'   # > Bayes factors for the restricted model vs. the un-restricted model.
 #' }
-#'
+#' }
 #' @references
 #' \itemize{
 #' \item Morey, R. D., & Wagenmakers, E. J. (2014). Simple relation between Bayesian order-restricted and point-null hypothesis tests. Statistics & Probability Letters, 92, 121-124.
@@ -113,26 +91,28 @@ bayesfactor_restricted <- function(posterior, hypothesis, prior = NULL, verbose 
   UseMethod("bayesfactor_restricted")
 }
 
-#' @importFrom insight get_parameters
+#' @rdname bayesfactor_restricted
+#' @export
+bf_restricted <- bayesfactor_restricted
+
 #' @rdname bayesfactor_restricted
 #' @export
 bayesfactor_restricted.stanreg <- function(posterior, hypothesis, prior = NULL,
                                            verbose = TRUE,
                                            effects = c("fixed", "random", "all"),
+                                           component = c("conditional", "zi", "zero_inflated", "all"),
                                            ...) {
   effects <- match.arg(effects)
+  component <- match.arg(component)
 
-  # Get Priors
-  if (is.null(prior)) {
-    prior <- .update_to_priors(posterior, verbose = verbose)
-  }
-
-  prior <- insight::get_parameters(prior, effects = effects)
-  posterior <- insight::get_parameters(posterior, effects = effects)
+  samps <- .clean_priors_and_posteriors(posterior, prior,
+    effects, component,
+    verbose = verbose
+  )
 
   # Get savage-dickey BFs
   bayesfactor_restricted.data.frame(
-    posterior = posterior, prior = prior,
+    posterior = samps$posterior, prior = samps$prior,
     hypothesis = hypothesis
   )
 }
@@ -141,37 +121,38 @@ bayesfactor_restricted.stanreg <- function(posterior, hypothesis, prior = NULL,
 #' @export
 bayesfactor_restricted.brmsfit <- bayesfactor_restricted.stanreg
 
-#' @importFrom stats update
-#' @importFrom insight get_parameters
+#' @rdname bayesfactor_restricted
+#' @export
+bayesfactor_restricted.blavaan <- function(posterior, hypothesis, prior = NULL,
+                                           verbose = TRUE, ...) {
+  samps <- .clean_priors_and_posteriors(posterior, prior,
+                                        verbose = verbose)
+
+  # Get savage-dickey BFs
+  bayesfactor_restricted.data.frame(
+    posterior = samps$posterior, prior = samps$prior,
+    hypothesis = hypothesis
+  )
+}
+
+
 #' @rdname bayesfactor_restricted
 #' @export
 bayesfactor_restricted.emmGrid <- function(posterior, hypothesis, prior = NULL,
                                            verbose = TRUE,
                                            ...) {
-  if (!requireNamespace("emmeans")) {
-    stop("Package \"emmeans\" needed for this function to work. Please install it.")
-  }
-
-  if (is.null(prior)) {
-    prior <- posterior
-    warning(
-      "Prior not specified! ",
-      "Please provide the original model to get meaningful results."
-    )
-  } else if (!inherits(prior, "emmGrid")) { # then is it a model
-    prior <- .update_to_priors(prior, verbose = verbose)
-    prior <- insight::get_parameters(prior, effects = "fixed")
-    prior <- stats::update(posterior, post.beta = as.matrix(prior))
-  }
-
-  prior <- as.data.frame(as.matrix(emmeans::as.mcmc.emmGrid(prior, names = FALSE)))
-  posterior <- as.data.frame(as.matrix(emmeans::as.mcmc.emmGrid(posterior, names = FALSE)))
+  samps <- .clean_priors_and_posteriors(posterior, prior,
+    verbose = verbose
+  )
 
   bayesfactor_restricted.data.frame(
-    posterior = posterior, prior = prior,
+    posterior = samps$posterior, prior = samps$prior,
     hypothesis = hypothesis
   )
 }
+
+#' @export
+bayesfactor_restricted.emm_list <- bayesfactor_restricted.emmGrid
 
 #' @export
 bayesfactor_restricted.data.frame <- function(posterior, hypothesis, prior = NULL, ...) {
@@ -207,9 +188,9 @@ bayesfactor_restricted.data.frame <- function(posterior, hypothesis, prior = NUL
   BF <- posterior_p / prior_p
   res <- data.frame(
     Hypothesis = hypothesis,
-    Prior_prob = prior_p,
-    Posterior_prob = posterior_p,
-    BF = BF
+    p_prior = prior_p,
+    p_posterior = posterior_p,
+    log_BF = log(BF)
   )
 
   class(res) <- unique(c(

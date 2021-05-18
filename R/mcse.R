@@ -15,12 +15,14 @@
 #'
 #' @examples
 #' \dontrun{
+#' library(bayestestR)
 #' library(rstanarm)
 #'
-#' model <- stan_glm(mpg ~ wt + am, data = mtcars, chains = 1)
+#' model <- stan_glm(mpg ~ wt + am, data = mtcars, chains = 1, refresh = 0)
 #' mcse(model)
 #' }
 #' @importFrom insight get_parameters
+#' @importFrom stats setNames
 #' @export
 mcse <- function(model, ...) {
   UseMethod("mcse")
@@ -33,7 +35,7 @@ mcse.brmsfit <- function(model, effects = c("fixed", "random", "all"), component
   effects <- match.arg(effects)
   component <- match.arg(component)
 
-  pars <-
+  params <-
     insight::get_parameters(
       model,
       effects = effects,
@@ -49,20 +51,22 @@ mcse.brmsfit <- function(model, effects = c("fixed", "random", "all"), component
       parameters = parameters
     )
 
-  mcse_helper(pars, ess$ESS)
+  .mcse(params, stats::setNames(ess$ESS, ess$Parameter))
 }
 
 
 #' @rdname mcse
 #' @export
-mcse.stanreg <- function(model, effects = c("fixed", "random", "all"), parameters = NULL, ...) {
+mcse.stanreg <- function(model, effects = c("fixed", "random", "all"), component = c("location", "all", "conditional", "smooth_terms", "sigma", "distributional", "auxiliary"), parameters = NULL, ...) {
   # check arguments
   effects <- match.arg(effects)
+  component <- match.arg(component)
 
-  pars <-
+  params <-
     insight::get_parameters(
       model,
       effects = effects,
+      component = component,
       parameters = parameters
     )
 
@@ -70,22 +74,41 @@ mcse.stanreg <- function(model, effects = c("fixed", "random", "all"), parameter
     effective_sample(
       model,
       effects = effects,
+      component = component,
       parameters = parameters
     )
 
-  mcse_helper(pars, ess$ESS)
+  .mcse(params, stats::setNames(ess$ESS, ess$Parameter))
 }
 
 
 
-#' @importFrom stats sd
-mcse_helper <- function(pars, ess) {
+#' @export
+mcse.stanfit <- mcse.stanreg
+
+
+#' @export
+mcse.blavaan <- mcse.stanreg
+
+
+#' @importFrom stats sd na.omit
+#' @keywords internal
+.mcse <- function(params, ess) {
   # get standard deviations from posterior samples
-  stddev <- sapply(pars, stats::sd)
+  stddev <- sapply(params, stats::sd)
+
+  # check proper length, and for unequal length, shorten all
+  # objects to common parameters
+  if (length(stddev) != length(ess)) {
+    common <- stats::na.omit(match(names(stddev), names(ess)))
+    stddev <- stddev[common]
+    ess <- ess[common]
+    params <- params[common]
+  }
 
   # compute mcse
   data.frame(
-    Parameter = colnames(pars),
+    Parameter = colnames(params),
     MCSE = stddev / sqrt(ess),
     stringsAsFactors = FALSE,
     row.names = NULL

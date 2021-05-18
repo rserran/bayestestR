@@ -2,10 +2,11 @@
 #'
 #' Compute the \strong{Highest Density Interval (HDI)} of posterior distributions. All points within this interval have a higher probability density than points outside the interval. The HDI can be used in the context of uncertainty characterisation of posterior distributions as \strong{Credible Interval (CI)}.
 #'
-#' @param x Vector representing a posterior distribution. Can also be a
-#'   \code{stanreg}, \code{brmsfit} or a \code{BayesFactor} model.
+#' @param x Vector representing a posterior distribution, or a data frame of such
+#'   vectors. Can also be a Bayesian model (\code{stanreg}, \code{brmsfit},
+#'   \code{MCMCglmm}, \code{mcmc} or \code{bcplm}) or a \code{BayesFactor} model.
 #' @param ci Value or vector of probability of the (credible) interval - CI (between 0 and 1)
-#'   to be estimated. Default to \code{.89} (89\%).
+#'   to be estimated. Default to \code{.95} (95\%).
 #' @param effects Should results for fixed effects, random effects or both be returned?
 #'   Only applies to mixed models. May be abbreviated.
 #' @param component Should results for all parameters, parameters for the conditional model
@@ -19,23 +20,34 @@
 #' @param verbose Toggle off warnings.
 #' @param ... Currently not used.
 #'
-#'
+#' @note There is also a \href{https://easystats.github.io/see/articles/bayestestR.html}{\code{plot()}-method} implemented in the \href{https://easystats.github.io/see/}{\pkg{see}-package}.
 #'
 #' @details Unlike equal-tailed intervals (see \code{eti()}) that typically exclude 2.5\%
 #' from each tail of the distribution and always include the median, the HDI is
 #' \emph{not} equal-tailed and therefore always includes the mode(s) of posterior
 #' distributions.
 #' \cr \cr
-#' By default, \code{hdi()} and \code{eti()} return the 89\% intervals (\code{ci = 0.89}),
-#' deemed to be more stable than, for instance, 95\% intervals (\cite{Kruschke, 2014}).
-#' An effective sample size of at least 10.000 is recommended if 95\% intervals
-#' should be computed (\cite{Kruschke, 2014, p. 183ff}). Moreover, 89 indicates
-#' the arbitrariness of interval limits - its only remarkable property is being
+#' The \href{https://easystats.github.io/bayestestR/articles/credible_interval.html}{95\% or 89\% Credible Intervals (CI)}
+#' are two reasonable ranges to characterize the uncertainty related to the estimation (see \href{https://easystats.github.io/bayestestR/articles/credible_interval.html}{here} for a discussion about the differences between these two values).
+#' \cr
+#' The 89\% intervals (\code{ci = 0.89}) are deemed to be more stable than, for
+#' instance, 95\% intervals (\cite{Kruschke, 2014}).
+#' An effective sample size of at least 10.000 is recommended if one wants to estimate
+#' 95\% intervals with high precision (\cite{Kruschke, 2014, p. 183ff}). Unfortunately, the default number of posterior samples for most Bayes packages (e.g., `rstanarm` or `brms`) is only 4.000 (thus, you might want to increase it when fitting your model). Moreover,
+#' 89 indicates the arbitrariness of interval limits - its only remarkable property is being
 #' the highest prime number that does not exceed the already unstable 95\%
 #' threshold (\cite{McElreath, 2015}).
+#' \cr
+#' However, 95\% has some \href{https://easystats.github.io/blog/posts/bayestestr_95/}{advantages too}.
+#' For instance, it shares (in the case of a normal posterior distribution) an intuitive relationship with the
+#' standard deviation and it conveys a more accurate image of the (artificial)
+#' bounds of the distribution. Also, because it is wider, it makes analyses more
+#' conservative (i.e., the probability of covering 0 is larger for the 95\% CI than
+#' for lower ranges such as 89\%), which is a good thing in the context of the
+#' reproducibility crisis.
 #' \cr \cr
-#' A 90\% equal-tailed interval (ETI) has 5\% of the distribution on either
-#' side of its limits. It indicates the 5th percentile and the 95h percentile.
+#' A 95\% equal-tailed interval (ETI) has 2.5\% of the distribution on either
+#' side of its limits. It indicates the 2.5th percentile and the 97.5h percentile.
 #' In symmetric distributions, the two methods of computing credible intervals,
 #' the ETI and the \link[=hdi]{HDI}, return similar results.
 #' \cr \cr
@@ -63,15 +75,15 @@
 #' df <- data.frame(replicate(4, rnorm(100)))
 #' hdi(df)
 #' hdi(df, ci = c(.80, .90, .95))
-#'
+#' \dontrun{
 #' library(rstanarm)
-#' model <- stan_glm(mpg ~ wt + gear, data = mtcars, chains = 2, iter = 200)
+#' model <- stan_glm(mpg ~ wt + gear, data = mtcars, chains = 2, iter = 200, refresh = 0)
 #' hdi(model)
 #' hdi(model, ci = c(.80, .90, .95))
 #'
 #' library(emmeans)
 #' hdi(emtrends(model, ~1, "wt"))
-#' \dontrun{
+#'
 #' library(brms)
 #' model <- brms::brm(mpg ~ wt + cyl, data = mtcars)
 #' hdi(model)
@@ -82,7 +94,6 @@
 #' hdi(bf)
 #' hdi(bf, ci = c(.80, .90, .95))
 #' }
-#'
 #' @author Credits go to \href{https://rdrr.io/cran/ggdistribute/src/R/stats.R}{ggdistribute} and \href{https://github.com/mikemeredith/HDInterval}{HDInterval}.
 #'
 #' @references \itemize{
@@ -99,73 +110,186 @@ hdi <- function(x, ...) {
 
 #' @rdname hdi
 #' @export
-hdi.numeric <- function(x, ci = .89, verbose = TRUE, ...) {
+hdi.numeric <- function(x, ci = 0.95, verbose = TRUE, ...) {
   out <- do.call(rbind, lapply(ci, function(i) {
     .hdi(x, ci = i, verbose = verbose)
   }))
-  class(out) <- unique(c("hdi", "see_hdi", "bayestestR_ci", "see_ci", class(out)))
+  class(out) <- unique(c("bayestestR_hdi", "see_hdi", "bayestestR_ci", "see_ci", class(out)))
   attr(out, "data") <- x
   out
 }
 
 
-
 #' @rdname hdi
 #' @export
-hdi.data.frame <- function(x, ci = .89, verbose = TRUE, ...) {
+hdi.data.frame <- function(x, ci = 0.95, verbose = TRUE, ...) {
   dat <- .compute_interval_dataframe(x = x, ci = ci, verbose = verbose, fun = "hdi")
-  attr(dat, "object_name") <- deparse(substitute(x), width.cutoff = 500)
+  attr(dat, "object_name") <- .safe_deparse(substitute(x))
   dat
 }
 
+
 #' @rdname hdi
 #' @export
-hdi.emmGrid <- function(x, ci = .89, verbose = TRUE, ...) {
-  if (!requireNamespace("emmeans")) {
-    stop("Package 'emmeans' required for this function to work. Please install it by running `install.packages('emmeans')`.")
-  }
-  xdf <- as.data.frame(as.matrix(emmeans::as.mcmc.emmGrid(x, names = FALSE)))
-  out <- hdi(xdf, ci = ci, verbose = verbose, ...)
-  attr(out, "object_name") <- deparse(substitute(x), width.cutoff = 500)
+hdi.MCMCglmm <- function(x, ci = 0.95, verbose = TRUE, ...) {
+  nF <- x$Fixed$nfl
+  d <- as.data.frame(x$Sol[, 1:nF, drop = FALSE])
+  dat <- .compute_interval_dataframe(x = d, ci = ci, verbose = verbose, fun = "hdi")
+  attr(dat, "data") <- deparse(substitute(x), width.cutoff = 500)
+  dat
+}
+
+
+#' @export
+hdi.bamlss <- function(x, ci = 0.95, component = c("all", "conditional", "location"), verbose = TRUE, ...) {
+  component <- match.arg(component)
+  d <- insight::get_parameters(x, component = component)
+  dat <- .compute_interval_dataframe(x = d, ci = ci, verbose = verbose, fun = "hdi")
+  dat <- .add_clean_parameters_attribute(dat, x)
+  attr(dat, "data") <- .safe_deparse(substitute(x))
+  dat
+}
+
+
+#' @export
+hdi.mcmc <- function(x, ci = 0.95, verbose = TRUE, ...) {
+  d <- as.data.frame(x)
+  dat <- .compute_interval_dataframe(x = d, ci = ci, verbose = verbose, fun = "hdi")
+  attr(dat, "data") <- .safe_deparse(substitute(x))
+  dat
+}
+
+
+#' @export
+hdi.bcplm <- function(x, ci = 0.95, verbose = TRUE, ...) {
+  d <- insight::get_parameters(x)
+  dat <- .compute_interval_dataframe(x = d, ci = ci, verbose = verbose, fun = "hdi")
+  attr(dat, "data") <- .safe_deparse(substitute(x))
+  dat
+}
+
+#' @export
+hdi.bayesQR <- hdi.bcplm
+
+#' @export
+hdi.blrm <- hdi.bcplm
+
+#' @export
+hdi.mcmc.list <- hdi.bcplm
+
+#' @export
+hdi.BGGM <- hdi.bcplm
+
+
+#' @rdname hdi
+#' @export
+hdi.sim.merMod <- function(x, ci = 0.95, effects = c("fixed", "random", "all"), parameters = NULL, verbose = TRUE, ...) {
+  effects <- match.arg(effects)
+  dat <- .compute_interval_simMerMod(x = x, ci = ci, effects = effects, parameters = parameters, verbose = verbose, fun = "hdi")
+  out <- dat$result
+  attr(out, "data") <- dat$data
   out
 }
 
+
+#' @rdname hdi
+#' @export
+hdi.sim <- function(x, ci = 0.95, parameters = NULL, verbose = TRUE, ...) {
+  dat <- .compute_interval_sim(x = x, ci = ci, parameters = parameters, verbose = verbose, fun = "hdi")
+  out <- dat$result
+  attr(out, "data") <- dat$data
+  out
+}
+
+
+#' @rdname hdi
+#' @export
+hdi.emmGrid <- function(x, ci = 0.95, verbose = TRUE, ...) {
+  xdf <- insight::get_parameters(x)
+
+  out <- hdi(xdf, ci = ci, verbose = verbose, ...)
+  attr(out, "object_name") <- .safe_deparse(substitute(x))
+  out
+}
+
+#' @export
+hdi.emm_list <- hdi.emmGrid
 
 
 #' @importFrom insight get_parameters
 #' @rdname hdi
 #' @export
-hdi.stanreg <- function(x, ci = .89, effects = c("fixed", "random", "all"), parameters = NULL, verbose = TRUE, ...) {
-  effects <- match.arg(effects)
-  out <- .compute_interval_stanreg(x, ci, effects, parameters, verbose, fun = "hdi")
-  attr(out, "object_name") <- deparse(substitute(x), width.cutoff = 500)
-  out
-}
-
-
-
-#' @rdname hdi
-#' @export
-hdi.brmsfit <- function(x, ci = .89, effects = c("fixed", "random", "all"), component = c("conditional", "zi", "zero_inflated", "all"), parameters = NULL, verbose = TRUE, ...) {
+hdi.stanreg <- function(x, ci = 0.95, effects = c("fixed", "random", "all"), component = c("location", "all", "conditional", "smooth_terms", "sigma", "distributional", "auxiliary"), parameters = NULL, verbose = TRUE, ...) {
   effects <- match.arg(effects)
   component <- match.arg(component)
-  out <- .compute_interval_brmsfit(x, ci, effects, component, parameters, verbose, fun = "hdi")
-  attr(out, "object_name") <- deparse(substitute(x), width.cutoff = 500)
+  cleaned_parameters <- insight::clean_parameters(x)
+
+  out <- .prepare_output(
+    hdi(insight::get_parameters(x, effects = effects, component = component, parameters = parameters), ci = ci, verbose = verbose, ...),
+    cleaned_parameters,
+    inherits(x, "stanmvreg")
+  )
+
+  attr(out, "clean_parameters") <- cleaned_parameters
+  attr(out, "object_name") <- .safe_deparse(substitute(x))
+  class(out) <- unique(c("bayestestR_hdi", "see_hdi", class(out)))
+  out
+}
+
+#' @export
+hdi.stanfit <- hdi.stanreg
+
+#' @export
+hdi.blavaan <- hdi.stanreg
+
+
+#' @rdname hdi
+#' @export
+hdi.brmsfit <- function(x, ci = 0.95, effects = c("fixed", "random", "all"), component = c("conditional", "zi", "zero_inflated", "all"), parameters = NULL, verbose = TRUE, ...) {
+  effects <- match.arg(effects)
+  component <- match.arg(component)
+  cleaned_parameters <- insight::clean_parameters(x)
+
+  out <- .prepare_output(
+    hdi(insight::get_parameters(x, effects = effects, component = component, parameters = parameters), ci = ci, verbose = verbose, ...),
+    cleaned_parameters
+  )
+
+  attr(out, "clean_parameters") <- cleaned_parameters
+  attr(out, "object_name") <- .safe_deparse(substitute(x))
+  class(out) <- unique(c("bayestestR_hdi", "see_hdi", class(out)))
   out
 }
 
 
 #' @rdname hdi
 #' @export
-hdi.BFBayesFactor <- function(x, ci = .89, verbose = TRUE, ...) {
+hdi.BFBayesFactor <- function(x, ci = 0.95, verbose = TRUE, ...) {
   out <- hdi(insight::get_parameters(x), ci = ci, verbose = verbose, ...)
-  attr(out, "object_name") <- deparse(substitute(x), width.cutoff = 500)
+  attr(out, "object_name") <- .safe_deparse(substitute(x))
   out
 }
+
+
+#' @export
+hdi.get_predicted <- function(x, ...) {
+  if ("iterations" %in% names(attributes(x))) {
+    out <- hdi(as.data.frame(t(attributes(x)$iterations)), ...)
+  } else {
+    stop("No iterations present in the output.")
+  }
+  attr(out, "object_name") <- .safe_deparse(substitute(x))
+  out
+}
+
+
+
+# Helper ------------------------------------------------------------------
+
 
 
 #' @keywords internal
-.hdi <- function(x, ci = .89, verbose = TRUE) {
+.hdi <- function(x, ci = 0.95, verbose = TRUE) {
   check_ci <- .check_ci_argument(x, ci, verbose)
 
   if (!is.null(check_ci)) {
@@ -180,7 +304,7 @@ hdi.BFBayesFactor <- function(x, ci = .89, verbose = TRUE, ...) {
       warning("`ci` is too small or x does not contain enough data points, returning NAs.")
     }
     return(data.frame(
-      "CI" = ci * 100,
+      "CI" = ci,
       "CI_low" = NA,
       "CI_high" = NA
     ))
@@ -193,7 +317,7 @@ hdi.BFBayesFactor <- function(x, ci = .89, verbose = TRUE, ...) {
       warning("`ci` is too large or x does not contain enough data points, returning NAs.")
     }
     return(data.frame(
-      "CI" = ci * 100,
+      "CI" = ci,
       "CI_low" = NA,
       "CI_high" = NA
     ))
@@ -217,7 +341,7 @@ hdi.BFBayesFactor <- function(x, ci = .89, verbose = TRUE, ...) {
   }
 
   data.frame(
-    "CI" = ci * 100,
+    "CI" = ci,
     "CI_low" = x_sorted[min_i],
     "CI_high" = x_sorted[min_i + window_size]
   )

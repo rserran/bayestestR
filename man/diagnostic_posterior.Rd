@@ -3,17 +3,38 @@
 \name{diagnostic_posterior}
 \alias{diagnostic_posterior}
 \alias{diagnostic_posterior.stanreg}
+\alias{diagnostic_posterior.stanmvreg}
 \alias{diagnostic_posterior.brmsfit}
 \title{Posteriors Sampling Diagnostic}
 \usage{
 diagnostic_posterior(posteriors, diagnostic = c("ESS", "Rhat"), ...)
 
-\method{diagnostic_posterior}{stanreg}(posteriors, diagnostic = "all",
-  effects = c("fixed", "random", "all"), parameters = NULL, ...)
+\method{diagnostic_posterior}{stanreg}(
+  posteriors,
+  diagnostic = "all",
+  effects = c("fixed", "random", "all"),
+  component = c("location", "all", "conditional", "smooth_terms", "sigma",
+    "distributional", "auxiliary"),
+  parameters = NULL,
+  ...
+)
 
-\method{diagnostic_posterior}{brmsfit}(posteriors, diagnostic = "all",
-  effects = c("fixed", "random", "all"), component = c("conditional",
-  "zi", "zero_inflated", "all"), parameters = NULL, ...)
+\method{diagnostic_posterior}{stanmvreg}(
+  posteriors,
+  diagnostic = "all",
+  effects = c("fixed", "random", "all"),
+  parameters = NULL,
+  ...
+)
+
+\method{diagnostic_posterior}{brmsfit}(
+  posteriors,
+  diagnostic = "all",
+  effects = c("fixed", "random", "all"),
+  component = c("conditional", "zi", "zero_inflated", "all"),
+  parameters = NULL,
+  ...
+)
 }
 \arguments{
 \item{posteriors}{A stanreg or brms model.}
@@ -25,39 +46,51 @@ diagnostic_posterior(posteriors, diagnostic = c("ESS", "Rhat"), ...)
 \item{effects}{Should parameters for fixed effects, random effects
 or both be returned? Only applies to mixed models. May be abbreviated.}
 
+\item{component}{Which type of parameters to return, such as parameters for the
+conditional model, the zero-inflated part of the model, the dispersion
+term, the instrumental variables or marginal effects be returned? Applies
+to models with zero-inflated and/or dispersion formula, or to models with
+instrumental variables (so called fixed-effects regressions), or models
+with marginal effects from \pkg{mfx}. May be abbreviated. Note that the
+\emph{conditional} component is also called \emph{count} or \emph{mean}
+component, depending on the model. There are three convenient shortcuts:
+\code{component = "all"} returns all possible parameters.
+If \code{component = "location"}, location parameters such as \code{conditional},
+\code{zero_inflated}, \code{smooth_terms}, or \code{instruments} are returned
+(everything that are fixed or random effects - depending on the \code{effects}
+argument - but no auxiliary parameters). For \code{component = "distributional"}
+(or \code{"auxiliary"}), components like \code{sigma}, \code{dispersion},
+\code{beta} or \code{precision} (and other auxiliary parameters) are returned.}
+
 \item{parameters}{Regular expression pattern that describes the parameters that
 should be returned.}
-
-\item{component}{Should all parameters, parameters for the
-conditional model, the zero-inflated part of the model, the dispersion
-term or the instrumental variables be returned? Applies to models
-with zero-inflated and/or dispersion formula, or to models with instrumental
-variable (so called fixed-effects regressions). May be abbreviated.}
 }
 \description{
 Extract diagnostic metrics (Effective Sample Size (\code{ESS}), \code{Rhat} and Monte Carlo Standard Error \code{MCSE}).
 }
 \details{
-\strong{Effective Sample (ESS)} should be as large as possible, altough for most applications, an effective sample size greater than 1000 is sufficient for stable estimates (Bürkner, 2017). The ESS corresponds to the number of independent samples with the same estimation power as the N autocorrelated samples. It is is a measure of \dQuote{how much independent information there is in autocorrelated chains} (\emph{Kruschke 2015, p182-3}).
+\strong{Effective Sample (ESS)} should be as large as possible, although for most applications, an effective sample size greater than 1000 is sufficient for stable estimates (Bürkner, 2017). The ESS corresponds to the number of independent samples with the same estimation power as the N autocorrelated samples. It is is a measure of \dQuote{how much independent information there is in autocorrelated chains} (\cite{Kruschke 2015, p182-3}).
   \cr \cr
-  \strong{Rhat} should be the closest to 1. It should not be larger than 1.1 (Gelman and Rubin, 1992) or 1.01 (Vehtari et al., 2019). The split R-hat statistic quantifies the consistency of an ensemble of Markov chains.
+  \strong{Rhat} should be the closest to 1. It should not be larger than 1.1 (\cite{Gelman and Rubin, 1992}) or 1.01 (\cite{Vehtari et al., 2019}). The split Rhat statistic quantifies the consistency of an ensemble of Markov chains.
   \cr \cr
   \strong{Monte Carlo Standard Error (MCSE)} is another measure of accuracy of the chains. It is defined as standard deviation of the chains divided by their effective sample size (the formula for \code{mcse()} is from Kruschke 2015, p. 187). The MCSE \dQuote{provides a quantitative suggestion of how big the estimation noise is}.
 }
 \examples{
+\dontrun{
 # rstanarm models
 # -----------------------------------------------
-library(rstanarm)
-model <- stan_glm(mpg ~ wt + gear, data = mtcars, chains = 2, iter = 200, refresh = 0)
-diagnostic_posterior(model)
-\dontrun{
-# brms models
-# -----------------------------------------------
-library(brms)
-model <- brms::brm(mpg ~ wt + cyl, data = mtcars)
-diagnostic_posterior(model)
+if (require("rstanarm", quietly = TRUE)) {
+  model <- stan_glm(mpg ~ wt + gear, data = mtcars, chains = 2, iter = 200, refresh = 0)
+  diagnostic_posterior(model)
 }
 
+# brms models
+# -----------------------------------------------
+if (require("brms", quietly = TRUE)) {
+  model <- brms::brm(mpg ~ wt + cyl, data = mtcars)
+  diagnostic_posterior(model)
+}
+}
 }
 \references{
 \itemize{

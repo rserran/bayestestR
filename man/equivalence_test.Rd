@@ -15,34 +15,61 @@ equivalence_test(x, ...)
 
 \method{equivalence_test}{default}(x, ...)
 
-\method{equivalence_test}{numeric}(x, range = "default", ci = 0.89,
-  verbose = TRUE, ...)
+\method{equivalence_test}{numeric}(x, range = "default", ci = 0.95, verbose = TRUE, ...)
 
-\method{equivalence_test}{data.frame}(x, range = "default", ci = 0.89,
-  verbose = TRUE, ...)
+\method{equivalence_test}{data.frame}(x, range = "default", ci = 0.95, verbose = TRUE, ...)
 
-\method{equivalence_test}{emmGrid}(x, range = "default", ci = 0.89,
-  verbose = TRUE, ...)
+\method{equivalence_test}{emmGrid}(x, range = "default", ci = 0.95, verbose = TRUE, ...)
 
-\method{equivalence_test}{BFBayesFactor}(x, range = "default",
-  ci = 0.89, verbose = TRUE, ...)
+\method{equivalence_test}{BFBayesFactor}(x, range = "default", ci = 0.95, verbose = TRUE, ...)
 
-\method{equivalence_test}{stanreg}(x, range = "default", ci = 0.89,
-  parameters = NULL, verbose = TRUE, ...)
+\method{equivalence_test}{stanreg}(
+  x,
+  range = "default",
+  ci = 0.95,
+  effects = c("fixed", "random", "all"),
+  component = c("location", "all", "conditional", "smooth_terms", "sigma",
+    "distributional", "auxiliary"),
+  parameters = NULL,
+  verbose = TRUE,
+  ...
+)
 
-\method{equivalence_test}{brmsfit}(x, range = "default", ci = 0.89,
-  parameters = NULL, verbose = TRUE, ...)
+\method{equivalence_test}{brmsfit}(
+  x,
+  range = "default",
+  ci = 0.95,
+  effects = c("fixed", "random", "all"),
+  component = c("conditional", "zi", "zero_inflated", "all"),
+  parameters = NULL,
+  verbose = TRUE,
+  ...
+)
 }
 \arguments{
 \item{x}{Vector representing a posterior distribution. Can also be a \code{stanreg} or \code{brmsfit} model.}
 
 \item{...}{Currently not used.}
 
-\item{range}{ROPE's lower and higher bounds. Should be a vector of length two (e.g., \code{c(-0.1, 0.1)}) or \code{"default"}. If \code{"default"}, the range is set to \code{c(-0.1, 0.1)} if input is a vector, and based on \code{\link[=rope_range]{rope_range()}} if a Bayesian model is provided.}
+\item{range}{ROPE's lower and higher bounds. Should be \code{"default"} or
+depending on the number of outcome variables a vector or a list. In models with one response,
+`range` should be a vector of length two (e.g., \code{c(-0.1, 0.1)}). In
+multivariate models, `range` should be a list with a numeric vectors for
+each response variable. Vector names should correspond to the name of the response
+variables. If \code{"default"} and input is a vector, the range is set to \code{c(-0.1,
+0.1)}. If \code{"default"} and input is a Bayesian model,
+\code{\link[=rope_range]{rope_range()}} is used.}
 
 \item{ci}{The Credible Interval (CI) probability, corresponding to the proportion of HDI, to use for the percentage in ROPE.}
 
 \item{verbose}{Toggle off warnings.}
+
+\item{effects}{Should results for fixed effects, random effects or both be returned?
+Only applies to mixed models. May be abbreviated.}
+
+\item{component}{Should results for all parameters, parameters for the conditional model
+or the zero-inflated part of the model be returned? May be abbreviated. Only
+applies to \pkg{brms}-models.}
 
 \item{parameters}{Regular expression pattern that describes the parameters that
 should be returned. Meta-parameters (like \code{lp__} or \code{prior_}) are
@@ -109,7 +136,8 @@ Using the \link[=rope]{ROPE} and the \link[=hdi]{HDI}, \cite{Kruschke (2018)}
 }
 \note{
 There is a \code{print()}-method with a \code{digits}-argument to control
-  the amount of digits in the output, and there is a \code{plot()}-method
+  the amount of digits in the output, and there is a
+  \href{https://easystats.github.io/see/articles/bayestestR.html}{\code{plot()}-method}
   to visualize the results from the equivalence-test (for models only).
 }
 \examples{
@@ -141,7 +169,7 @@ model <- brms::brm(mpg ~ wt + cyl, data = mtcars)
 equivalence_test(model)
 equivalence_test(model, ci = c(.50, .99))
 
-ibrary(BayesFactor)
+library(BayesFactor)
 bf <- ttestBF(x = rnorm(100, 1, 1))
 equivalence_test(bf)
 equivalence_test(bf, ci = c(.50, .99))
@@ -151,7 +179,7 @@ equivalence_test(bf, ci = c(.50, .99))
 \references{
 \itemize{
   \item Kruschke, J. K. (2018). Rejecting or accepting parameter values in Bayesian estimation. Advances in Methods and Practices in Psychological Science, 1(2), 270-280. \doi{10.1177/2515245918771304}
-  \item Kruschke, J. (2014). Doing Bayesian data analysis: A tutorial with R, JAGS, and Stan. Academic Press
+  \item Kruschke, J. K. (2014). Doing Bayesian data analysis: A tutorial with R, JAGS, and Stan. Academic Press
   \item Piironen, J., & Vehtari, A. (2017). Comparison of Bayesian predictive methods for model selection. Statistics and Computing, 27(3), 711–735. \doi{10.1007/s11222-016-9649-y}
 }
 }

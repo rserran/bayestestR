@@ -2,24 +2,58 @@
 % Please edit documentation in R/bayesfactor_restricted.R
 \name{bayesfactor_restricted}
 \alias{bayesfactor_restricted}
+\alias{bf_restricted}
 \alias{bayesfactor_restricted.stanreg}
 \alias{bayesfactor_restricted.brmsfit}
+\alias{bayesfactor_restricted.blavaan}
 \alias{bayesfactor_restricted.emmGrid}
 \title{Bayes Factors (BF) for Order Restricted Models}
 \usage{
-bayesfactor_restricted(posterior, hypothesis, prior = NULL,
-  verbose = TRUE, ...)
+bayesfactor_restricted(
+  posterior,
+  hypothesis,
+  prior = NULL,
+  verbose = TRUE,
+  ...
+)
 
-\method{bayesfactor_restricted}{stanreg}(posterior, hypothesis,
-  prior = NULL, verbose = TRUE, effects = c("fixed", "random",
-  "all"), ...)
+bf_restricted(posterior, hypothesis, prior = NULL, verbose = TRUE, ...)
 
-\method{bayesfactor_restricted}{brmsfit}(posterior, hypothesis,
-  prior = NULL, verbose = TRUE, effects = c("fixed", "random",
-  "all"), ...)
+\method{bayesfactor_restricted}{stanreg}(
+  posterior,
+  hypothesis,
+  prior = NULL,
+  verbose = TRUE,
+  effects = c("fixed", "random", "all"),
+  component = c("conditional", "zi", "zero_inflated", "all"),
+  ...
+)
 
-\method{bayesfactor_restricted}{emmGrid}(posterior, hypothesis,
-  prior = NULL, verbose = TRUE, ...)
+\method{bayesfactor_restricted}{brmsfit}(
+  posterior,
+  hypothesis,
+  prior = NULL,
+  verbose = TRUE,
+  effects = c("fixed", "random", "all"),
+  component = c("conditional", "zi", "zero_inflated", "all"),
+  ...
+)
+
+\method{bayesfactor_restricted}{blavaan}(
+  posterior,
+  hypothesis,
+  prior = NULL,
+  verbose = TRUE,
+  ...
+)
+
+\method{bayesfactor_restricted}{emmGrid}(
+  posterior,
+  hypothesis,
+  prior = NULL,
+  verbose = TRUE,
+  ...
+)
 }
 \arguments{
 \item{posterior}{A \code{stanreg} / \code{brmsfit} object, \code{emmGrid} or a data frame - representing a posterior distribution(s) from (see Details).}
@@ -34,50 +68,70 @@ bayesfactor_restricted(posterior, hypothesis, prior = NULL,
 
 \item{effects}{Should results for fixed effects, random effects or both be returned?
 Only applies to mixed models. May be abbreviated.}
+
+\item{component}{Should results for all parameters, parameters for the conditional model
+or the zero-inflated part of the model be returned? May be abbreviated. Only
+applies to \pkg{brms}-models.}
 }
 \value{
-A data frame containing the Bayes factor representing evidence \emph{against} the un-restricted model.
+A data frame containing the (log) Bayes factor representing evidence \emph{against} the un-restricted model.
 }
 \description{
 This method computes Bayes factors for comparing a model with an order restrictions on its parameters
 with the fully unrestricted model. \emph{Note that this method should only be used for confirmatory analyses}.
 \cr \cr
-For more info, see \href{https://easystats.github.io/bayestestR/articles/bayes_factors.html}{the Bayes factors vignette}.
+The \code{bf_*} function is an alias of the main function.
+\cr \cr
+\strong{For more info, in particular on specifying correct priors for factors with more than 2 levels, see \href{https://easystats.github.io/bayestestR/articles/bayes_factors.html}{the Bayes factors vignette}.}
 }
 \details{
 This method is used to compute Bayes factors for order-restricted models vs un-restricted
 models by setting an order restriction on the prior and posterior distributions
 (\cite{Morey & Wagenmakers, 2013}).
+\cr\cr
+(Though it is possible to use \code{bayesfactor_restricted()} to test interval restrictions,
+it is more suitable for testing order restrictions; see examples).
+}
+\section{Setting the correct \code{prior}}{
 
-(Though it is possible to use \code{bayesfactor_restricted} to test interval restrictions,
-it is more suitable for testing order restrictions (see examples)).
-
-When \code{posterior} is a model (\code{stanreg}, \code{brmsfit}), posterior and prior samples are
-extracted for each parameter, and Savage-Dickey Bayes factors are computed for each parameter.
-
-\strong{NOTE:} For \code{brmsfit} models, the model must have been fitted with \emph{custom (non-default)} priors. See example below.
-
-\subsection{Setting the correct \code{prior}}{
+For the computation of Bayes factors, the model priors must be proper priors
+(at the very least they should be \emph{not flat}, and it is preferable that
+they be \emph{informative}); As the priors for the alternative get wider, the
+likelihood of the null value(s) increases, to the extreme that for completely
+flat priors the null is infinitely more favorable than the alternative (this
+is called \emph{the Jeffreys-Lindley-Bartlett paradox}). Thus, you should
+only ever try (or want) to compute a Bayes factor when you have an informed
+prior.
+\cr\cr
+(Note that by default, \code{brms::brm()} uses flat priors for fixed-effects;
+See example below.)
+\cr\cr
 It is important to provide the correct \code{prior} for meaningful results.
 \itemize{
+  \item When \code{posterior} is a numerical vector, \code{prior} should also be a numerical vector.
   \item When \code{posterior} is a \code{data.frame}, \code{prior} should also be a \code{data.frame}, with matching column order.
   \item When \code{posterior} is a \code{stanreg} or \code{brmsfit} model: \itemize{
     \item \code{prior} can be set to \code{NULL}, in which case prior samples are drawn internally.
-    \item \code{prior} can also be a model equvilant to \code{posterior} but with samples from the priors \emph{only}.
+    \item \code{prior} can also be a model equivalent to \code{posterior} but with samples from the priors \emph{only}. See \code{\link{unupdate}}.
+    \item \strong{Note:} When \code{posterior} is a \code{brmsfit_multiple} model, \code{prior} \strong{must} be provided.
   }
   \item When \code{posterior} is an \code{emmGrid} object: \itemize{
     \item \code{prior} should be the \code{stanreg} or \code{brmsfit} model used to create the \code{emmGrid} objects.
-    \item \code{prior} can also be an \code{emmGrid} object equvilant to \code{posterior} but created with a model of priors samples \emph{only}.
+    \item \code{prior} can also be an \code{emmGrid} object equivalent to \code{posterior} but created with a model of priors samples \emph{only}.
+    \item \strong{Note:} When the \code{emmGrid} has undergone any transformations (\code{"log"}, \code{"response"}, etc.), or \code{regrid}ing, then \code{prior} must be an \code{emmGrid} object, as stated above.
   }
-}}
-\subsection{Interpreting Bayes Factors}{
-A Bayes factor greater than 1 can be interpereted as evidence against the null,
-at which one convention is that a Bayes factor greater than 3 can be considered
-as "substantial" evidence against the null (and vice versa, a Bayes factor
-smaller than 1/3 indicates substantial evidence in favor of the null-hypothesis)
-(\cite{Wetzels et al. 2011}).
 }
 }
+
+\section{Interpreting Bayes Factors}{
+
+A Bayes factor greater than 1 can be interpreted as evidence against the
+null, at which one convention is that a Bayes factor greater than 3 can be
+considered as "substantial" evidence against the null (and vice versa, a
+Bayes factor smaller than 1/3 indicates substantial evidence in favor of the
+null-model) (\cite{Wetzels et al. 2011}).
+}
+
 \examples{
 library(bayestestR)
 prior <- data.frame(
@@ -101,39 +155,37 @@ bayesfactor_restricted(posterior, hypothesis = hyps, prior = prior)
 \dontrun{
 # rstanarm models
 # ---------------
-library(rstanarm)
-fit_stan <- stan_glm(mpg ~ wt + cyl + am,
-  data = mtcars
-)
-hyps <- c(
-  "am > 0 & cyl < 0",
-  "cyl < 0",
-  "wt - cyl > 0"
-)
-bayesfactor_restricted(fit_stan, hypothesis = hyps)
+if (require("rstanarm") && require("emmeans")) {
+  fit_stan <- stan_glm(mpg ~ wt + cyl + am,
+    data = mtcars, refresh = 0
+  )
+  hyps <- c(
+    "am > 0 & cyl < 0",
+    "cyl < 0",
+    "wt - cyl > 0"
+  )
+  bayesfactor_restricted(fit_stan, hypothesis = hyps)
 
-# emmGrid objects
-# ---------------
-library(emmeans)
-options(contrasts = c("contr.bayes", "contr.bayes")) # see `bfrms` package
+  # emmGrid objects
+  # ---------------
+  # replicating http://bayesfactor.blogspot.com/2015/01/multiple-comparisons-with-bayesfactor-2.html
+  disgust_data <- read.table(url("http://www.learnbayes.org/disgust_example.txt"), header = TRUE)
 
-# replicating http://bayesfactor.blogspot.com/2015/01/multiple-comparisons-with-bayesfactor-2.html
-disgust_data <- read.table(url("http://www.learnbayes.org/disgust_example.txt"), header = TRUE)
+  contrasts(disgust_data$condition) <- contr.orthonorm # see vignette
+  fit_model <- stan_glm(score ~ condition, data = disgust_data, family = gaussian())
 
-fit_model <- stan_glm(score ~ condition, data = disgust_data, family = gaussian())
+  em_condition <- emmeans(fit_model, ~condition)
+  hyps <- c("lemon < control & control < sulfur")
 
-em_condition <- emmeans(fit_model, ~condition)
-hyps <- c("lemon < control & control < sulfur")
-
-bayesfactor_restricted(em_condition, prior = fit_model, hypothesis = hyps)
-# > # Bayes Factor (Order-Restriction)
-# >
-# >                          Hypothesis P(Prior) P(Posterior) Bayes Factor
-# >  lemon < control & control < sulfur     0.17         0.75         4.49
-# > ---
-# > Bayes factors for the restricted movel vs. the un-restricted model.
+  bayesfactor_restricted(em_condition, prior = fit_model, hypothesis = hyps)
+  # > # Bayes Factor (Order-Restriction)
+  # >
+  # >                          Hypothesis P(Prior) P(Posterior)   BF
+  # >  lemon < control & control < sulfur     0.17         0.75 4.49
+  # > ---
+  # > Bayes factors for the restricted model vs. the un-restricted model.
 }
-
+}
 }
 \references{
 \itemize{

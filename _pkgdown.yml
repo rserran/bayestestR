@@ -5,6 +5,8 @@ authors:
     href: https://github.com/strengejacke
   Mattan S. Ben-Shachar:
     href: https://github.com/mattansb
+  Indrajeet Patil:
+    href: https://sites.google.com/site/indrajeetspatilmorality/
   Michael D. Wilson:
     href: http://www.humanfactors.io
 
@@ -13,40 +15,56 @@ template:
     ganalytics: UA-97457476-7
     bootswatch: cosmo
 
+toc:
+  depth: 3
 
 reference:
 - title: "Posterior Description"
   contents:
   - describe_posterior
+  - describe_prior
+  - sexit
+
+- title: "Centrality and Uncertainty"
+  contents:
   - point_estimate
   - map_estimate
   - eti
   - hdi
   - ci
+  - reshape_ci
 
 - title: "Effect Existence and Significance"
+  desc: "Functions for Bayesian Inference"
+- subtitle: "Posterior Based Methods"
   contents:
   - p_direction
   - p_rope
   - p_map
+  - p_significance
   - rope
   - rope_range
   - equivalence_test
   - convert_pd_to_p
 
-- title: "Effect Existence and Significance - Bayes factors"
+- subtitle: "Bayes factors"
   contents:
   - bayesfactor
-  - bayesfactor_savagedickey
-  - bayesfactor_inclusion
+  - bayesfactor_parameters
   - bayesfactor_models
+  - bayesfactor_inclusion
   - bayesfactor_restricted
+  - si
+  - weighted_posteriors
+  - bic_to_bf
 
 - title: "Model Diagnostics"
   contents:
   - diagnostic_posterior
-  - describe_prior
-  - sensivity_to_prior
+  - sensitivity_to_prior
+  - check_prior
+  - simulate_prior
+  - unupdate
   - effective_sample
   - mcse
 
@@ -55,6 +73,7 @@ reference:
   - estimate_density
   - density_at
   - area_under_curve
+  - overlap
 
 - title: "Distributions"
   contents:
@@ -62,9 +81,15 @@ reference:
 
 - title: "Utilities"
   contents:
+  - simulate_correlation
+  - mediation
+  - convert_bayesian_as_frequentist
+  - contr.orthonorm
   - as.numeric.p_direction
   - as.data.frame.density
-  - reshape_ci
+  - sexit_thresholds
+  - reshape_iterations
+  - diagnostic_draws
 
 
 navbar:
@@ -99,7 +124,9 @@ navbar:
       - text: 'Comparison of Point-Estimates'
         href: articles/indicesEstimationComparison.html
       - text: 'Comparison of Indices of Effect Existence'
-        href: articles/indicesExistenceComparison.html
+        href: https://www.frontiersin.org/articles/10.3389/fpsyg.2019.02767/full
+      - text: 'Mediation Analysis: Direct and Indirect Effects'
+        href: articles/mediation.html
   - text: Guidelines
     href: articles/guidelines.html
 

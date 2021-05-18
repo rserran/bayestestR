@@ -44,7 +44,7 @@ plot.rope <- function(x, ...) {
 
 
 #' @export
-plot.hdi <- function(x, ...) {
+plot.bayestestR_hdi <- function(x, ...) {
   if (!requireNamespace("see", quietly = TRUE)) {
     stop("Package 'see' needed to plot HDI. Please install it by running `install.packages('see')`.")
   }
@@ -53,9 +53,17 @@ plot.hdi <- function(x, ...) {
 
 
 #' @export
-plot.eti <- function(x, ...) {
+plot.bayestestR_eti <- function(x, ...) {
   if (!requireNamespace("see", quietly = TRUE)) {
     stop("Package 'see' needed to plot credible intervals. Please install it by running `install.packages('see')`.")
+  }
+  NextMethod()
+}
+
+#' @export
+plot.bayestestR_si <- function(x, ...) {
+  if (!requireNamespace("see", quietly = TRUE)) {
+    stop("Package 'see' needed to plot support intervals. Please install it by running `install.packages('see')`.")
   }
   NextMethod()
 }
@@ -80,6 +88,22 @@ plot.bayesfactor_models <- function(x, ...) {
 plot.estimate_density <- function(x, ...) {
   if (!requireNamespace("see", quietly = TRUE)) {
     stop("Package 'see' needed to plot densities. Please install it by running `install.packages('see')`.")
+  }
+  NextMethod()
+}
+
+#' @export
+plot.estimate_density_df <- function(x, ...) {
+  if (!requireNamespace("see", quietly = TRUE)) {
+    stop("Package 'see' needed to plot densities. Please install it by running `install.packages('see')`.")
+  }
+  NextMethod()
+}
+
+#' @export
+plot.p_significance <- function(x, ...) {
+  if (!requireNamespace("see", quietly = TRUE)) {
+    stop("Package 'see' needed to plot practical significance Please install it by running `install.packages('see')`.")
   }
   NextMethod()
 }

@@ -1,109 +1,157 @@
-#' Savage-Dickey density ratio Bayes Factor (BF)
+#' Bayes Factors (BF) for a Single Parameter
 #'
-#' This method computes Bayes factors against the null (either a point or an interval),
-#' bases on prior and posterior samples of a single parameter. This Bayes factor indicates
-#' the degree by which the mass of the posterior distribution has shifted further away
-#' from or closer to the null value(s) (relative to the prior distribution), thus indicating
-#' if the null value has become less or more likely given the observed data.
+#' This method computes Bayes factors against the null (either a point or an
+#' interval), based on prior and posterior samples of a single parameter. This
+#' Bayes factor indicates the degree by which the mass of the posterior
+#' distribution has shifted further away from or closer to the null value(s)
+#' (relative to the prior distribution), thus indicating if the null value has
+#' become less or more likely given the observed data.
 #' \cr \cr
-#' When the null is an interval, the Bayes factor is computed by comparing the prior
-#' and posterior odds of the parameter falling within or outside the null;
-#' When the null is a point, a Savage-Dickey density ratio is computed, which is also
-#' an approximation of a Bayes factor comparing the marginal likelihoods of the model
-#' against a model in which the tested parameter has been restricted to the point null.
+#' When the null is an interval, the Bayes factor is computed by comparing the
+#' prior and posterior odds of the parameter falling within or outside the null
+#' interval (Morey & Rouder, 2011; Liao et al., 2020); When the null is a point,
+#' a Savage-Dickey density ratio is computed, which is also an approximation of
+#' a Bayes factor comparing the marginal likelihoods of the model against a
+#' model in which the tested parameter has been restricted to the point null
+#' (Wagenmakers et al., 2010; Heck, 2019).
 #' \cr \cr
-#' For more info, see \href{https://easystats.github.io/bayestestR/articles/bayes_factors.html}{the Bayes factors vignette}.
+#' Note that the \code{logspline} package is used for estimating densities and
+#' probabilities, and must be installed for the function to work.
+#' \cr \cr
+#' \code{bayesfactor_pointnull()} and \code{bayesfactor_rope()} are wrappers
+#' around \code{bayesfactor_parameters} with different defaults for the null to
+#' be tested against (a point and a range, respectively). Aliases of the main
+#' functions are prefixed with \code{bf_*}, like \code{bf_parameters()} or
+#' \code{bf_pointnull()}.
+#' \cr \cr
+#' \strong{For more info, in particular on specifying correct priors for factors
+#' with more than 2 levels, see
+#' \href{https://easystats.github.io/bayestestR/articles/bayes_factors.html}{the
+#' Bayes factors vignette}.}
 #'
-#' @param posterior A numerical vector, \code{stanreg} / \code{brmsfit} object, \code{emmGrid}
-#' or a data frame - representing a posterior distribution(s) from (see Details).
-#' @param prior An object representing a prior distribution (see Details).
-#' @param direction Test type (see details). One of \code{0}, \code{"two-sided"} (default, two tailed),
-#' \code{-1}, \code{"left"} (left tailed) or \code{1}, \code{"right"} (right tailed).
-#' @param null Value of the null, either a scaler (for point-null) or a a range
-#' (for a interval-null).
-#' @param hypothesis Deprecated in favour of \code{null}.
+#' @param posterior A numerical vector, \code{stanreg} / \code{brmsfit} object,
+#'   \code{emmGrid} or a data frame - representing a posterior distribution(s)
+#'   from (see 'Details').
+#' @param prior An object representing a prior distribution (see 'Details').
+#' @param direction Test type (see 'Details'). One of \code{0},
+#'   \code{"two-sided"} (default, two tailed), \code{-1}, \code{"left"} (left
+#'   tailed) or \code{1}, \code{"right"} (right tailed).
+#' @param null Value of the null, either a scalar (for point-null) or a range
+#'   (for a interval-null).
+#' @param ... Arguments passed to and from other methods. (Can be used to pass
+#'   arguments to internal \code{\link[logspline]{logspline}}.)
 #' @inheritParams hdi
 #'
-#' @return A data frame containing the Bayes factor representing evidence \emph{against} the null.
+#' @return A data frame containing the (log) Bayes factor representing evidence
+#'   \emph{against} the null.
 #'
-#' @details This method is used to compute Bayes factors based on prior and posterior distributions.
-#' When \code{posterior} is a model (\code{stanreg}, \code{brmsfit}), posterior and prior samples are
-#' extracted for each parameter, and Savage-Dickey Bayes factors are computed for each parameter.
+#' @note There is also a
+#'   \href{https://easystats.github.io/see/articles/bayestestR.html}{\code{plot()}-method}
+#'   implemented in the
+#'   \href{https://easystats.github.io/see/}{\pkg{see}-package}.
 #'
-#' \strong{NOTE:} For \code{brmsfit} models, the model must have been fitted with \emph{custom (non-default)}
-#' priors. See example below.
+#' @details
+#' This method is used to compute Bayes factors based on prior and posterior
+#' distributions.
 #'
-#' \subsection{Setting the correct \code{prior}}{
+#' \subsection{One-sided & Dividing Tests (setting an order restriction)}{
+#' One sided tests (controlled by \code{direction}) are conducted by restricting
+#' the prior and posterior of the non-null values (the "alternative") to one
+#' side of the null only (\cite{Morey & Wagenmakers, 2014}). For example, if we
+#' have a prior hypothesis that the parameter should be positive, the
+#' alternative will be restricted to the region to the right of the null (point
+#' or interval). For example, for a Bayes factor comparing the "null" of [0-0.1]
+#' to the alternative [>0.1], we would set
+#' \code{bayesfactor_parameters(null = c(0, 0.1), direction = ">")}.
+#' \cr\cr
+#' It is also possible to compute a Bayes factor for \strong{dividing}
+#' hypotheses - that is, for a null and alternative that are complementary,
+#' opposing one-sided hypotheses (\cite{Morey & Wagenmakers, 2014}). For
+#' example, for a Bayes factor comparing the "null" of [<0] to the alternative
+#' [>0], we would set \code{bayesfactor_parameters(null = c(-Inf, 0))}.
+#' }
+#'
+#' @section Setting the correct \code{prior}:
+#' For the computation of Bayes factors, the model priors must be proper priors
+#' (at the very least they should be \emph{not flat}, and it is preferable that
+#' they be \emph{informative}); As the priors for the alternative get wider, the
+#' likelihood of the null value(s) increases, to the extreme that for completely
+#' flat priors the null is infinitely more favorable than the alternative (this
+#' is called \emph{the Jeffreys-Lindley-Bartlett paradox}). Thus, you should
+#' only ever try (or want) to compute a Bayes factor when you have an informed
+#' prior.
+#' \cr\cr
+#' (Note that by default, \code{brms::brm()} uses flat priors for fixed-effects;
+#' See example below.)
+#' \cr\cr
 #' It is important to provide the correct \code{prior} for meaningful results.
 #' \itemize{
 #'   \item When \code{posterior} is a numerical vector, \code{prior} should also be a numerical vector.
 #'   \item When \code{posterior} is a \code{data.frame}, \code{prior} should also be a \code{data.frame}, with matching column order.
 #'   \item When \code{posterior} is a \code{stanreg} or \code{brmsfit} model: \itemize{
 #'     \item \code{prior} can be set to \code{NULL}, in which case prior samples are drawn internally.
-#'     \item \code{prior} can also be a model equvilant to \code{posterior} but with samples from the priors \emph{only}.
+#'     \item \code{prior} can also be a model equivalent to \code{posterior} but with samples from the priors \emph{only}. See \code{\link{unupdate}}.
+#'     \item \strong{Note:} When \code{posterior} is a \code{brmsfit_multiple} model, \code{prior} \strong{must} be provided.
 #'   }
 #'   \item When \code{posterior} is an \code{emmGrid} object: \itemize{
 #'     \item \code{prior} should be the \code{stanreg} or \code{brmsfit} model used to create the \code{emmGrid} objects.
-#'     \item \code{prior} can also be an \code{emmGrid} object equvilant to \code{posterior} but created with a model of priors samples \emph{only}.
+#'     \item \code{prior} can also be an \code{emmGrid} object equivalent to \code{posterior} but created with a model of priors samples \emph{only}.
+#'     \item \strong{Note:} When the \code{emmGrid} has undergone any transformations (\code{"log"}, \code{"response"}, etc.), or \code{regrid}ing, then \code{prior} must be an \code{emmGrid} object, as stated above.
 #'   }
-#' }}
-#' \subsection{One-sided Tests (setting an order restriction)}{
-#' One sided tests (controlled by \code{direction}) are conducted by restricting the prior and
-#' posterior of the non-null values (the "alternative") to one side of the null only
-#' (\cite{Morey & Wagenmakers, 2013}). For example, if we have a prior hypothesis that the
-#' parameter should be positive, the alternative will be restricted to the region to the right
-#' of the null (point or interval).
 #' }
-#' \subsection{Interpreting Bayes Factors}{
-#' A Bayes factor greater than 1 can be interpereted as evidence against the null,
-#' at which one convention is that a Bayes factor greater than 3 can be considered
-#' as "substantial" evidence against the null (and vice versa, a Bayes factor
-#' smaller than 1/3 indicates substantial evidence in favor of the null-model)
-#' (\cite{Wetzels et al. 2011}).
-#' }
+#'
+#' @section Interpreting Bayes Factors:
+#' A Bayes factor greater than 1 can be interpreted as evidence against the
+#' null, at which one convention is that a Bayes factor greater than 3 can be
+#' considered as "substantial" evidence against the null (and vice versa, a
+#' Bayes factor smaller than 1/3 indicates substantial evidence in favor of the
+#' null-model) (\cite{Wetzels et al. 2011}).
 #'
 #' @examples
 #' library(bayestestR)
-#'
-#' prior <- distribution_normal(1000, mean = 0, sd = 1)
-#' posterior <- distribution_normal(1000, mean = .5, sd = .3)
-#'
-#' bayesfactor_parameters(posterior, prior)
+#' if (require("logspline")) {
+#'   prior <- distribution_normal(1000, mean = 0, sd = 1)
+#'   posterior <- distribution_normal(1000, mean = .5, sd = .3)
+#'   bayesfactor_parameters(posterior, prior)
+#' }
 #' \dontrun{
 #' # rstanarm models
 #' # ---------------
-#' library(rstanarm)
-#' stan_model <- stan_lmer(extra ~ group + (1 | ID), data = sleep)
-#' bayesfactor_parameters(stan_model)
-#' bayesfactor_parameters(stan_model, null = rope_range(stan_model))
+#' if (require("rstanarm") && require("emmeans") && require("logspline")) {
+#'   contrasts(sleep$group) <- contr.orthonorm # see vingette
+#'   stan_model <- stan_lmer(extra ~ group + (1 | ID), data = sleep)
+#'   bayesfactor_parameters(stan_model)
+#'   bayesfactor_parameters(stan_model, null = rope_range(stan_model))
 #'
-#' # emmGrid objects
-#' # ---------------
-#' library(emmeans)
-#' group_diff <- pairs(emmeans(stan_model, ~group))
-#' bayesfactor_parameters(group_diff, prior = stan_model)
+#'   # emmGrid objects
+#'   # ---------------
+#'   group_diff <- pairs(emmeans(stan_model, ~group))
+#'   bayesfactor_parameters(group_diff, prior = stan_model)
+#' }
 #'
 #' # brms models
 #' # -----------
-#' library(brms)
-#' my_custom_priors <-
-#'   set_prior("student_t(3, 0, 1)", class = "b") +
-#'   set_prior("student_t(3, 0, 1)", class = "sd", group = "ID")
+#' if (require("brms")) {
+#'   contrasts(sleep$group) <- contr.orthonorm # see vingette
+#'   my_custom_priors <-
+#'     set_prior("student_t(3, 0, 1)", class = "b") +
+#'     set_prior("student_t(3, 0, 1)", class = "sd", group = "ID")
 #'
-#' brms_model <- brm(extra ~ group + (1 | ID),
-#'   data = sleep,
-#'   prior = my_custom_priors
-#' )
-#' bayesfactor_parameters(brms_model)
+#'   brms_model <- brm(extra ~ group + (1 | ID),
+#'     data = sleep,
+#'     prior = my_custom_priors
+#'   )
+#'   bayesfactor_parameters(brms_model)
 #' }
-#'
+#' }
 #' @references
 #' \itemize{
 #' \item Wagenmakers, E. J., Lodewyckx, T., Kuriyal, H., and Grasman, R. (2010). Bayesian hypothesis testing for psychologists: A tutorial on the Savage-Dickey method. Cognitive psychology, 60(3), 158-189.
-#' \item Wetzels, R., Matzke, D., Lee, M. D., Rouder, J. N., Iverson, G. J., and Wagenmakers, E.-J. (2011). Statistical Evidence in Experimental Psychology: An Empirical Comparison Using 855 t Tests. Perspectives on Psychological Science, 6(3), 291–298. \doi{10.1177/1745691611406923}
 #' \item Heck, D. W. (2019). A caveat on the Savage–Dickey density ratio: The case of computing Bayes factors for regression parameters. British Journal of Mathematical and Statistical Psychology, 72(2), 316-333.
 #' \item Morey, R. D., & Wagenmakers, E. J. (2014). Simple relation between Bayesian order-restricted and point-null hypothesis tests. Statistics & Probability Letters, 92, 121-124.
 #' \item Morey, R. D., & Rouder, J. N. (2011). Bayes factor approaches for testing interval null hypotheses. Psychological methods, 16(4), 406.
+#' \item Liao, J. G., Midya, V., & Berg, A. (2020). Connecting and contrasting the Bayes factor and a modified ROPE procedure for testing interval null hypotheses. The American Statistician, 1-19.
+#' \item Wetzels, R., Matzke, D., Lee, M. D., Rouder, J. N., Iverson, G. J., and Wagenmakers, E.-J. (2011). Statistical Evidence in Experimental Psychology: An Empirical Comparison Using 855 t Tests. Perspectives on Psychological Science, 6(3), 291–298. \doi{10.1177/1745691611406923}
 #' }
 #'
 #' @author Mattan S. Ben-Shachar
@@ -115,13 +163,9 @@ bayesfactor_parameters <- function(posterior, prior = NULL, direction = "two-sid
 
 #' @rdname bayesfactor_parameters
 #' @export
-bayesfactor_savagedickey <- function(posterior, prior = NULL, direction = "two-sided", null = 0, verbose = TRUE, hypothesis = NULL, ...) {
-  .Deprecated("bayesfactor_parameters")
-
-  dots <- list(...)
-  if (!is.null(hypothesis)) {
-    null <- hypothesis
-    warning("The 'hypothesis' argument is deprecated. Please use 'null' instead.")
+bayesfactor_pointnull <- function(posterior, prior = NULL, direction = "two-sided", null = 0, verbose = TRUE, ...) {
+  if (length(null) > 1) {
+    message("'null' is a range - computing a ROPE based Bayes factor.")
   }
 
   bayesfactor_parameters(
@@ -133,6 +177,35 @@ bayesfactor_savagedickey <- function(posterior, prior = NULL, direction = "two-s
     ...
   )
 }
+
+#' @rdname bayesfactor_parameters
+#' @export
+bayesfactor_rope <- function(posterior, prior = NULL, direction = "two-sided", null = rope_range(posterior), verbose = TRUE, ...) {
+  if (length(null) < 2) {
+    message("'null' is a point - computing a Savage-Dickey (point null) Bayes factor.")
+  }
+
+  bayesfactor_parameters(
+    posterior = posterior,
+    prior = prior,
+    direction = direction,
+    null = null,
+    verbose = verbose,
+    ...
+  )
+}
+
+#' @rdname bayesfactor_parameters
+#' @export
+bf_parameters <- bayesfactor_parameters
+
+#' @rdname bayesfactor_parameters
+#' @export
+bf_pointnull <- bayesfactor_pointnull
+
+#' @rdname bayesfactor_parameters
+#' @export
+bf_rope <- bayesfactor_rope
 
 #' @rdname bayesfactor_parameters
 #' @export
@@ -153,7 +226,7 @@ bayesfactor_parameters.numeric <- function(posterior, prior = NULL, direction = 
   posterior <- data.frame(X = posterior)
   # colnames(posterior) <- colnames(prior) <- nm
 
-  # Get savage-dickey BFs
+  # Get BFs
   sdbf <- bayesfactor_parameters.data.frame(
     posterior = posterior, prior = prior,
     direction = direction, null = null, ...
@@ -163,29 +236,43 @@ bayesfactor_parameters.numeric <- function(posterior, prior = NULL, direction = 
 }
 
 
-#' @importFrom insight get_parameters
+#' @importFrom insight clean_parameters
 #' @rdname bayesfactor_parameters
 #' @export
-bayesfactor_parameters.stanreg <- function(posterior, prior = NULL,
-                                           direction = "two-sided", null = 0,
+bayesfactor_parameters.stanreg <- function(posterior,
+                                           prior = NULL,
+                                           direction = "two-sided",
+                                           null = 0,
                                            verbose = TRUE,
                                            effects = c("fixed", "random", "all"),
+                                           component = c("conditional", "location", "smooth_terms", "sigma", "zi", "zero_inflated", "all"),
+                                           parameters = NULL,
                                            ...) {
+  cleaned_parameters <- insight::clean_parameters(posterior)
   effects <- match.arg(effects)
+  component <- match.arg(component)
 
-  # Get Priors
-  if (is.null(prior)) {
-    prior <- .update_to_priors(posterior, verbose = verbose)
-  }
+  samps <- .clean_priors_and_posteriors(posterior, prior,
+    verbose = verbose,
+    effects = effects, component = component,
+    parameters = parameters
+  )
 
-  prior <- insight::get_parameters(prior, effects = effects)
-  posterior <- insight::get_parameters(posterior, effects = effects)
-
-  # Get savage-dickey BFs
-  bayesfactor_parameters.data.frame(
-    posterior = posterior, prior = prior,
+  # Get BFs
+  temp <- bayesfactor_parameters.data.frame(
+    posterior = samps$posterior, prior = samps$prior,
     direction = direction, null = null, ...
   )
+
+  bf_val <- .prepare_output(temp, cleaned_parameters, inherits(posterior, "stanmvreg"))
+
+  class(bf_val) <- class(temp)
+  attr(bf_val, "clean_parameters") <- cleaned_parameters
+  attr(bf_val, "hypothesis") <- attr(temp, "hypothesis") # don't change the name of this attribute - it is used only internally for "see" and printing
+  attr(bf_val, "direction") <- attr(temp, "direction")
+  attr(bf_val, "plot_data") <- attr(temp, "plot_data")
+
+  bf_val
 }
 
 
@@ -195,53 +282,65 @@ bayesfactor_parameters.stanreg <- function(posterior, prior = NULL,
 bayesfactor_parameters.brmsfit <- bayesfactor_parameters.stanreg
 
 
-
-#' @importFrom stats update
-#' @importFrom insight get_parameters
 #' @rdname bayesfactor_parameters
 #' @export
-bayesfactor_parameters.emmGrid <- function(posterior, prior = NULL,
-                                           direction = "two-sided", null = 0,
+bayesfactor_parameters.blavaan <- function(posterior,
+                                           prior = NULL,
+                                           direction = "two-sided",
+                                           null = 0,
                                            verbose = TRUE,
                                            ...) {
-  if (!requireNamespace("emmeans")) {
-    stop("Package 'emmeans' required for this function to work. Please install it by running `install.packages('emmeans')`.")
-  }
+  cleaned_parameters <- insight::clean_parameters(posterior)
 
-  if (is.null(prior)) {
-    prior <- posterior
-    warning(
-      "Prior not specified! ",
-      "Please provide the original model to get meaningful results."
-    )
-  } else if (!inherits(prior, "emmGrid")) { # then is it a model
-    prior <- .update_to_priors(prior, verbose = verbose)
-    prior <- insight::get_parameters(prior, effects = "fixed")
-    prior <- stats::update(posterior, post.beta = as.matrix(prior))
-  }
+  samps <- .clean_priors_and_posteriors(posterior, prior,
+                                        verbose = verbose)
 
-  prior <- as.data.frame(as.matrix(emmeans::as.mcmc.emmGrid(prior, names = FALSE)))
-  posterior <- as.data.frame(as.matrix(emmeans::as.mcmc.emmGrid(posterior, names = FALSE)))
+  # Get BFs
+  temp <- bayesfactor_parameters.data.frame(
+    posterior = samps$posterior, prior = samps$prior,
+    direction = direction, null = null, ...
+  )
 
+  bf_val <- .prepare_output(temp, cleaned_parameters)
+
+  class(bf_val) <- class(temp)
+  attr(bf_val, "clean_parameters") <- cleaned_parameters
+  attr(bf_val, "hypothesis") <- attr(temp, "hypothesis") # don't change the name of this attribute - it is used only internally for "see" and printing
+  attr(bf_val, "direction") <- attr(temp, "direction")
+  attr(bf_val, "plot_data") <- attr(temp, "plot_data")
+
+  bf_val
+}
+
+
+#' @export
+bayesfactor_parameters.emmGrid <- function(posterior,
+                                           prior = NULL,
+                                           direction = "two-sided",
+                                           null = 0,
+                                           verbose = TRUE,
+                                           ...) {
+  samps <- .clean_priors_and_posteriors(posterior, prior,
+    verbose = verbose
+  )
+
+  # Get BFs
   bayesfactor_parameters.data.frame(
-    posterior = posterior, prior = prior,
+    posterior = samps$posterior, prior = samps$prior,
     direction = direction, null = null, ...
   )
 }
 
 #' @export
-bayesfactor_parameters.bayesfactor_models <- function(...) {
-  stop(
-    "Oh no, 'bayesfactor_parameters()' does not know how to deal with multiple models :(\n",
-    "You want might want to use 'bayesfactor_inclusion()' here to test specific terms across models."
-  )
-}
+bayesfactor_parameters.emm_list <- bayesfactor_parameters.emmGrid
 
 
 #' @rdname bayesfactor_parameters
 #' @export
-bayesfactor_parameters.data.frame <- function(posterior, prior = NULL,
-                                              direction = "two-sided", null = 0,
+bayesfactor_parameters.data.frame <- function(posterior,
+                                              prior = NULL,
+                                              direction = "two-sided",
+                                              null = 0,
                                               verbose = TRUE,
                                               ...) {
   # find direction
@@ -262,13 +361,14 @@ bayesfactor_parameters.data.frame <- function(posterior, prior = NULL,
       posterior[[par]],
       prior[[par]],
       direction = direction,
-      null = null
+      null = null,
+      ...
     )
   }
 
   bf_val <- data.frame(
     Parameter = colnames(posterior),
-    BF = sdbf,
+    log_BF = log(sdbf),
     stringsAsFactors = FALSE
   )
 
@@ -278,9 +378,9 @@ bayesfactor_parameters.data.frame <- function(posterior, prior = NULL,
     class(bf_val)
   ))
 
-  attr(bf_val, "hypothesis") <- null
+  attr(bf_val, "hypothesis") <- null # don't change the name of this attribute - it is used only internally for "see" and printing
   attr(bf_val, "direction") <- direction
-  attr(bf_val, "plot_data") <- .make_sdBF_plot_data(posterior, prior, direction, null)
+  attr(bf_val, "plot_data") <- .make_BF_plot_data(posterior, prior, direction, null, ...)
 
   bf_val
 }
@@ -289,7 +389,9 @@ bayesfactor_parameters.data.frame <- function(posterior, prior = NULL,
 
 #' @keywords internal
 #' @importFrom insight print_color
-.bayesfactor_parameters <- function(posterior, prior, direction = 0, null = 0) {
+.bayesfactor_parameters <- function(posterior, prior, direction = 0, null = 0, ...) {
+  stopifnot(length(null) %in% c(1, 2))
+
   if (isTRUE(all.equal(posterior, prior))) {
     return(1)
   }
@@ -301,7 +403,7 @@ bayesfactor_parameters.data.frame <- function(posterior, prior = NULL,
 
   if (length(null) == 1) {
     relative_density <- function(samples) {
-      f_samples <- suppressWarnings(logspline::logspline(samples))
+      f_samples <- .logspline(samples, ...)
       d_samples <- logspline::dlogspline(null, f_samples)
 
       if (direction < 0) {
@@ -321,8 +423,8 @@ bayesfactor_parameters.data.frame <- function(posterior, prior = NULL,
     null <- sort(null)
     null[is.infinite(null)] <- 1.797693e+308 * sign(null[is.infinite(null)])
 
-    f_prior <- logspline::logspline(prior)
-    f_posterior <- logspline::logspline(posterior)
+    f_prior <- .logspline(prior, ...)
+    f_posterior <- .logspline(posterior, ...)
 
     h0_prior <- diff(logspline::plogspline(null, f_prior))
     h0_post <- diff(logspline::plogspline(null, f_posterior))
@@ -342,109 +444,27 @@ bayesfactor_parameters.data.frame <- function(posterior, prior = NULL,
     BF_alt_full <- h1_post / h1_prior
 
     return(BF_alt_full / BF_null_full)
-  } else {
-    stop("'null' must be of length 1 or 2")
   }
 }
 
+# Bad Methods -------------------------------------------------------------
 
-# UTILS -------------------------------------------------------------------
-
-#' @keywords internal
-.get_direction <- function(direction) {
-  if (length(direction) > 1) {
-    warning("Using first 'direction' value.")
-    direction <- direction[1]
-  }
-
-  String <- c("left", "right", "one-sided", "onesided", "two-sided", "twosided", "<", ">", "=", "-1", "0", "1", "+1")
-  Value <- c(-1, 1, 1, 1, 0, 0, -1, 1, 0, -1, 0, 1, 1)
-
-  ind <- String == direction
-  if (length(ind) == 0) {
-    stop("Unrecognized 'direction' argument.")
-  }
-  Value[ind]
-}
-
-
-
-#' @importFrom stats median mad approx
-#' @importFrom utils stack
-#' @keywords internal
-.make_sdBF_plot_data <- function(posterior, prior, direction, null) {
-  if (!requireNamespace("logspline")) {
-    stop("Package \"logspline\" needed for this function to work. Please install it.")
-  }
-
-  estimate_samples_density <- function(samples) {
-    nm <- .safe_deparse(substitute(samples))
-    samples <- utils::stack(samples)
-    samples <- split(samples, samples$ind)
-
-    samples <- lapply(samples, function(data) {
-      # 1. estimate density
-      x <- data$values
-
-      extend_scale <- 0.05
-      precision <- 2^8
-
-      x_range <- range(x)
-      x_rangex <- stats::median(x) + 7 * stats::mad(x) * c(-1, 1)
-      x_range <- c(
-        max(c(x_range[1], x_rangex[1])),
-        min(c(x_range[2], x_rangex[2]))
-      )
-
-      extension_scale <- diff(x_range) * extend_scale
-      x_range[1] <- x_range[1] - extension_scale
-      x_range[2] <- x_range[2] + extension_scale
-
-      x_axis <- seq(x_range[1], x_range[2], length.out = precision)
-      f_x <- logspline::logspline(x)
-      y <- logspline::dlogspline(x_axis, f_x)
-      d_points <- data.frame(x = x_axis, y = y)
-
-      # 2. estimate points
-      d_null <- stats::approx(d_points$x, d_points$y, xout = null)
-      d_null$y[is.na(d_null$y)] <- 0
-
-      # 3. direction?
-      if (direction > 0) {
-        d_points <- d_points[d_points$x > min(null), , drop = FALSE]
-        norm_factor <- 1 - logspline::plogspline(min(null), f_x)
-        d_points$y <- d_points$y / norm_factor
-        d_null$y <- d_null$y / norm_factor
-      } else if (direction < 0) {
-        d_points <- d_points[d_points$x < max(null), , drop = FALSE]
-        norm_factor <- logspline::plogspline(max(null), f_x)
-        d_points$y <- d_points$y / norm_factor
-        d_null$y <- d_null$y / norm_factor
-      }
-
-      d_points$ind <- d_null$ind <- data$ind[1]
-      list(d_points, d_null)
-    })
-
-    # 4a. orgenize
-    point0 <- lapply(samples, function(.) as.data.frame(.[[2]]))
-    point0 <- do.call("rbind", point0)
-
-    samplesX <- lapply(samples, function(.) .[[1]])
-    samplesX <- do.call("rbind", samplesX)
-
-    samplesX$Distribution <- point0$Distribution <- nm
-    rownames(samplesX) <- rownames(point0) <- c()
-
-    list(samplesX, point0)
-  }
-
-  # 4b. orgenize
-  posterior <- estimate_samples_density(posterior)
-  prior <- estimate_samples_density(prior)
-
-  list(
-    plot_data = rbind(posterior[[1]], prior[[1]]),
-    d_points = rbind(posterior[[2]], prior[[2]])
+#' @export
+bayesfactor_parameters.bayesfactor_models <- function(...) {
+  stop(
+    "Oh no, 'bayesfactor_parameters()' does not know how to deal with multiple models :(\n",
+    "You might want to use 'bayesfactor_inclusion()' here to test specific terms across models."
   )
 }
+
+#' @export
+bayesfactor_parameters.sim <- function(...) {
+  stop(
+    "Bayes factors are based on the shift from a prior to a posterior. ",
+    "Since simulated draws are not based on any priors, computing Bayes factors does not make sense :(\n",
+    "You might want to try `rope`, `ci`, `pd` or `pmap` for posterior-based inference."
+  )
+}
+
+#' @export
+bayesfactor_parameters.sim.merMod <- bayesfactor_parameters.sim

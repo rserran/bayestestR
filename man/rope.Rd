@@ -7,6 +7,7 @@
 \alias{rope.data.frame}
 \alias{rope.emmGrid}
 \alias{rope.BFBayesFactor}
+\alias{rope.MCMCglmm}
 \alias{rope.stanreg}
 \alias{rope.brmsfit}
 \title{Region of Practical Equivalence (ROPE)}
@@ -15,33 +16,54 @@ rope(x, ...)
 
 \method{rope}{default}(x, ...)
 
-\method{rope}{numeric}(x, range = "default", ci = 0.89,
-  ci_method = "HDI", verbose = TRUE, ...)
+\method{rope}{numeric}(x, range = "default", ci = 0.95, ci_method = "HDI", verbose = TRUE, ...)
 
-\method{rope}{data.frame}(x, range = "default", ci = 0.89,
-  ci_method = "HDI", verbose = TRUE, ...)
+\method{rope}{data.frame}(x, range = "default", ci = 0.95, ci_method = "HDI", verbose = TRUE, ...)
 
-\method{rope}{emmGrid}(x, range = "default", ci = 0.89,
-  verbose = TRUE, ...)
+\method{rope}{emmGrid}(x, range = "default", ci = 0.95, ci_method = "HDI", verbose = TRUE, ...)
 
-\method{rope}{BFBayesFactor}(x, range = "default", ci = 0.89,
-  verbose = TRUE, ...)
+\method{rope}{BFBayesFactor}(x, range = "default", ci = 0.95, ci_method = "HDI", verbose = TRUE, ...)
 
-\method{rope}{stanreg}(x, range = "default", ci = 0.89,
-  ci_method = "HDI", effects = c("fixed", "random", "all"),
-  parameters = NULL, verbose = TRUE, ...)
+\method{rope}{MCMCglmm}(x, range = "default", ci = 0.95, ci_method = "HDI", verbose = TRUE, ...)
 
-\method{rope}{brmsfit}(x, range = "default", ci = 0.89,
-  ci_method = "HDI", effects = c("fixed", "random", "all"),
+\method{rope}{stanreg}(
+  x,
+  range = "default",
+  ci = 0.95,
+  ci_method = "HDI",
+  effects = c("fixed", "random", "all"),
+  component = c("location", "all", "conditional", "smooth_terms", "sigma",
+    "distributional", "auxiliary"),
+  parameters = NULL,
+  verbose = TRUE,
+  ...
+)
+
+\method{rope}{brmsfit}(
+  x,
+  range = "default",
+  ci = 0.95,
+  ci_method = "HDI",
+  effects = c("fixed", "random", "all"),
   component = c("conditional", "zi", "zero_inflated", "all"),
-  parameters = NULL, verbose = TRUE, ...)
+  parameters = NULL,
+  verbose = TRUE,
+  ...
+)
 }
 \arguments{
 \item{x}{Vector representing a posterior distribution. Can also be a \code{stanreg} or \code{brmsfit} model.}
 
 \item{...}{Currently not used.}
 
-\item{range}{ROPE's lower and higher bounds. Should be a vector of length two (e.g., \code{c(-0.1, 0.1)}) or \code{"default"}. If \code{"default"}, the range is set to \code{c(-0.1, 0.1)} if input is a vector, and based on \code{\link[=rope_range]{rope_range()}} if a Bayesian model is provided.}
+\item{range}{ROPE's lower and higher bounds. Should be \code{"default"} or
+depending on the number of outcome variables a vector or a list. In models with one response,
+`range` should be a vector of length two (e.g., \code{c(-0.1, 0.1)}). In
+multivariate models, `range` should be a list with a numeric vectors for
+each response variable. Vector names should correspond to the name of the response
+variables. If \code{"default"} and input is a vector, the range is set to \code{c(-0.1,
+0.1)}. If \code{"default"} and input is a Bayesian model,
+\code{\link[=rope_range]{rope_range()}} is used.}
 
 \item{ci}{The Credible Interval (CI) probability, corresponding to the proportion of HDI, to use for the percentage in ROPE.}
 
@@ -52,21 +74,22 @@ rope(x, ...)
 \item{effects}{Should results for fixed effects, random effects or both be returned?
 Only applies to mixed models. May be abbreviated.}
 
+\item{component}{Should results for all parameters, parameters for the conditional model
+or the zero-inflated part of the model be returned? May be abbreviated. Only
+applies to \pkg{brms}-models.}
+
 \item{parameters}{Regular expression pattern that describes the parameters that
 should be returned. Meta-parameters (like \code{lp__} or \code{prior_}) are
 filtered by default, so only parameters that typically appear in the
 \code{summary()} are returned. Use \code{parameters} to select specific parameters
 for the output.}
-
-\item{component}{Should results for all parameters, parameters for the conditional model
-or the zero-inflated part of the model be returned? May be abbreviated. Only
-applies to \pkg{brms}-models.}
 }
 \description{
-Compute the proportion (in percentage) of the HDI (default to the 90\% HDI) of a posterior distribution that lies within a region of practical equivalence.
+Compute the proportion of the HDI (default to the 89\% HDI) of a posterior distribution that lies within a region of practical equivalence.
 }
 \details{
-Statistically, the probability of a posterior distribution of being
+\subsection{ROPE}{
+  Statistically, the probability of a posterior distribution of being
   different from 0 does not make much sense (the probability of a single value
   null hypothesis in a continuous distribution is 0). Therefore, the idea
   underlining ROPE is to let the user define an area around the null value
@@ -84,9 +107,8 @@ Statistically, the probability of a posterior distribution of being
   (or 89\%, considered more stable) \link[=hdi]{HDI} that falls within the
   ROPE as an index for "null-hypothesis" testing (as understood under the
   Bayesian framework, see \code{\link[=equivalence_test]{equivalence_test()}}).
-  \cr \cr
-  \strong{ Sensitivity to parameter's scale}
-  \cr \cr
+}
+\subsection{Sensitivity to parameter's scale}{
   It is important to consider the unit (i.e., the scale) of the predictors
   when using an index based on the ROPE, as the correct interpretation of the
   ROPE as representing a region of practical equivalence to zero is dependent
@@ -94,9 +116,8 @@ Statistically, the probability of a posterior distribution of being
   the unit of its parameter. In other words, as the ROPE represents a fixed
   portion of the response's scale, its proximity with a coefficient depends
   on the scale of the coefficient itself.
-  \cr \cr
-  \strong{Multicollinearity: Non-independent covariates}
-  \cr \cr
+}
+\subsection{Multicollinearity: Non-independent covariates}{
   When parameters show strong correlations, i.e. when covariates are not
   independent, the joint parameter distributions may shift towards or
   away from the ROPE. Collinearity invalidates ROPE and hypothesis
@@ -113,6 +134,15 @@ Statistically, the probability of a posterior distribution of being
   at different pair plots. An even more sophisticated check is the projection
   predictive variable selection (\cite{Piironen and Vehtari 2017}).
 }
+\subsection{Strengths and Limitations}{
+  \strong{Strengths:} Provides information related to the practical relevance of the effects.
+  \cr \cr
+  \strong{Limitations:} A ROPE range needs to be arbitrarily defined. Sensitive to the scale (the unit) of the predictors. Not sensitive to highly significant effects.
+}
+}
+\note{
+There is also a \href{https://easystats.github.io/see/articles/bayestestR.html}{\code{plot()}-method} implemented in the \href{https://easystats.github.io/see/}{\pkg{see}-package}.
+}
 \examples{
 library(bayestestR)
 
@@ -120,7 +150,7 @@ rope(x = rnorm(1000, 0, 0.01), range = c(-0.1, 0.1))
 rope(x = rnorm(1000, 0, 1), range = c(-0.1, 0.1))
 rope(x = rnorm(1000, 1, 0.01), range = c(-0.1, 0.1))
 rope(x = rnorm(1000, 1, 1), ci = c(.90, .95))
-
+\dontrun{
 library(rstanarm)
 model <- stan_glm(mpg ~ wt + gear, data = mtcars, chains = 2, iter = 200, refresh = 0)
 rope(model)
@@ -128,9 +158,14 @@ rope(model, ci = c(.90, .95))
 
 library(emmeans)
 rope(emtrends(model, ~1, "wt"), ci = c(.90, .95))
-\dontrun{
+
 library(brms)
 model <- brms::brm(mpg ~ wt + cyl, data = mtcars)
+rope(model)
+rope(model, ci = c(.90, .95))
+
+library(brms)
+model <- brms::brm(brms::mvbind(mpg, disp) ~ wt + cyl, data = mtcars)
 rope(model)
 rope(model, ci = c(.90, .95))
 
@@ -139,7 +174,6 @@ bf <- ttestBF(x = rnorm(100, 1, 1))
 rope(bf)
 rope(bf, ci = c(.90, .95))
 }
-
 }
 \references{
 \itemize{
@@ -148,6 +182,7 @@ rope(bf, ci = c(.90, .95))
 \item Kruschke, J. K. (2011). Bayesian assessment of null values via parameter estimation and model comparison. Perspectives on Psychological Science, 6(3), 299-312. \doi{10.1177/1745691611406925}.
 \item Kruschke, J. K. (2014). Doing Bayesian data analysis: A tutorial with R, JAGS, and Stan. Academic Press. \doi{10.1177/2515245918771304}.
 \item Kruschke, J. K. (2018). Rejecting or accepting parameter values in Bayesian estimation. Advances in Methods and Practices in Psychological Science, 1(2), 270-280. \doi{10.1177/2515245918771304}.
+\item Makowski D, Ben-Shachar MS, Chen SHA, Lüdecke D (2019) Indices of Effect Existence and Significance in the Bayesian Framework. Frontiers in Psychology 2019;10:2767. \doi{10.3389/fpsyg.2019.02767}
 \item Piironen, J., & Vehtari, A. (2017). Comparison of Bayesian predictive methods for model selection. Statistics and Computing, 27(3), 711–735. \doi{10.1007/s11222-016-9649-y}
 }
 }

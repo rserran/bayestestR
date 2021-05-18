@@ -4,16 +4,37 @@
 \alias{effective_sample}
 \alias{effective_sample.brmsfit}
 \alias{effective_sample.stanreg}
+\alias{effective_sample.blavaan}
+\alias{effective_sample.MCMCglmm}
 \title{Effective Sample Size (ESS)}
 \usage{
 effective_sample(model, ...)
 
-\method{effective_sample}{brmsfit}(model, effects = c("fixed", "random",
-  "all"), component = c("conditional", "zi", "zero_inflated", "all"),
-  parameters = NULL, ...)
+\method{effective_sample}{brmsfit}(
+  model,
+  effects = c("fixed", "random", "all"),
+  component = c("conditional", "zi", "zero_inflated", "all"),
+  parameters = NULL,
+  ...
+)
 
-\method{effective_sample}{stanreg}(model, effects = c("fixed", "random",
-  "all"), parameters = NULL, ...)
+\method{effective_sample}{stanreg}(
+  model,
+  effects = c("fixed", "random", "all"),
+  component = c("location", "all", "conditional", "smooth_terms", "sigma",
+    "distributional", "auxiliary"),
+  parameters = NULL,
+  ...
+)
+
+\method{effective_sample}{blavaan}(model, parameters = NULL, ...)
+
+\method{effective_sample}{MCMCglmm}(
+  model,
+  effects = c("fixed", "random", "all"),
+  parameters = NULL,
+  ...
+)
 }
 \arguments{
 \item{model}{A \code{stanreg}, \code{stanfit}, or \code{brmsfit} object.}
@@ -43,9 +64,11 @@ This function returns the effective sample size (ESS).
 \strong{Effective Sample (ESS)} should be as large as possible, altough for most applications, an effective sample size greater than 1,000 is sufficient for stable estimates (Bürkner, 2017). The ESS corresponds to the number of independent samples with the same estimation power as the N autocorrelated samples. It is is a measure of \dQuote{how much independent information there is in autocorrelated chains} (\emph{Kruschke 2015, p182-3}).
 }
 \examples{
+\dontrun{
 library(rstanarm)
 model <- stan_glm(mpg ~ wt + gear, data = mtcars, chains = 2, iter = 200, refresh = 0)
 effective_sample(model)
+}
 }
 \references{
 \itemize{

@@ -2,7 +2,12 @@
 #'
 #' Compute a Bayesian equivalent of the \emph{p}-value, related to the odds that a parameter (described by its posterior distribution) has against the null hypothesis (\emph{h0}) using Mills' (2014, 2017) \emph{Objective Bayesian Hypothesis Testing} framework. It corresponds to the density value at 0 divided by the density at the Maximum A Posteriori (MAP).
 #'
-#' @details Note that this method is sensitive to the density estimation \code{method} (see the secion in the examples below).
+#' @details Note that this method is sensitive to the density estimation \code{method} (see the section in the examples below).
+#' \subsection{Strengths and Limitations}{
+#' \strong{Strengths:} Straightforward computation. Objective property of the posterior distribution.
+#' \cr \cr
+#' \strong{Limitations:} Limited information favoring the null hypothesis. Relates on density approximation. Indirect relationship between mathematical definition and interpretation. Only suitable for weak / very diffused priors.
+#' }
 #'
 #' @inheritParams hdi
 #' @inheritParams density_at
@@ -12,14 +17,14 @@
 #'
 #' p_map(rnorm(1000, 0, 1))
 #' p_map(rnorm(1000, 10, 1))
-#'
+#' \dontrun{
 #' library(rstanarm)
 #' model <- stan_glm(mpg ~ wt + gear, data = mtcars, chains = 2, iter = 200, refresh = 0)
 #' p_map(model)
 #'
 #' library(emmeans)
 #' p_map(emtrends(model, ~1, "wt"))
-#' \dontrun{
+#'
 #' library(brms)
 #' model <- brms::brm(mpg ~ wt + cyl, data = mtcars)
 #' p_map(model)
@@ -27,9 +32,7 @@
 #' library(BayesFactor)
 #' bf <- ttestBF(x = rnorm(100, 1, 1))
 #' p_map(bf)
-#' }
 #'
-#' \donttest{
 #' # ---------------------------------------
 #' # Robustness to density estimation method
 #' set.seed(333)
@@ -50,10 +53,10 @@
 #' summary(data$logspline)
 #' boxplot(data[c("KernSmooth", "logspline")])
 #' }
-#'
 #' @seealso \href{https://www.youtube.com/watch?v=Ip8Ci5KUVRc}{Jeff Mill's talk}
 #'
 #' @references \itemize{
+#'   \item Makowski D, Ben-Shachar MS, Chen SHA, Lüdecke D (2019) Indices of Effect Existence and Significance in the Bayesian Framework. Frontiers in Psychology 2019;10:2767. \doi{10.3389/fpsyg.2019.02767}
 #'   \item Mills, J. A. (2018). Objective Bayesian Precise Hypothesis Testing. University of Cincinnati.
 #' }
 #'
@@ -63,12 +66,12 @@ p_map <- function(x, precision = 2^10, method = "kernel", ...) {
   UseMethod("p_map")
 }
 
-
-
-
-
-
 #' @rdname p_map
+#' @export
+p_pointnull <- p_map
+
+
+
 #' @export
 p_map.numeric <- function(x, precision = 2^10, method = "kernel", ...) {
   # Density at MAP
@@ -106,29 +109,86 @@ p_map.data.frame <- function(x, precision = 2^10, method = "kernel", ...) {
   out
 }
 
+
+
+
 #' @export
 p_map.emmGrid <- function(x, precision = 2^10, method = "kernel", ...) {
-  if (!requireNamespace("emmeans")) {
-    stop("Package 'emmeans' required for this function to work. Please install it by running `install.packages('emmeans')`.")
-  }
-  xdf <- as.data.frame(as.matrix(emmeans::as.mcmc.emmGrid(x, names = FALSE)))
+  xdf <- insight::get_parameters(x)
+
   out <- p_map(xdf, precision = precision, method = method, ...)
-  attr(out, "object_name") <- deparse(substitute(x), width.cutoff = 500)
+  attr(out, "object_name") <- .safe_deparse(substitute(x))
   out
 }
+
+#' @export
+p_map.emm_list <- p_map.emmGrid
+
+
 
 
 #' @importFrom insight get_parameters
 #' @keywords internal
 .p_map_models <- function(x, precision, method, effects, component, parameters, ...) {
-  out <- p_map(insight::get_parameters(x, effects = effects, component = component, parameters = parameters), precision = precision, method = method, ...)
+  p_map(insight::get_parameters(x, effects = effects, component = component, parameters = parameters), precision = precision, method = method, ...)
+}
 
+
+
+
+#' @export
+p_map.mcmc <- function(x, precision = 2^10, method = "kernel", parameters = NULL, ...) {
+  out <- .p_map_models(
+    x = x,
+    precision = precision,
+    method = method,
+    effects = "fixed",
+    component = "conditional",
+    parameters = parameters,
+    ...
+  )
+
+  attr(out, "data") <- insight::get_parameters(x, parameters = parameters)
   out
 }
 
-#' @rdname p_map
+
 #' @export
-p_map.stanreg <- function(x, precision = 2^10, method = "kernel", effects = c("fixed", "random", "all"), parameters = NULL, ...) {
+p_map.bcplm <- p_map.mcmc
+
+#' @export
+p_map.blrm <- p_map.mcmc
+
+#' @export
+p_map.mcmc.list <- p_map.mcmc
+
+#' @export
+p_map.BGGM <- p_map.mcmc
+
+
+
+#' @export
+p_map.bamlss <- function(x, precision = 2^10, method = "kernel", component = c("all", "conditional", "location"), parameters = NULL, ...) {
+  component <- match.arg(component)
+  out <- .p_map_models(
+    x = x,
+    precision = precision,
+    method = method,
+    effects = "all",
+    component = component,
+    parameters = parameters,
+    ...
+  )
+
+  out <- .add_clean_parameters_attribute(out, x)
+  attr(out, "data") <- insight::get_parameters(x, parameters = parameters)
+  out
+}
+
+
+
+#' @export
+p_map.sim.merMod <- function(x, precision = 2^10, method = "kernel", effects = c("fixed", "random", "all"), parameters = NULL, ...) {
   effects <- match.arg(effects)
 
   out <- .p_map_models(
@@ -141,40 +201,109 @@ p_map.stanreg <- function(x, precision = 2^10, method = "kernel", effects = c("f
     ...
   )
 
-  attr(out, "object_name") <- deparse(substitute(x), width.cutoff = 500)
+  attr(out, "data") <- insight::get_parameters(x, effects = effects, parameters = parameters)
   out
 }
+
+
+
+
+#' @export
+p_map.sim <- function(x, precision = 2^10, method = "kernel", parameters = NULL, ...) {
+  out <- .p_map_models(
+    x = x,
+    precision = precision,
+    method = method,
+    effects = "fixed",
+    component = "conditional",
+    parameters = parameters,
+    ...
+  )
+
+  attr(out, "data") <- insight::get_parameters(x, parameters = parameters)
+  out
+}
+
+
+
+
+#' @rdname p_map
+#' @export
+p_map.stanreg <- function(x, precision = 2^10, method = "kernel", effects = c("fixed", "random", "all"), component = c("location", "all", "conditional", "smooth_terms", "sigma", "distributional", "auxiliary"), parameters = NULL, ...) {
+  effects <- match.arg(effects)
+  component <- match.arg(component)
+  cleaned_parameters <- insight::clean_parameters(x)
+
+  out <- .prepare_output(
+    p_map(insight::get_parameters(x, effects = effects, component = component, parameters = parameters), precision = precision, method = method),
+    cleaned_parameters,
+    inherits(x, "stanmvreg")
+  )
+
+  attr(out, "clean_parameters") <- cleaned_parameters
+  class(out) <- unique(c("p_map", class(out)))
+  attr(out, "object_name") <- .safe_deparse(substitute(x))
+  out
+}
+
+#' @export
+p_map.stanfit <- p_map.stanreg
+
+
+#' @export
+p_map.blavaan <- p_map.stanreg
+
+
 
 #' @rdname p_map
 #' @export
 p_map.brmsfit <- function(x, precision = 2^10, method = "kernel", effects = c("fixed", "random", "all"), component = c("conditional", "zi", "zero_inflated", "all"), parameters = NULL, ...) {
   effects <- match.arg(effects)
   component <- match.arg(component)
+  cleaned_parameters <- insight::clean_parameters(x)
 
-  out <- .p_map_models(
-    x = x,
-    precision = precision,
-    method = method,
-    effects = effects,
-    component = component,
-    parameters = parameters,
-    ...
+  out <- .prepare_output(
+    p_map(insight::get_parameters(x, effects = effects, component = component, parameters = parameters), precision = precision, method = method, ...),
+    cleaned_parameters
   )
 
-  attr(out, "object_name") <- deparse(substitute(x), width.cutoff = 500)
+  attr(out, "clean_parameters") <- cleaned_parameters
+  class(out) <- unique(c("p_map", class(out)))
+  attr(out, "object_name") <- .safe_deparse(substitute(x))
   out
 }
 
 
 
 
-#' @rdname p_map
+
 #' @export
 p_map.BFBayesFactor <- function(x, precision = 2^10, method = "kernel", ...) {
   out <- p_map(insight::get_parameters(x), precision = precision, method = method, ...)
-  attr(out, "object_name") <- deparse(substitute(x), width.cutoff = 500)
+  attr(out, "object_name") <- .safe_deparse(substitute(x))
   out
 }
+
+
+
+#' @export
+p_map.MCMCglmm <- function(x, precision = 2^10, method = "kernel", ...) {
+  nF <- x$Fixed$nfl
+  out <- p_map(as.data.frame(x$Sol[, 1:nF, drop = FALSE]), precision = precision, method = method, ...)
+  attr(out, "object_name") <- .safe_deparse(substitute(x))
+  out
+}
+
+
+
+#' @export
+p_map.bayesQR <- function(x, precision = 2^10, method = "kernel", ...) {
+  out <- p_map(insight::get_parameters(x), precision = precision, method = method, ...)
+  attr(out, "object_name") <- .safe_deparse(substitute(x))
+  out
+}
+
+
 
 
 #' @rdname as.numeric.p_direction

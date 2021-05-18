@@ -2,57 +2,86 @@
 % Please edit documentation in R/estimate_density.R
 \name{estimate_density}
 \alias{estimate_density}
+\alias{estimate_density.data.frame}
 \title{Density Estimation}
 \usage{
-estimate_density(x, method = "kernel", precision = 2^10,
-  extend = FALSE, extend_scale = 0.1, bw = "SJ", ...)
+estimate_density(
+  x,
+  method = "kernel",
+  precision = 2^10,
+  extend = FALSE,
+  extend_scale = 0.1,
+  bw = "SJ",
+  ...
+)
+
+\method{estimate_density}{data.frame}(
+  x,
+  method = "kernel",
+  precision = 2^10,
+  extend = FALSE,
+  extend_scale = 0.1,
+  bw = "SJ",
+  ci = NULL,
+  group_by = NULL,
+  ...
+)
 }
 \arguments{
-\item{x}{Vector representing a posterior distribution. Can also be a
-\code{stanreg}, \code{brmsfit} or a \code{BayesFactor} model.}
+\item{x}{Vector representing a posterior distribution, or a data frame of such
+vectors. Can also be a Bayesian model (\code{stanreg}, \code{brmsfit},
+\code{MCMCglmm}, \code{mcmc} or \code{bcplm}) or a \code{BayesFactor} model.}
 
 \item{method}{Density estimation method. Can be \code{"kernel"} (default), \code{"logspline"} or \code{"KernSmooth"}.}
 
-\item{precision}{Number of points of density data. See the \code{n} parameter in \link[=density]{density}.}
+\item{precision}{Number of points of density data. See the \code{n} parameter in \code{density}.}
 
 \item{extend}{Extend the range of the x axis by a factor of \code{extend_scale}.}
 
 \item{extend_scale}{Ratio of range by which to extend the x axis. A value of \code{0.1} means that the x axis will be extended by \code{1/10} of the range of the data.}
 
-\item{bw}{the smoothing bandwidth to be used.  The kernels are scaled
-    such that this is the standard deviation of the smoothing kernel.
-    (Note this differs from the reference books cited below, and from S-PLUS.)
-
-    \code{bw} can also be a character string giving a rule to choose the
-    bandwidth.  See \code{\link{bw.nrd}}. \cr The default,
-    \code{"nrd0"}, has remained the default for historical and
-    compatibility reasons, rather than as a general recommendation,
-    where e.g., \code{"SJ"} would rather fit, see also Venables and
-    Ripley (2002).
-
-    The specified (or computed) value of \code{bw} is multiplied by
-    \code{adjust}.
-  }
+\item{bw}{See the eponymous argument in \code{density}. Here, the default has been changed for \code{"SJ"}, which is recommended.}
 
 \item{...}{Currently not used.}
+
+\item{ci}{The confidence interval threshold. Only used when \code{method = "kernel"}.}
+
+\item{group_by}{Optional character vector. If not \code{NULL} and \code{x} is a data frame, density estimation is performed for each group (subset) indicated by \code{group_by}.}
 }
 \description{
-This function is a wrapper over different methods of density estimation. By default, it uses the base R \link{density} with by default uses a different smoothing bandwidth (\code{"SJ"}) from the legacy default implemented the base R \link{density} function (\code{"nrd0"}). However, Deng \& Wickham suggest that \code{method = "KernSmooth"} is the fastest and the most accurate.
+This function is a wrapper over different methods of density estimation. By default, it uses the base R \code{density} with by default uses a different smoothing bandwidth (\code{"SJ"}) from the legacy default implemented the base R \code{density} function (\code{"nrd0"}). However, Deng \& Wickham suggest that \code{method = "KernSmooth"} is the fastest and the most accurate.
+}
+\note{
+There is also a \href{https://easystats.github.io/see/articles/bayestestR.html}{\code{plot()}-method} implemented in the \href{https://easystats.github.io/see/}{\pkg{see}-package}.
 }
 \examples{
 library(bayestestR)
 
-x <- rnorm(250, 1)
+set.seed(1)
+x <- rnorm(250, mean = 1)
 
-# Methods
-density_kernel <- estimate_density(x, method = "kernel")
+# Basic usage
+density_kernel <- estimate_density(x) # default method is "kernel"
+
+hist(x, prob = TRUE)
+lines(density_kernel$x, density_kernel$y, col = "black", lwd = 2)
+lines(density_kernel$x, density_kernel$CI_low, col = "gray", lty = 2)
+lines(density_kernel$x, density_kernel$CI_high, col = "gray", lty = 2)
+legend("topright",
+  legend = c("Estimate", "95\% CI"),
+  col = c("black", "gray"), lwd = 2, lty = c(1, 2)
+)
+
+# Other Methods
 density_logspline <- estimate_density(x, method = "logspline")
 density_KernSmooth <- estimate_density(x, method = "KernSmooth")
+density_mixture <- estimate_density(x, method = "mixture")
 
 hist(x, prob = TRUE)
 lines(density_kernel$x, density_kernel$y, col = "black", lwd = 2)
 lines(density_logspline$x, density_logspline$y, col = "red", lwd = 2)
 lines(density_KernSmooth$x, density_KernSmooth$y, col = "blue", lwd = 2)
+lines(density_mixture$x, density_mixture$y, col = "green", lwd = 2)
 
 # Extension
 density_extended <- estimate_density(x, extend = TRUE)
@@ -62,9 +91,14 @@ hist(x, prob = TRUE)
 lines(density_extended$x, density_extended$y, col = "red", lwd = 3)
 lines(density_default$x, density_default$y, col = "black", lwd = 3)
 
+# Multiple columns
 df <- data.frame(replicate(4, rnorm(100)))
 head(estimate_density(df))
 
+# Grouped data
+estimate_density(iris, group_by = "Species")
+estimate_density(iris$Petal.Width, group_by = iris$Species)
+\dontrun{
 # rstanarm models
 # -----------------------------------------------
 library(rstanarm)
@@ -73,7 +107,7 @@ head(estimate_density(model))
 
 library(emmeans)
 head(estimate_density(emtrends(model, ~1, "wt")))
-\dontrun{
+
 # brms models
 # -----------------------------------------------
 library(brms)

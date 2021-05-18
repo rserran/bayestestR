@@ -2,28 +2,43 @@
 % Please edit documentation in R/point_estimate.R
 \name{point_estimate}
 \alias{point_estimate}
+\alias{point_estimate.numeric}
 \alias{point_estimate.stanreg}
 \alias{point_estimate.brmsfit}
 \alias{point_estimate.BFBayesFactor}
 \title{Point-estimates of posterior distributions}
 \usage{
-point_estimate(x, centrality = "median", dispersion = FALSE, ...)
+point_estimate(x, centrality = "all", dispersion = FALSE, ...)
 
-\method{point_estimate}{stanreg}(x, centrality = "median",
-  dispersion = FALSE, effects = c("fixed", "random", "all"),
-  parameters = NULL, ...)
+\method{point_estimate}{numeric}(x, centrality = "all", dispersion = FALSE, threshold = 0.1, ...)
 
-\method{point_estimate}{brmsfit}(x, centrality = "median",
-  dispersion = FALSE, effects = c("fixed", "random", "all"),
+\method{point_estimate}{stanreg}(
+  x,
+  centrality = "all",
+  dispersion = FALSE,
+  effects = c("fixed", "random", "all"),
+  component = c("location", "all", "conditional", "smooth_terms", "sigma",
+    "distributional", "auxiliary"),
+  parameters = NULL,
+  ...
+)
+
+\method{point_estimate}{brmsfit}(
+  x,
+  centrality = "all",
+  dispersion = FALSE,
+  effects = c("fixed", "random", "all"),
   component = c("conditional", "zi", "zero_inflated", "all"),
-  parameters = NULL, ...)
+  parameters = NULL,
+  ...
+)
 
-\method{point_estimate}{BFBayesFactor}(x, centrality = "median",
-  dispersion = FALSE, ...)
+\method{point_estimate}{BFBayesFactor}(x, centrality = "all", dispersion = FALSE, ...)
 }
 \arguments{
-\item{x}{Vector representing a posterior distribution. Can also be a
-\code{stanreg}, \code{brmsfit} or a \code{BayesFactor} model.}
+\item{x}{Vector representing a posterior distribution, or a data frame of such
+vectors. Can also be a Bayesian model (\code{stanreg}, \code{brmsfit},
+\code{MCMCglmm}, \code{mcmc} or \code{bcplm}) or a \code{BayesFactor} model.}
 
 \item{centrality}{The point-estimates (centrality indices) to compute.  Character (vector) or list with one or more of these options: \code{"median"}, \code{"mean"}, \code{"MAP"} or \code{"all"}.}
 
@@ -31,21 +46,26 @@ point_estimate(x, centrality = "median", dispersion = FALSE, ...)
 
 \item{...}{Additional arguments to be passed to or from methods.}
 
+\item{threshold}{For \code{centrality = "trimmed"} (i.e. trimmed mean), indicates the fraction (0 to 0.5) of observations to be trimmed from each end of the vector before the mean is computed.}
+
 \item{effects}{Should results for fixed effects, random effects or both be returned?
 Only applies to mixed models. May be abbreviated.}
+
+\item{component}{Should results for all parameters, parameters for the conditional model
+or the zero-inflated part of the model be returned? May be abbreviated. Only
+applies to \pkg{brms}-models.}
 
 \item{parameters}{Regular expression pattern that describes the parameters that
 should be returned. Meta-parameters (like \code{lp__} or \code{prior_}) are
 filtered by default, so only parameters that typically appear in the
 \code{summary()} are returned. Use \code{parameters} to select specific parameters
 for the output.}
-
-\item{component}{Should results for all parameters, parameters for the conditional model
-or the zero-inflated part of the model be returned? May be abbreviated. Only
-applies to \pkg{brms}-models.}
 }
 \description{
 Compute various point-estimates, such as the mean, the median or the MAP, to describe posterior distributions.
+}
+\note{
+There is also a \href{https://easystats.github.io/see/articles/bayestestR.html}{\code{plot()}-method} implemented in the \href{https://easystats.github.io/see/}{\pkg{see}-package}.
 }
 \examples{
 library(bayestestR)

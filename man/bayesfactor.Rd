@@ -4,31 +4,41 @@
 \alias{bayesfactor}
 \title{Bayes Factors (BF)}
 \usage{
-bayesfactor(..., prior = NULL, direction = "two-sided", null = 0,
-  hypothesis = NULL, effects = c("fixed", "random", "all"),
-  verbose = TRUE, denominator = 1, match_models = FALSE,
-  prior_odds = NULL)
+bayesfactor(
+  ...,
+  prior = NULL,
+  direction = "two-sided",
+  null = 0,
+  hypothesis = NULL,
+  effects = c("fixed", "random", "all"),
+  verbose = TRUE,
+  denominator = 1,
+  match_models = FALSE,
+  prior_odds = NULL
+)
 }
 \arguments{
 \item{...}{A numeric vector, model object(s), or the output from \code{bayesfactor_models}.}
 
-\item{prior}{An object representing a prior distribution (see Details).}
+\item{prior}{An object representing a prior distribution (see 'Details').}
 
-\item{direction}{Test type (see details). One of \code{0}, \code{"two-sided"} (default, two tailed),
-\code{-1}, \code{"left"} (left tailed) or \code{1}, \code{"right"} (right tailed).}
+\item{direction}{Test type (see 'Details'). One of \code{0},
+\code{"two-sided"} (default, two tailed), \code{-1}, \code{"left"} (left
+tailed) or \code{1}, \code{"right"} (right tailed).}
 
-\item{null}{Value of the null, either a scaler (for point-null) or a a range
+\item{null}{Value of the null, either a scalar (for point-null) or a range
 (for a interval-null).}
 
-\item{hypothesis}{Deprecated in favour of \code{null}.}
+\item{hypothesis}{A character vector specifying the restrictions as logical conditions (see examples below).}
 
 \item{effects}{Should results for fixed effects, random effects or both be returned?
 Only applies to mixed models. May be abbreviated.}
 
 \item{verbose}{Toggle off warnings.}
 
-\item{denominator}{Either an integer indicating which of the models to use as the denominator,
-or a model to be used as a denominator. Ignored for \code{BFBayesFactor}.}
+\item{denominator}{Either an integer indicating which of the models to use as
+the denominator, or a model to be used as a denominator. Ignored for
+\code{BFBayesFactor}.}
 
 \item{match_models}{See details.}
 
@@ -46,30 +56,37 @@ and if a model comparison is passed, it will compute the \code{\link[=bayesfacto
 \cr\cr
 For a complete overview of these functions, read the \href{https://easystats.github.io/bayestestR/articles/bayes_factors.html}{Bayes factor vignette}.
 }
+\note{
+There is also a \href{https://easystats.github.io/see/articles/bayestestR.html}{\code{plot()}-method} implemented in the \href{https://easystats.github.io/see/}{\pkg{see}-package}.
+}
 \examples{
 library(bayestestR)
 
-# Vectors
-prior <- distribution_normal(1000, mean = 0, sd = 1)
-posterior <- distribution_normal(1000, mean = .5, sd = .3)
+if (require("logspline")) {
+  prior <- distribution_normal(1000, mean = 0, sd = 1)
+  posterior <- distribution_normal(1000, mean = .5, sd = .3)
 
-bayesfactor(posterior, prior = prior)
+  bayesfactor(posterior, prior = prior)
+}
 \dontrun{
 # rstanarm models
 # ---------------
-library(rstanarm)
-model <- stan_lmer(extra ~ group + (1 | ID), data = sleep)
-bayesfactor(model)
+if (require("rstanarm")) {
+  model <- stan_lmer(extra ~ group + (1 | ID), data = sleep)
+  bayesfactor(model)
+}
 }
 
-# Frequentist models
-# ---------------
-m0 <- lm(extra ~ 1, data = sleep)
-m1 <- lm(extra ~ group, data = sleep)
-m2 <- lm(extra ~ group + ID, data = sleep)
+if (require("logspline")) {
+  # Frequentist models
+  # ---------------
+  m0 <- lm(extra ~ 1, data = sleep)
+  m1 <- lm(extra ~ group, data = sleep)
+  m2 <- lm(extra ~ group + ID, data = sleep)
 
-comparison <- bayesfactor(m0, m1, m2)
-comparison
+  comparison <- bayesfactor(m0, m1, m2)
+  comparison
 
-bayesfactor(comparison)
+  bayesfactor(comparison)
+}
 }

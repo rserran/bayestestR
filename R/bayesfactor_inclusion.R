@@ -1,5 +1,8 @@
 #' Inclusion Bayes Factors for testing predictors across Bayesian models
 #'
+#' The \code{bf_*} function is an alias of the main function.
+#' \cr \cr
+#' For more info, see \href{https://easystats.github.io/bayestestR/articles/bayes_factors.html}{the Bayes factors vignette}.
 #'
 #' @author Mattan S. Ben-Shachar
 #' @param models An object of class \code{\link{bayesfactor_models}} or \code{BFBayesFactor}.
@@ -7,26 +10,28 @@
 #' @param prior_odds Optional vector of prior odds for the models. See \code{BayesFactor::priorOdds<-}.
 #' @param ... Arguments passed to or from other methods.
 #'
-#' @return a data frame containing the prior and posterior probabilities, and BF for each effect.
+#' @return a data frame containing the prior and posterior probabilities, and log(BF) for each effect.
 #'
 #' @details Inclusion Bayes factors answer the question: Are the observed data more
 #' probable under models with a particular effect, than they are under models without
 #' that particular effect? In other words, on average - are models with effect \eqn{X}
 #' more likely to have produced the observed data than models without effect \eqn{X}?
-#' \cr \cr
-#' For more info, see \href{https://easystats.github.io/bayestestR/articles/bayes_factors.html}{the Bayes factors vignette}.
 #'
 #' \subsection{Match Models}{
 #' If \code{match_models=FALSE} (default), Inclusion BFs are computed by comparing all models
-#' with a predictor against all models without that predictor. If \code{TRUE},
+#' with a term against all models without that term. If \code{TRUE},
 #' comparison is restricted to models that (1) do not include any interactions
-#' with the predictor of interest; (2) for interaction predictors, averaging is done
-#' only across models that containe the main effect from which the interaction
-#' predictor is comprised.
+#' with the term of interest; (2) for interaction terms, averaging is done
+#' only across models that containe the main effect terms from which the interaction
+#' term is comprised.
 #' }
 #'
-#' @note Random effects in the \code{lme} style will be displayed as interactions:
-#' i.e., \code{(X|G)} will become \code{1:G} and \code{X:G}.
+#' @inheritSection bayesfactor_parameters Interpreting Bayes Factors
+#'
+#' @note Random effects in the \code{lmer} style are converted to interaction terms:
+#' i.e., \code{(X|G)} will become the terms \code{1:G} and \code{X:G}.
+#'
+#' @seealso \code{\link{weighted_posteriors}} for Bayesian parameter averaging.
 #'
 #' @examples
 #' library(bayestestR)
@@ -56,7 +61,7 @@
 #' \itemize{
 #'   \item Hinne, M., Gronau, Q. F., van den Bergh, D., and Wagenmakers, E. (2019, March 25). A conceptual introduction to Bayesian Model Averaging. \doi{10.31234/osf.io/wgb64}
 #'   \item Clyde, M. A., Ghosh, J., & Littman, M. L. (2011). Bayesian adaptive sampling for variable selection and model averaging. Journal of Computational and Graphical Statistics, 20(1), 80-101.
-#'   \item Mathot. S. (2017). Bayes like a Baws: Interpreting Bayesian Repeated Measures in JASP [Blog post]. Retrieved from https://www.cogsci.nl/blog/interpreting-bayesian-repeated-measures-in-jasp
+#'   \item Mathot, S. (2017). Bayes like a Baws: Interpreting Bayesian Repeated Measures in JASP [Blog post]. Retrieved from https://www.cogsci.nl/blog/interpreting-bayesian-repeated-measures-in-jasp
 #' }
 #'
 #'
@@ -65,9 +70,16 @@ bayesfactor_inclusion <- function(models, match_models = FALSE, prior_odds = NUL
   UseMethod("bayesfactor_inclusion")
 }
 
+#' @rdname bayesfactor_inclusion
+#' @export
+bf_inclusion <- bayesfactor_inclusion
 
 #' @export
 bayesfactor_inclusion.bayesfactor_models <- function(models, match_models = FALSE, prior_odds = NULL, ...) {
+  if (isTRUE(attr(models, "unsupported_models"))) {
+    stop("Can not compute inclusion Bayes factors - passed models are not (yet) supported.", call. = FALSE)
+  }
+
   # Build Models Table #
   df.model <- .get_model_table(models, priorOdds = prior_odds)
   effnames <- colnames(df.model)[-(1:3)]
@@ -90,7 +102,7 @@ bayesfactor_inclusion.bayesfactor_models <- function(models, match_models = FALS
     effnames,
     Pinc = rep(NA, length(effnames)),
     PincD = rep(NA, length(effnames)),
-    BF_inclusion = rep(NA, length(effnames)),
+    log_BF = rep(NA, length(effnames)),
     stringsAsFactors = FALSE
   )
 
@@ -124,14 +136,12 @@ bayesfactor_inclusion.bayesfactor_models <- function(models, match_models = FALS
     # Save results
     df.effect$Pinc[effnames == eff] <- mwithprior
     df.effect$PincD[effnames == eff] <- mwithpost
-    df.effect$BF_inclusion[effnames == eff] <- (mwithpost / mwithoutpost) / (mwithprior / mwithoutprior)
+    df.effect$log_BF[effnames == eff] <- (log(mwithpost) - log(mwithoutpost)) - (log(mwithprior) - log(mwithoutprior))
   }
 
-  df.effect$BF_inclusion <- df.effect$BF_inclusion
   df.effect <- df.effect[, -1, drop = FALSE]
-  colnames(df.effect) <- c("p_prior", "p_posterior", "BF")
+  colnames(df.effect) <- c("p_prior", "p_posterior", "log_BF")
   rownames(df.effect) <- effnames
-
 
   class(df.effect) <- c("bayesfactor_inclusion", class(df.effect))
   attr(df.effect, "matched") <- match_models
@@ -145,81 +155,6 @@ bayesfactor_inclusion.bayesfactor_models <- function(models, match_models = FALS
 bayesfactor_inclusion.BFBayesFactor <- function(models, match_models = FALSE, prior_odds = NULL, ...) {
   models <- bayesfactor_models.BFBayesFactor(models)
   bayesfactor_inclusion.bayesfactor_models(models, match_models = match_models, prior_odds = prior_odds)
-}
-
-
-#' @keywords internal
-#' @importFrom stats as.formula terms terms.formula
-.get_model_table <- function(BFGrid, priorOdds = NULL, ...) {
-  denominator <- attr(BFGrid, "denominator")
-  BFGrid <- rbind(BFGrid[denominator, ], BFGrid[-denominator, ])
-  attr(BFGrid, "denominator") <- 1
-
-  # Prior and post odds
-  Modelnames <- BFGrid$Model
-  if (!is.null(priorOdds)) {
-    priorOdds <- c(1, priorOdds)
-  } else {
-    priorOdds <- rep(1, length(Modelnames))
-  }
-
-  posterior_odds <- priorOdds * BFGrid$BF
-
-  priorProbs <- priorOdds / sum(priorOdds)
-  postProbs <- posterior_odds / sum(posterior_odds)
-
-  df.model <- data.frame(
-    Modelnames,
-    priorProbs,
-    postProbs,
-    stringsAsFactors = FALSE
-  )
-
-  # add effects table
-  make_terms <- function(formula) {
-    formula.f <- stats::as.formula(paste0("~", formula))
-    all.terms <- attr(stats::terms(formula.f), "term.labels")
-
-    fix_trms <- all.terms[!grepl("\\|", all.terms)] # no random
-
-    random_parts <- paste0(all.terms[grepl("\\|", all.terms)]) # only random
-    if (length(random_parts) == 0) {
-      return(fix_trms)
-    }
-
-    random_units <- sub("^.+\\|\\s+", "", random_parts)
-    tmp_random <- lapply(
-      sub("\\|.+$", "", random_parts),
-      function(x) stats::as.formula(paste0("~", x))
-    )
-
-    rand_trms <- vector("list", length(random_parts))
-
-    for (i in seq_along(random_parts)) {
-      tmp_trms <- attr(stats::terms.formula(tmp_random[[i]]), "term.labels")
-
-      if (!any(unlist(strsplit(as.character(tmp_random[[i]])[[2]], " \\+ ")) == "0")) {
-        tmp_trms <- c("1", tmp_trms)
-      }
-
-      rand_trms[[i]] <- paste0(tmp_trms, ":", random_units[[i]])
-    }
-
-    c(fix_trms, unlist(rand_trms))
-  }
-
-  for (m in seq_len(nrow(df.model))) {
-    tmp_terms <- make_terms(df.model$Modelnames[m])
-    if (length(tmp_terms) > 0) {
-      missing_terms <- !tmp_terms %in% colnames(df.model) # For R < 3.6.0
-      if (any(missing_terms)) df.model[, tmp_terms[missing_terms]] <- NA # For R < 3.6.0
-      df.model[m, tmp_terms] <- TRUE
-    }
-  }
-
-  df.model[is.na(df.model)] <- FALSE
-
-  df.model
 }
 
 

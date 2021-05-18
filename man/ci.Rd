@@ -4,34 +4,60 @@
 \alias{ci}
 \alias{ci.numeric}
 \alias{ci.data.frame}
-\alias{ci.emmGrid}
+\alias{ci.sim.merMod}
+\alias{ci.sim}
 \alias{ci.stanreg}
 \alias{ci.brmsfit}
 \alias{ci.BFBayesFactor}
-\title{Confidence/Credible Interval (CI)}
+\alias{ci.MCMCglmm}
+\title{Confidence/Credible/Compatibility Interval (CI)}
 \usage{
 ci(x, ...)
 
-\method{ci}{numeric}(x, ci = 0.89, method = "ETI", verbose = TRUE,
-  ...)
+\method{ci}{numeric}(x, ci = 0.95, method = "ETI", verbose = TRUE, BF = 1, ...)
 
-\method{ci}{data.frame}(x, ci = 0.89, method = "ETI", verbose = TRUE,
-  ...)
+\method{ci}{data.frame}(x, ci = 0.95, method = "ETI", verbose = TRUE, BF = 1, ...)
 
-\method{ci}{emmGrid}(x, ci = 0.89, method = "ETI", verbose = TRUE,
-  ...)
+\method{ci}{sim.merMod}(
+  x,
+  ci = 0.95,
+  method = "ETI",
+  effects = c("fixed", "random", "all"),
+  parameters = NULL,
+  verbose = TRUE,
+  ...
+)
 
-\method{ci}{stanreg}(x, ci = 0.89, method = "ETI",
-  effects = c("fixed", "random", "all"), parameters = NULL,
-  verbose = TRUE, ...)
+\method{ci}{sim}(x, ci = 0.95, method = "ETI", parameters = NULL, verbose = TRUE, ...)
 
-\method{ci}{brmsfit}(x, ci = 0.89, method = "ETI",
-  effects = c("fixed", "random", "all"), component = c("conditional",
-  "zi", "zero_inflated", "all"), parameters = NULL, verbose = TRUE,
-  ...)
+\method{ci}{stanreg}(
+  x,
+  ci = 0.95,
+  method = "ETI",
+  effects = c("fixed", "random", "all"),
+  component = c("location", "all", "conditional", "smooth_terms", "sigma",
+    "distributional", "auxiliary"),
+  parameters = NULL,
+  verbose = TRUE,
+  BF = 1,
+  ...
+)
 
-\method{ci}{BFBayesFactor}(x, ci = 0.89, method = "ETI",
-  verbose = TRUE, ...)
+\method{ci}{brmsfit}(
+  x,
+  ci = 0.95,
+  method = "ETI",
+  effects = c("fixed", "random", "all"),
+  component = c("conditional", "zi", "zero_inflated", "all"),
+  parameters = NULL,
+  verbose = TRUE,
+  BF = 1,
+  ...
+)
+
+\method{ci}{BFBayesFactor}(x, ci = 0.95, method = "ETI", verbose = TRUE, BF = 1, ...)
+
+\method{ci}{MCMCglmm}(x, ci = 0.95, method = "ETI", verbose = TRUE, ...)
 }
 \arguments{
 \item{x}{A \code{stanreg} or \code{brmsfit} model, or a vector representing a posterior distribution.}
@@ -41,9 +67,11 @@ ci(x, ...)
 \item{ci}{Value or vector of probability of the CI (between 0 and 1)
 to be estimated. Default to \code{.89} (89\%) for Bayesian models and \code{.95} (95\%) for frequentist models.}
 
-\item{method}{Can be \link[=eti]{'ETI'} (default) or \link[=hdi]{'HDI'}.}
+\item{method}{Can be \link[=eti]{'ETI'} (default), \link[=hdi]{'HDI'} or \link[=si]{'SI'}.}
 
 \item{verbose}{Toggle off warnings.}
+
+\item{BF}{The amount of support required to be included in the support interval.}
 
 \item{effects}{Should results for fixed effects, random effects or both be returned?
 Only applies to mixed models. May be abbreviated.}
@@ -67,13 +95,21 @@ A data frame with following columns:
   }
 }
 \description{
-Compute Confidence/Credible Intervals (CI) for Bayesian and frequentist models. The Documentation is accessible for:
+Compute Confidence/Credible/Compatibility Intervals (CI) or Support Intervals (SI) for Bayesian and frequentist models. The Documentation is accessible for:
 }
 \details{
 \itemize{
  \item \href{https://easystats.github.io/bayestestR/articles/credible_interval.html}{Bayesian models}
  \item \href{https://easystats.github.io/parameters/reference/ci.merMod.html}{Frequentist models}
 }
+}
+\note{
+When it comes to interpretation, we recommend thinking of the CI in terms of
+  an "uncertainty" or "compatibility" interval, the latter being defined as
+  \dQuote{Given any value in the interval and the background assumptions,
+  the data should not seem very surprising} (\cite{Gelman & Greenland 2019}).
+  \cr \cr
+  There is also a \href{https://easystats.github.io/see/articles/bayestestR.html}{\code{plot()}-method} implemented in the \href{https://easystats.github.io/see/}{\pkg{see}-package}.
 }
 \examples{
 library(bayestestR)
@@ -85,26 +121,35 @@ ci(posterior, method = "HDI")
 df <- data.frame(replicate(4, rnorm(100)))
 ci(df, method = "ETI", ci = c(.80, .89, .95))
 ci(df, method = "HDI", ci = c(.80, .89, .95))
-
-library(rstanarm)
-model <- stan_glm(mpg ~ wt, data = mtcars, chains = 2, iter = 200)
-ci(model, method = "ETI", ci = c(.80, .89))
-ci(model, method = "HDI", ci = c(.80, .89))
 \dontrun{
-library(brms)
-model <- brms::brm(mpg ~ wt + cyl, data = mtcars)
-ci(model, method = "ETI")
-ci(model, method = "HDI")
-
-library(BayesFactor)
-bf <- ttestBF(x = rnorm(100, 1, 1))
-ci(bf, method = "ETI")
-ci(bf, method = "HDI")
-
-library(emmeans)
-model <- emtrends(model, ~1, "wt")
-ci(model, method = "ETI")
-ci(model, method = "HDI")
+if (require("rstanarm")) {
+  model <- stan_glm(mpg ~ wt, data = mtcars, chains = 2, iter = 200, refresh = 0)
+  ci(model, method = "ETI", ci = c(.80, .89))
+  ci(model, method = "HDI", ci = c(.80, .89))
+  ci(model, method = "SI")
 }
 
+if (require("brms")) {
+  model <- brms::brm(mpg ~ wt + cyl, data = mtcars)
+  ci(model, method = "ETI")
+  ci(model, method = "HDI")
+  ci(model, method = "SI")
+}
+
+if (require("BayesFactor")) {
+  bf <- ttestBF(x = rnorm(100, 1, 1))
+  ci(bf, method = "ETI")
+  ci(bf, method = "HDI")
+}
+
+if (require("emmeans")) {
+  model <- emtrends(model, ~1, "wt")
+  ci(model, method = "ETI")
+  ci(model, method = "HDI")
+  ci(model, method = "SI")
+}
+}
+}
+\references{
+Gelman A, Greenland S. Are confidence intervals better termed "uncertainty intervals"? BMJ 2019;l5381. \doi{10.1136/bmj.l5381}
 }

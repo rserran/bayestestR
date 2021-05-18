@@ -16,7 +16,7 @@
 #' df <- data.frame(replicate(4, rnorm(100)))
 #' eti(df)
 #' eti(df, ci = c(.80, .89, .95))
-#'
+#' \dontrun{
 #' library(rstanarm)
 #' model <- stan_glm(mpg ~ wt + gear, data = mtcars, chains = 2, iter = 200, refresh = 0)
 #' eti(model)
@@ -24,7 +24,7 @@
 #'
 #' library(emmeans)
 #' eti(emtrends(model, ~1, "wt"))
-#' \dontrun{
+#'
 #' library(brms)
 #' model <- brms::brm(mpg ~ wt + cyl, data = mtcars)
 #' eti(model)
@@ -45,11 +45,11 @@ eti <- function(x, ...) {
 
 #' @rdname eti
 #' @export
-eti.numeric <- function(x, ci = .89, verbose = TRUE, ...) {
+eti.numeric <- function(x, ci = 0.95, verbose = TRUE, ...) {
   out <- do.call(rbind, lapply(ci, function(i) {
     .eti(x = x, ci = i, verbose = verbose)
   }))
-  class(out) <- unique(c("eti", "see_eti", "bayestestR_ci", "see_ci", class(out)))
+  class(out) <- unique(c("bayestestR_eti", "see_eti", "bayestestR_ci", "see_ci", class(out)))
   attr(out, "data") <- x
   out
 }
@@ -58,57 +58,175 @@ eti.numeric <- function(x, ci = .89, verbose = TRUE, ...) {
 
 #' @rdname eti
 #' @export
-eti.data.frame <- function(x, ci = .89, verbose = TRUE, ...) {
+eti.data.frame <- function(x, ci = 0.95, verbose = TRUE, ...) {
   dat <- .compute_interval_dataframe(x = x, ci = ci, verbose = verbose, fun = "eti")
-  attr(dat, "object_name") <- deparse(substitute(x), width.cutoff = 500)
-  dat
-}
-
-#' @rdname eti
-#' @export
-eti.emmGrid <- function(x, ci = .89, verbose = TRUE, ...) {
-  if (!requireNamespace("emmeans")) {
-    stop("Package 'emmeans' required for this function to work. Please install it by running `install.packages('emmeans')`.")
-  }
-  xdf <- as.data.frame(as.matrix(emmeans::as.mcmc.emmGrid(x, names = FALSE)))
-
-  dat <- .compute_interval_dataframe(x = xdf, ci = ci, verbose = verbose, fun = "eti")
-  attr(dat, "object_name") <- deparse(substitute(x), width.cutoff = 500)
+  attr(dat, "object_name") <- .safe_deparse(substitute(x))
   dat
 }
 
 
+
 #' @rdname eti
 #' @export
-eti.stanreg <- function(x, ci = .89, effects = c("fixed", "random", "all"),
-                        parameters = NULL, verbose = TRUE, ...) {
+eti.MCMCglmm <- function(x, ci = 0.95, verbose = TRUE, ...) {
+  nF <- x$Fixed$nfl
+  d <- as.data.frame(x$Sol[, 1:nF, drop = FALSE])
+  dat <- .compute_interval_dataframe(x = d, ci = ci, verbose = verbose, fun = "eti")
+  attr(dat, "data") <- .safe_deparse(substitute(x))
+  dat
+}
+
+
+
+#' @export
+eti.mcmc <- function(x, ci = 0.95, verbose = TRUE, ...) {
+  d <- as.data.frame(x)
+  dat <- .compute_interval_dataframe(x = d, ci = ci, verbose = verbose, fun = "eti")
+  attr(dat, "data") <- .safe_deparse(substitute(x))
+  dat
+}
+
+
+
+#' @export
+eti.bamlss <- function(x, ci = 0.95, component = c("all", "conditional", "location"), verbose = TRUE, ...) {
+  component <- match.arg(component)
+  d <- insight::get_parameters(x, component = component)
+  dat <- .compute_interval_dataframe(x = d, ci = ci, verbose = verbose, fun = "eti")
+  attr(dat, "data") <- .safe_deparse(substitute(x))
+  dat
+}
+
+
+
+#' @export
+eti.bcplm <- function(x, ci = 0.95, verbose = TRUE, ...) {
+  d <- insight::get_parameters(x)
+  dat <- .compute_interval_dataframe(x = d, ci = ci, verbose = verbose, fun = "eti")
+  attr(dat, "data") <- .safe_deparse(substitute(x))
+  dat
+}
+
+
+#' @export
+eti.bayesQR <- eti.bcplm
+
+#' @export
+eti.blrm <- eti.bcplm
+
+#' @export
+eti.mcmc.list <- eti.bcplm
+
+#' @export
+eti.BGGM <- eti.bcplm
+
+
+
+#' @rdname eti
+#' @export
+eti.sim.merMod <- function(x, ci = 0.95, effects = c("fixed", "random", "all"), parameters = NULL, verbose = TRUE, ...) {
   effects <- match.arg(effects)
-  out <- .compute_interval_stanreg(x, ci, effects, parameters, verbose, fun = "eti")
-  attr(out, "object_name") <- deparse(substitute(x), width.cutoff = 500)
+  dat <- .compute_interval_simMerMod(x = x, ci = ci, effects = effects, parameters = parameters, verbose = verbose, fun = "eti")
+  out <- dat$result
+  attr(out, "data") <- dat$data
   out
 }
 
 
+
 #' @rdname eti
 #' @export
-eti.brmsfit <- function(x, ci = .89, effects = c("fixed", "random", "all"),
+eti.sim <- function(x, ci = 0.95, parameters = NULL, verbose = TRUE, ...) {
+  dat <- .compute_interval_sim(x = x, ci = ci, parameters = parameters, verbose = verbose, fun = "eti")
+  out <- dat$result
+  attr(out, "data") <- dat$data
+  out
+}
+
+
+
+#' @rdname eti
+#' @export
+eti.emmGrid <- function(x, ci = 0.95, verbose = TRUE, ...) {
+  xdf <- insight::get_parameters(x)
+
+  dat <- eti(xdf, ci = ci, verbose = verbose, ...)
+  attr(dat, "object_name") <- .safe_deparse(substitute(x))
+  dat
+}
+
+#' @export
+eti.emm_list <- eti.emmGrid
+
+#' @rdname eti
+#' @export
+eti.stanreg <- function(x, ci = 0.95, effects = c("fixed", "random", "all"),
+                        component = c("location", "all", "conditional", "smooth_terms", "sigma", "distributional", "auxiliary"),
+                        parameters = NULL, verbose = TRUE, ...) {
+  effects <- match.arg(effects)
+  component <- match.arg(component)
+
+  out <- .prepare_output(
+    eti(insight::get_parameters(x, effects = effects, component = component, parameters = parameters), ci = ci, verbose = verbose, ...),
+    insight::clean_parameters(x),
+    inherits(x, "stanmvreg")
+  )
+
+  class(out) <- unique(c("bayestestR_eti", "see_eti", class(out)))
+  attr(out, "object_name") <- .safe_deparse(substitute(x))
+  out
+}
+
+
+#' @export
+eti.stanfit <- eti.stanreg
+
+#' @export
+eti.blavaan <- eti.stanreg
+
+
+
+#' @rdname eti
+#' @export
+eti.brmsfit <- function(x, ci = 0.95, effects = c("fixed", "random", "all"),
                         component = c("conditional", "zi", "zero_inflated", "all"),
                         parameters = NULL, verbose = TRUE, ...) {
   effects <- match.arg(effects)
   component <- match.arg(component)
-  out <- .compute_interval_brmsfit(x, ci, effects, component, parameters, verbose, fun = "eti")
-  attr(out, "object_name") <- deparse(substitute(x), width.cutoff = 500)
+
+  out <- .prepare_output(
+    eti(insight::get_parameters(x, effects = effects, component = component, parameters = parameters), ci = ci, verbose = verbose, ...),
+    insight::clean_parameters(x)
+  )
+
+  class(out) <- unique(c("bayestestR_eti", "see_eti", class(out)))
+  attr(out, "object_name") <- .safe_deparse(substitute(x))
   out
 }
+
 
 
 #' @rdname eti
 #' @export
-eti.BFBayesFactor <- function(x, ci = .89, verbose = TRUE, ...) {
+eti.BFBayesFactor <- function(x, ci = 0.95, verbose = TRUE, ...) {
   out <- eti(insight::get_parameters(x), ci = ci, verbose = verbose, ...)
-  attr(out, "object_name") <- deparse(substitute(x), width.cutoff = 500)
+  attr(out, "object_name") <- .safe_deparse(substitute(x))
   out
 }
+
+
+#' @export
+eti.get_predicted <- function(x, ...) {
+  if ("iterations" %in% names(attributes(x))) {
+    out <- hdi(as.data.frame(t(attributes(x)$iterations)), ...)
+  } else {
+    stop("No iterations present in the output.")
+  }
+  attr(out, "object_name") <- .safe_deparse(substitute(x))
+  out
+}
+
+# Helper ------------------------------------------------------------------
 
 
 #' @importFrom stats quantile
@@ -126,7 +244,7 @@ eti.BFBayesFactor <- function(x, ci = .89, verbose = TRUE, ...) {
   ))
 
   data.frame(
-    "CI" = ci * 100,
+    "CI" = ci,
     "CI_low" = results[1],
     "CI_high" = results[2]
   )

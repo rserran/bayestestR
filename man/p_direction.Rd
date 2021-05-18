@@ -5,6 +5,7 @@
 \alias{pd}
 \alias{p_direction.numeric}
 \alias{p_direction.data.frame}
+\alias{p_direction.MCMCglmm}
 \alias{p_direction.emmGrid}
 \alias{p_direction.stanreg}
 \alias{p_direction.brmsfit}
@@ -15,20 +16,36 @@ p_direction(x, ...)
 
 pd(x, ...)
 
-\method{p_direction}{numeric}(x, method = "direct", ...)
+\method{p_direction}{numeric}(x, method = "direct", null = 0, ...)
 
-\method{p_direction}{data.frame}(x, method = "direct", ...)
+\method{p_direction}{data.frame}(x, method = "direct", null = 0, ...)
 
-\method{p_direction}{emmGrid}(x, method = "direct", ...)
+\method{p_direction}{MCMCglmm}(x, method = "direct", null = 0, ...)
 
-\method{p_direction}{stanreg}(x, effects = c("fixed", "random", "all"),
-  parameters = NULL, method = "direct", ...)
+\method{p_direction}{emmGrid}(x, method = "direct", null = 0, ...)
 
-\method{p_direction}{brmsfit}(x, effects = c("fixed", "random", "all"),
+\method{p_direction}{stanreg}(
+  x,
+  effects = c("fixed", "random", "all"),
+  component = c("location", "all", "conditional", "smooth_terms", "sigma",
+    "distributional", "auxiliary"),
+  parameters = NULL,
+  method = "direct",
+  null = 0,
+  ...
+)
+
+\method{p_direction}{brmsfit}(
+  x,
+  effects = c("fixed", "random", "all"),
   component = c("conditional", "zi", "zero_inflated", "all"),
-  parameters = NULL, method = "direct", ...)
+  parameters = NULL,
+  method = "direct",
+  null = 0,
+  ...
+)
 
-\method{p_direction}{BFBayesFactor}(x, method = "direct", ...)
+\method{p_direction}{BFBayesFactor}(x, method = "direct", null = 0, ...)
 }
 \arguments{
 \item{x}{Vector representing a posterior distribution. Can also be a Bayesian model (\code{stanreg}, \code{brmsfit} or \code{BayesFactor}).}
@@ -37,41 +54,69 @@ pd(x, ...)
 
 \item{method}{Can be \code{"direct"} or one of methods of \link[=estimate_density]{density estimation}, such as \code{"kernel"}, \code{"logspline"} or \code{"KernSmooth"}. If \code{"direct"} (default), the computation is based on the raw ratio of samples superior and inferior to 0. Else, the result is based on the \link[=auc]{Area under the Curve (AUC)} of the estimated \link[=estimate_density]{density} function.}
 
+\item{null}{The value considered as a "null" effect. Traditionally 0, but could also be 1 in the case of ratios.}
+
 \item{effects}{Should results for fixed effects, random effects or both be returned?
 Only applies to mixed models. May be abbreviated.}
+
+\item{component}{Should results for all parameters, parameters for the conditional model
+or the zero-inflated part of the model be returned? May be abbreviated. Only
+applies to \pkg{brms}-models.}
 
 \item{parameters}{Regular expression pattern that describes the parameters that
 should be returned. Meta-parameters (like \code{lp__} or \code{prior_}) are
 filtered by default, so only parameters that typically appear in the
 \code{summary()} are returned. Use \code{parameters} to select specific parameters
 for the output.}
-
-\item{component}{Should results for all parameters, parameters for the conditional model
-or the zero-inflated part of the model be returned? May be abbreviated. Only
-applies to \pkg{brms}-models.}
 }
 \value{
-The probability of direction (pd) expressed in percentage (between 50\% and 100\%).
+Values between 0.5 and 1 corresponding to the probability of direction (pd).
+\cr\cr
+Note that in some (rare) cases, especially when used with model averaged
+posteriors (see \code{\link{weighted_posteriors}} or
+\code{brms::posterior_average}), \code{pd} can be smaller than \code{0.5},
+reflecting high credibility of \code{0}. To detect such cases, the
+\code{method = "direct"} must be used.
 }
 \description{
-Compute the \strong{Probability of Direction} (\strong{\emph{pd}}, also known as the Maximum Probability of Effect - \emph{MPE}). It varies between 50\% and 100\% (\emph{i.e.}, \code{0.5} and \code{1}) and can be interpreted as the probability (expressed in percentage) that a parameter (described by its posterior distribution) is strictly positive or negative (whichever is the most probable). It is mathematically defined as the proportion of the posterior distribution that is of the median's sign. Altough differently expressed, this index is fairly similar (\emph{i.e.}, is strongly correlated) to the frequentist \strong{p-value}.
+Compute the \strong{Probability of Direction} (\strong{\emph{pd}}, also known
+as the Maximum Probability of Effect - \emph{MPE}). It varies between 50\%
+and 100\% (\emph{i.e.}, \code{0.5} and \code{1}) and can be interpreted as
+the probability (expressed in percentage) that a parameter (described by its
+posterior distribution) is strictly positive or negative (whichever is the
+most probable). It is mathematically defined as the proportion of the
+posterior distribution that is of the median's sign. Although differently
+expressed, this index is fairly similar (\emph{i.e.}, is strongly correlated)
+to the frequentist \strong{p-value}.
+\cr\cr
+Note that in some (rare) cases, especially when used with model averaged
+posteriors (see \code{\link{weighted_posteriors}} or
+\code{brms::posterior_average}), \code{pd} can be smaller than \code{0.5},
+reflecting high credibility of \code{0}.
 }
 \details{
-\strong{What is the \emph{pd}?}
-\cr \cr
+\subsection{What is the \emph{pd}?}{
 The Probability of Direction (pd) is an index of effect existence, ranging from 50\% to 100\%, representing the certainty with which an effect goes in a particular direction (\emph{i.e.}, is positive or negative). Beyond its simplicity of interpretation, understanding and computation, this index also presents other interesting properties:
 \itemize{
   \item It is independent from the model: It is solely based on the posterior distributions and does not require any additional information from the data or the model.
   \item It is robust to the scale of both the response variable and the predictors.
   \item It is strongly correlated with the frequentist p-value, and can thus be used to draw parallels and give some reference to readers non-familiar with Bayesian statistics.
 }
-\strong{Relationship with the p-value}
+}
+\subsection{Relationship with the p-value}{
+In most cases, it seems that the \emph{pd} has a direct correspondence with the frequentist one-sided \emph{p}-value through the formula \ifelse{html}{\out{p<sub>one&nbsp;sided</sub>&nbsp;=&nbsp;1&nbsp;-&nbsp;<sup>p(<em>d</em>)</sup>/<sub>100</sub>}}{\eqn{p_{one sided}=1-\frac{p_{d}}{100}}} and to the two-sided p-value (the most commonly reported one) through the formula \ifelse{html}{\out{p<sub>two&nbsp;sided</sub>&nbsp;=&nbsp;2&nbsp;*&nbsp;(1&nbsp;-&nbsp;<sup>p(<em>d</em>)</sup>/<sub>100</sub>)}}{\eqn{p_{two sided}=2*(1-\frac{p_{d}}{100})}}. Thus, a two-sided p-value of respectively \code{.1}, \code{.05}, \code{.01} and \code{.001} would correspond approximately to a \emph{pd} of 95\%, 97.5\%, 99.5\% and 99.95\%. See also \code{\link{pd_to_p}}.
+}
+\subsection{Methods of computation}{
+ The most simple and direct way to compute the \emph{pd} is to 1) look at the median's sign, 2) select the portion of the posterior of the same sign and 3) compute the percentage that this portion represents. This "simple" method is the most straightforward, but its precision is directly tied to the number of posterior draws. The second approach relies on \link[=estimate_density]{density estimation}. It starts by estimating the density function (for which many methods are available), and then computing the \link[=area_under_curve]{area under the curve} (AUC) of the density curve on the other side of 0.
+}
+\subsection{Strengths and Limitations}{
+\strong{Strengths:} Straightforward computation and interpretation. Objective property of the posterior distribution. 1:1 correspondence with the frequentist p-value.
 \cr \cr
-In most cases, it seems that the \emph{pd} has a direct correspondance with the frequentist one-sided \emph{p}-value through the formula \ifelse{html}{\out{p<sub>one&nbsp;sided</sub>&nbsp;=&nbsp;1&nbsp;-&nbsp;<sup>p(<em>d</em>)</sup>/<sub>100</sub>}}{\eqn{p_{one sided}=1-\frac{p_{d}}{100}}} and to the two-sided p-value (the most commonly reported one) through the formula \ifelse{html}{\out{p<sub>two&nbsp;sided</sub>&nbsp;=&nbsp;2&nbsp;*&nbsp;(1&nbsp;-&nbsp;<sup>p(<em>d</em>)</sup>/<sub>100</sub>)}}{\eqn{p_{two sided}=2*(1-\frac{p_{d}}{100})}}. Thus, a two-sided p-value of respectively \code{.1}, \code{.05}, \code{.01} and \code{.001} would correspond approximately to a \emph{pd} of 95\%, 97.5\%, 99.5\% and 99.95\%.
-\cr \cr
-\strong{Methods of computation}
-\cr \cr
- The most simple and direct way to compute the \emph{pd} is to 1) look at the median's sign, 2) select the portion of the posterior of the same sign and 3) compute the percentage that this portion represents. This "simple" method is the most straigtfoward, but its precision is directly tied to the number of posterior draws. The second approach relies on \link[=estimate_density]{density estimation}. It starts by estimating the density function (for which many methods are available), and then computing the \link[=area_under_curve]{area under the curve} (AUC) of the density curve on the other side of 0.
+\strong{Limitations:} Limited information favoring the null hypothesis.
+}
+}
+\note{
+There is also a \href{https://easystats.github.io/see/articles/bayestestR.html}{\code{plot()}-method} implemented in the \href{https://easystats.github.io/see/}{\pkg{see}-package}.
 }
 \examples{
 library(bayestestR)
@@ -90,29 +135,41 @@ p_direction(df, method = "kernel")
 \dontrun{
 # rstanarm models
 # -----------------------------------------------
-library(rstanarm)
-model <- rstanarm::stan_glm(mpg ~ wt + cyl, data = mtcars)
-p_direction(model)
-p_direction(model, method = "kernel")
+if (require("rstanarm")) {
+  model <- rstanarm::stan_glm(mpg ~ wt + cyl,
+    data = mtcars,
+    chains = 2, refresh = 0
+  )
+  p_direction(model)
+  p_direction(model, method = "kernel")
+}
 
 # emmeans
 # -----------------------------------------------
-library(emmeans)
-p_direction(emtrends(model, ~1, "wt"))
+if (require("emmeans")) {
+  p_direction(emtrends(model, ~1, "wt"))
+}
 
 # brms models
 # -----------------------------------------------
-library(brms)
-model <- brms::brm(mpg ~ wt + cyl, data = mtcars)
-p_direction(model)
-p_direction(model, method = "kernel")
+if (require("brms")) {
+  model <- brms::brm(mpg ~ wt + cyl, data = mtcars)
+  p_direction(model)
+  p_direction(model, method = "kernel")
+}
 
 # BayesFactor objects
 # -----------------------------------------------
-library(BayesFactor)
-bf <- ttestBF(x = rnorm(100, 1, 1))
-p_direction(bf)
-p_direction(bf, method = "kernel")
+if (require("BayesFactor")) {
+  bf <- ttestBF(x = rnorm(100, 1, 1))
+  p_direction(bf)
+  p_direction(bf, method = "kernel")
 }
-
+}
+}
+\references{
+Makowski D, Ben-Shachar MS, Chen SHA, Lüdecke D (2019) Indices of Effect Existence and Significance in the Bayesian Framework. Frontiers in Psychology 2019;10:2767. \doi{10.3389/fpsyg.2019.02767}
+}
+\seealso{
+\code{\link{pd_to_p}} to convert between Probability of Direction (pd) and p-value.
 }

@@ -2,31 +2,42 @@
 % Please edit documentation in R/p_map.R
 \name{p_map}
 \alias{p_map}
-\alias{p_map.numeric}
+\alias{p_pointnull}
 \alias{p_map.stanreg}
 \alias{p_map.brmsfit}
-\alias{p_map.BFBayesFactor}
 \title{Bayesian p-value based on the density at the Maximum A Posteriori (MAP)}
 \usage{
 p_map(x, precision = 2^10, method = "kernel", ...)
 
-\method{p_map}{numeric}(x, precision = 2^10, method = "kernel", ...)
+p_pointnull(x, precision = 2^10, method = "kernel", ...)
 
-\method{p_map}{stanreg}(x, precision = 2^10, method = "kernel",
-  effects = c("fixed", "random", "all"), parameters = NULL, ...)
+\method{p_map}{stanreg}(
+  x,
+  precision = 2^10,
+  method = "kernel",
+  effects = c("fixed", "random", "all"),
+  component = c("location", "all", "conditional", "smooth_terms", "sigma",
+    "distributional", "auxiliary"),
+  parameters = NULL,
+  ...
+)
 
-\method{p_map}{brmsfit}(x, precision = 2^10, method = "kernel",
-  effects = c("fixed", "random", "all"), component = c("conditional",
-  "zi", "zero_inflated", "all"), parameters = NULL, ...)
-
-\method{p_map}{BFBayesFactor}(x, precision = 2^10, method = "kernel",
-  ...)
+\method{p_map}{brmsfit}(
+  x,
+  precision = 2^10,
+  method = "kernel",
+  effects = c("fixed", "random", "all"),
+  component = c("conditional", "zi", "zero_inflated", "all"),
+  parameters = NULL,
+  ...
+)
 }
 \arguments{
-\item{x}{Vector representing a posterior distribution. Can also be a
-\code{stanreg}, \code{brmsfit} or a \code{BayesFactor} model.}
+\item{x}{Vector representing a posterior distribution, or a data frame of such
+vectors. Can also be a Bayesian model (\code{stanreg}, \code{brmsfit},
+\code{MCMCglmm}, \code{mcmc} or \code{bcplm}) or a \code{BayesFactor} model.}
 
-\item{precision}{Number of points of density data. See the \code{n} parameter in \link[=density]{density}.}
+\item{precision}{Number of points of density data. See the \code{n} parameter in \code{density}.}
 
 \item{method}{Density estimation method. Can be \code{"kernel"} (default), \code{"logspline"} or \code{"KernSmooth"}.}
 
@@ -35,35 +46,40 @@ p_map(x, precision = 2^10, method = "kernel", ...)
 \item{effects}{Should results for fixed effects, random effects or both be returned?
 Only applies to mixed models. May be abbreviated.}
 
+\item{component}{Should results for all parameters, parameters for the conditional model
+or the zero-inflated part of the model be returned? May be abbreviated. Only
+applies to \pkg{brms}-models.}
+
 \item{parameters}{Regular expression pattern that describes the parameters that
 should be returned. Meta-parameters (like \code{lp__} or \code{prior_}) are
 filtered by default, so only parameters that typically appear in the
 \code{summary()} are returned. Use \code{parameters} to select specific parameters
 for the output.}
-
-\item{component}{Should results for all parameters, parameters for the conditional model
-or the zero-inflated part of the model be returned? May be abbreviated. Only
-applies to \pkg{brms}-models.}
 }
 \description{
 Compute a Bayesian equivalent of the \emph{p}-value, related to the odds that a parameter (described by its posterior distribution) has against the null hypothesis (\emph{h0}) using Mills' (2014, 2017) \emph{Objective Bayesian Hypothesis Testing} framework. It corresponds to the density value at 0 divided by the density at the Maximum A Posteriori (MAP).
 }
 \details{
-Note that this method is sensitive to the density estimation \code{method} (see the secion in the examples below).
+Note that this method is sensitive to the density estimation \code{method} (see the section in the examples below).
+\subsection{Strengths and Limitations}{
+\strong{Strengths:} Straightforward computation. Objective property of the posterior distribution.
+\cr \cr
+\strong{Limitations:} Limited information favoring the null hypothesis. Relates on density approximation. Indirect relationship between mathematical definition and interpretation. Only suitable for weak / very diffused priors.
+}
 }
 \examples{
 library(bayestestR)
 
 p_map(rnorm(1000, 0, 1))
 p_map(rnorm(1000, 10, 1))
-
+\dontrun{
 library(rstanarm)
 model <- stan_glm(mpg ~ wt + gear, data = mtcars, chains = 2, iter = 200, refresh = 0)
 p_map(model)
 
 library(emmeans)
 p_map(emtrends(model, ~1, "wt"))
-\dontrun{
+
 library(brms)
 model <- brms::brm(mpg ~ wt + cyl, data = mtcars)
 p_map(model)
@@ -71,9 +87,7 @@ p_map(model)
 library(BayesFactor)
 bf <- ttestBF(x = rnorm(100, 1, 1))
 p_map(bf)
-}
 
-\donttest{
 # ---------------------------------------
 # Robustness to density estimation method
 set.seed(333)
@@ -94,10 +108,10 @@ summary(data$KernSmooth)
 summary(data$logspline)
 boxplot(data[c("KernSmooth", "logspline")])
 }
-
 }
 \references{
 \itemize{
+  \item Makowski D, Ben-Shachar MS, Chen SHA, Lüdecke D (2019) Indices of Effect Existence and Significance in the Bayesian Framework. Frontiers in Psychology 2019;10:2767. \doi{10.3389/fpsyg.2019.02767}
   \item Mills, J. A. (2018). Objective Bayesian Precise Hypothesis Testing. University of Cincinnati.
 }
 }

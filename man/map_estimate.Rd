@@ -3,27 +3,50 @@
 \name{map_estimate}
 \alias{map_estimate}
 \alias{map_estimate.numeric}
+\alias{map_estimate.bayesQR}
 \alias{map_estimate.stanreg}
 \alias{map_estimate.brmsfit}
+\alias{map_estimate.data.frame}
+\alias{map_estimate.emmGrid}
 \title{Maximum A Posteriori probability estimate (MAP)}
 \usage{
 map_estimate(x, precision = 2^10, method = "kernel", ...)
 
-\method{map_estimate}{numeric}(x, precision = 2^10, method = "kernel",
-  ...)
+\method{map_estimate}{numeric}(x, precision = 2^10, method = "kernel", ...)
 
-\method{map_estimate}{stanreg}(x, precision = 2^10, method = "kernel",
-  effects = c("fixed", "random", "all"), parameters = NULL, ...)
+\method{map_estimate}{bayesQR}(x, precision = 2^10, method = "kernel", ...)
 
-\method{map_estimate}{brmsfit}(x, precision = 2^10, method = "kernel",
-  effects = c("fixed", "random", "all"), component = c("conditional",
-  "zi", "zero_inflated", "all"), parameters = NULL, ...)
+\method{map_estimate}{stanreg}(
+  x,
+  precision = 2^10,
+  method = "kernel",
+  effects = c("fixed", "random", "all"),
+  component = c("location", "all", "conditional", "smooth_terms", "sigma",
+    "distributional", "auxiliary"),
+  parameters = NULL,
+  ...
+)
+
+\method{map_estimate}{brmsfit}(
+  x,
+  precision = 2^10,
+  method = "kernel",
+  effects = c("fixed", "random", "all"),
+  component = c("conditional", "zi", "zero_inflated", "all"),
+  parameters = NULL,
+  ...
+)
+
+\method{map_estimate}{data.frame}(x, precision = 2^10, method = "kernel", ...)
+
+\method{map_estimate}{emmGrid}(x, precision = 2^10, method = "kernel", ...)
 }
 \arguments{
-\item{x}{Vector representing a posterior distribution. Can also be a
-\code{stanreg}, \code{brmsfit} or a \code{BayesFactor} model.}
+\item{x}{Vector representing a posterior distribution, or a data frame of such
+vectors. Can also be a Bayesian model (\code{stanreg}, \code{brmsfit},
+\code{MCMCglmm}, \code{mcmc} or \code{bcplm}) or a \code{BayesFactor} model.}
 
-\item{precision}{Number of points of density data. See the \code{n} parameter in \link[=density]{density}.}
+\item{precision}{Number of points of density data. See the \code{n} parameter in \code{density}.}
 
 \item{method}{Density estimation method. Can be \code{"kernel"} (default), \code{"logspline"} or \code{"KernSmooth"}.}
 
@@ -32,15 +55,15 @@ map_estimate(x, precision = 2^10, method = "kernel", ...)
 \item{effects}{Should results for fixed effects, random effects or both be returned?
 Only applies to mixed models. May be abbreviated.}
 
+\item{component}{Should results for all parameters, parameters for the conditional model
+or the zero-inflated part of the model be returned? May be abbreviated. Only
+applies to \pkg{brms}-models.}
+
 \item{parameters}{Regular expression pattern that describes the parameters that
 should be returned. Meta-parameters (like \code{lp__} or \code{prior_}) are
 filtered by default, so only parameters that typically appear in the
 \code{summary()} are returned. Use \code{parameters} to select specific parameters
 for the output.}
-
-\item{component}{Should results for all parameters, parameters for the conditional model
-or the zero-inflated part of the model be returned? May be abbreviated. Only
-applies to \pkg{brms}-models.}
 }
 \value{
 A numeric value if \code{posterior} is a vector. If \code{posterior}
@@ -54,6 +77,7 @@ is a model-object, returns a data frame with following columns:
 Find the \strong{Highest Maximum A Posteriori probability estimate (MAP)} of a posterior, i.e., the value associated with the highest probability density (the "peak" of the posterior distribution). In other words, it is an estimation of the \emph{mode} for continuous parameters. Note that this function relies on \link{estimate_density}, which by default uses a different smoothing bandwidth (\code{"SJ"}) compared to the legacy default implemented the base R \link{density} function (\code{"nrd0"}).
 }
 \examples{
+\dontrun{
 library(bayestestR)
 
 posterior <- rnorm(10000)
@@ -61,7 +85,7 @@ map_estimate(posterior)
 
 plot(density(posterior))
 abline(v = map_estimate(posterior), col = "red")
-\dontrun{
+
 library(rstanarm)
 model <- rstanarm::stan_glm(mpg ~ wt + cyl, data = mtcars)
 map_estimate(model)

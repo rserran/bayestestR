@@ -2,46 +2,87 @@
 % Please edit documentation in R/bayesfactor_models.R
 \name{bayesfactor_models}
 \alias{bayesfactor_models}
+\alias{bf_models}
+\alias{update.bayesfactor_models}
+\alias{as.matrix.bayesfactor_models}
 \title{Bayes Factors (BF) for model comparison}
 \usage{
 bayesfactor_models(..., denominator = 1, verbose = TRUE)
+
+bf_models(..., denominator = 1, verbose = TRUE)
+
+\method{update}{bayesfactor_models}(object, subset = NULL, reference = NULL, ...)
+
+\method{as.matrix}{bayesfactor_models}(x, ...)
 }
 \arguments{
-\item{...}{Fitted models (any models supported by \pkg{insight}), all fit on the same data, or a single \code{BFBayesFactor} object (see 'Details').}
+\item{...}{Fitted models (see details), all fit on the same data, or a single
+\code{BFBayesFactor} object (see 'Details'). Ignored in \code{as.matrix()},
+\code{update()}.}
 
-\item{denominator}{Either an integer indicating which of the models to use as the denominator,
-or a model to be used as a denominator. Ignored for \code{BFBayesFactor}.}
+\item{denominator}{Either an integer indicating which of the models to use as
+the denominator, or a model to be used as a denominator. Ignored for
+\code{BFBayesFactor}.}
 
 \item{verbose}{Toggle off warnings.}
+
+\item{object, x}{A \code{\link{bayesfactor_models}} object.}
+
+\item{subset}{Vector of model indices to keep or remove.}
+
+\item{reference}{Index of model to reference to, or \code{"top"} to
+reference to the best model, or \code{"bottom"} to reference to the worst
+model.}
 }
 \value{
-A data frame containing the models' formulas (reconstructed fixed and random effects) and their BFs, that prints nicely.
+A data frame containing the models' formulas (reconstructed fixed and
+  random effects) and their \code{log(BF)}s, that prints nicely.
 }
 \description{
 This function computes or extracts Bayes factors from fitted models.
+\cr \cr
+The \code{bf_*} function is an alias of the main function.
 }
 \details{
+If the passed models are supported by \pkg{insight} the DV of all models will be tested for equality
+(else this is assumed to be true), and the models' terms will be extracted (allowing for follow-up
+analysis with \code{bayesfactor_inclusion}).
+
 \itemize{
   \item For \code{brmsfit} or \code{stanreg} models, Bayes factors are computed using the \CRANpkg{bridgesampling} package.
   \itemize{
-    \item \code{brmsfit} models must have been fitted with \code{save_all_pars = TRUE}.
+    \item \code{brmsfit} models must have been fitted with \code{save_pars = save_pars(all = TRUE)}.
     \item \code{stanreg} models must have been fitted with a defined \code{diagnostic_file}.
   }
-  \item For \code{BFBayesFactor}, \code{bayesfactor_models()} is mostly a wraparoud \code{BayesFactor::extractBF()}.
-  \item For all other model types (supported by \CRANpkg{insight}), BIC approximations are used to compute Bayes factors.
+  \item For \code{BFBayesFactor}, \code{bayesfactor_models()} is mostly a wraparound \code{BayesFactor::extractBF()}.
+  \item BIC approximations are used to compute Bayes factors for all other model types (with a BIC method).
+  \itemize{
+    \item \strong{Note} that BICs are extracted from models as-is. So if for example you want to compare mixed-models bases on ML instead of REML, you must supply models fit with ML.
+  }
 }
-In order to correctly and precisely estimate Bayes factors, a rule of thumb are
-the 4 P's: \strong{P}roper \strong{P}riors and \strong{P}lentiful \strong{P}osterior
-(i.e. probably at leat 40,000 samples instead of the default of 4,000).
-\cr \cr
-A Bayes factor greater than 1 can be interpereted as evidence against the compared-to
-model (the denominator). One convention is that a Bayes factor greater than 3 can be considered
-as "substantial" evidence against the denominator model (and vice versa, a Bayes factor
-smaller than 1/3 indicates substantial evidence in favor of the denominator model)
-(\cite{Wetzels et al. 2011}).
+In order to correctly and precisely estimate Bayes factors, a rule of thumb
+are the 4 P's: \strong{P}roper \strong{P}riors and \strong{P}lentiful
+\strong{P}osteriors. How many? The number of posterior samples needed for
+testing is substantially larger than for estimation (the default of 4000
+samples may not be enough in many cases). A conservative rule of thumb is to
+obtain 10 times more samples than would be required for estimation
+(\cite{Gronau, Singmann, & Wagenmakers, 2017}). If less than 40,000 samples
+are detected, \code{bayesfactor_models()} gives a warning.
 \cr \cr
 See also \href{https://easystats.github.io/bayestestR/articles/bayes_factors.html}{the Bayes factors vignette}.
 }
+\note{
+There is also a \href{https://easystats.github.io/see/articles/bayestestR.html}{\code{plot()}-method} implemented in the \href{https://easystats.github.io/see/}{\pkg{see}-package}.
+}
+\section{Interpreting Bayes Factors}{
+
+A Bayes factor greater than 1 can be interpreted as evidence against the
+null, at which one convention is that a Bayes factor greater than 3 can be
+considered as "substantial" evidence against the null (and vice versa, a
+Bayes factor smaller than 1/3 indicates substantial evidence in favor of the
+null-model) (\cite{Wetzels et al. 2011}).
+}
+
 \examples{
 # With lm objects:
 # ----------------
@@ -51,73 +92,79 @@ lm3 <- lm(Sepal.Length ~ Species + Petal.Length, data = iris)
 lm4 <- lm(Sepal.Length ~ Species * Petal.Length, data = iris)
 bayesfactor_models(lm1, lm2, lm3, lm4, denominator = 1)
 bayesfactor_models(lm2, lm3, lm4, denominator = lm1) # same result
-bayesfactor_models(lm1, lm2, lm3, lm4, denominator = lm1) # same result
+BFM <- bayesfactor_models(lm1, lm2, lm3, lm4, denominator = lm1) # same result
 
+update(BFM, reference = "bottom")
+as.matrix(BFM)
+\dontrun{
 # With lmerMod objects:
 # ---------------------
-library(lme4)
-lmer1 <- lmer(Sepal.Length ~ Petal.Length + (1 | Species), data = iris)
-lmer2 <- lmer(Sepal.Length ~ Petal.Length + (Petal.Length | Species), data = iris)
-lmer3 <- lmer(
-  Sepal.Length ~ Petal.Length + (Petal.Length | Species) + (1 | Petal.Width),
-  data = iris
-)
-bayesfactor_models(lmer1, lmer2, lmer3, denominator = 1)
-bayesfactor_models(lmer1, lmer2, lmer3, denominator = lmer1)
-\dontrun{
+if (require("lme4")) {
+  lmer1 <- lmer(Sepal.Length ~ Petal.Length + (1 | Species), data = iris)
+  lmer2 <- lmer(Sepal.Length ~ Petal.Length + (Petal.Length | Species), data = iris)
+  lmer3 <- lmer(
+    Sepal.Length ~ Petal.Length + (Petal.Length | Species) + (1 | Petal.Width),
+    data = iris
+  )
+  bayesfactor_models(lmer1, lmer2, lmer3, denominator = 1)
+  bayesfactor_models(lmer1, lmer2, lmer3, denominator = lmer1)
+}
+
 # rstanarm models
 # ---------------------
 # (note that a unique diagnostic_file MUST be specified in order to work)
-library(rstanarm)
-stan_m0 <- stan_glm(Sepal.Length ~ 1,
-  data = iris,
-  family = gaussian(),
-  diagnostic_file = file.path(tempdir(), "df0.csv")
-)
-stan_m1 <- stan_glm(Sepal.Length ~ Species,
-  data = iris,
-  family = gaussian(),
-  diagnostic_file = file.path(tempdir(), "df1.csv")
-)
-stan_m2 <- stan_glm(Sepal.Length ~ Species + Petal.Length,
-  data = iris,
-  family = gaussian(),
-  diagnostic_file = file.path(tempdir(), "df2.csv")
-)
-bayesfactor_models(stan_m1, stan_m2, denominator = stan_m0)
+if (require("rstanarm")) {
+  stan_m0 <- stan_glm(Sepal.Length ~ 1,
+    data = iris,
+    family = gaussian(),
+    diagnostic_file = file.path(tempdir(), "df0.csv")
+  )
+  stan_m1 <- stan_glm(Sepal.Length ~ Species,
+    data = iris,
+    family = gaussian(),
+    diagnostic_file = file.path(tempdir(), "df1.csv")
+  )
+  stan_m2 <- stan_glm(Sepal.Length ~ Species + Petal.Length,
+    data = iris,
+    family = gaussian(),
+    diagnostic_file = file.path(tempdir(), "df2.csv")
+  )
+  bayesfactor_models(stan_m1, stan_m2, denominator = stan_m0)
+}
 
 
 # brms models
 # --------------------
-# (note the save_all_pars MUST be set to TRUE in order to work)
-library(brms)
-brm1 <- brm(Sepal.Length ~ 1, data = iris, save_all_pars = TRUE)
-brm2 <- brm(Sepal.Length ~ Species, data = iris, save_all_pars = TRUE)
-brm3 <- brm(
-  Sepal.Length ~ Species + Petal.Length,
-  data = iris,
-  save_all_pars = TRUE
-)
+# (note the save_pars MUST be set to save_pars(all = TRUE) in order to work)
+if (require("brms")) {
+  brm1 <- brm(Sepal.Length ~ 1, data = iris, save_all_pars = TRUE)
+  brm2 <- brm(Sepal.Length ~ Species, data = iris, save_all_pars = TRUE)
+  brm3 <- brm(
+    Sepal.Length ~ Species + Petal.Length,
+    data = iris,
+    save_pars = save_pars(all = TRUE)
+  )
 
-bayesfactor_models(brm1, brm2, brm3, denominator = 1)
+  bayesfactor_models(brm1, brm2, brm3, denominator = 1)
+}
 
 
 # BayesFactor
 # ---------------------------
-library(BayesFactor)
-data(puzzles)
-BF <- anovaBF(RT ~ shape * color + ID,
-  data = puzzles,
-  whichRandom = "ID", progress = FALSE
-)
-BF
-bayesfactor_models(BF) # basically the same
+if (require("BayesFactor")) {
+  data(puzzles)
+  BF <- anovaBF(RT ~ shape * color + ID,
+    data = puzzles,
+    whichRandom = "ID", progress = FALSE
+  )
+  BF
+  bayesfactor_models(BF) # basically the same
 }
-
+}
 }
 \references{
 \itemize{
-  \item Gronau, Q. F., Wagenmakers, E. J., Heck, D. W., and Matzke, D. (2019). A simple method for comparing complex models: Bayesian model comparison for hierarchical multinomial processing tree models using Warp-III bridge sampling. Psychometrika, 84(1), 261-284.
+  \item Gronau, Q. F., Singmann, H., & Wagenmakers, E. J. (2017). Bridgesampling: An R package for estimating normalizing constants. arXiv preprint arXiv:1710.08162.
   \item Kass, R. E., and Raftery, A. E. (1995). Bayes Factors. Journal of the American Statistical Association, 90(430), 773-795.
   \item Robert, C. P. (2016). The expected demise of the Bayes factor. Journal of Mathematical Psychology, 72, 33–37.
   \item Wagenmakers, E. J. (2007). A practical solution to the pervasive problems of p values. Psychonomic bulletin & review, 14(5), 779-804.

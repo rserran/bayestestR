@@ -16,46 +16,52 @@
 #'
 #' @return Some type of Bayes factor, depending on the input. See \code{\link{bayesfactor_parameters}}, \code{\link{bayesfactor_models}} or \code{\link{bayesfactor_inclusion}}
 #'
+#' @note There is also a \href{https://easystats.github.io/see/articles/bayestestR.html}{\code{plot()}-method} implemented in the \href{https://easystats.github.io/see/}{\pkg{see}-package}.
 #'
 #' @examples
 #' library(bayestestR)
 #'
-#' # Vectors
-#' prior <- distribution_normal(1000, mean = 0, sd = 1)
-#' posterior <- distribution_normal(1000, mean = .5, sd = .3)
+#' if (require("logspline")) {
+#'   prior <- distribution_normal(1000, mean = 0, sd = 1)
+#'   posterior <- distribution_normal(1000, mean = .5, sd = .3)
 #'
-#' bayesfactor(posterior, prior = prior)
+#'   bayesfactor(posterior, prior = prior)
+#' }
 #' \dontrun{
 #' # rstanarm models
 #' # ---------------
-#' library(rstanarm)
-#' model <- stan_lmer(extra ~ group + (1 | ID), data = sleep)
-#' bayesfactor(model)
+#' if (require("rstanarm")) {
+#'   model <- stan_lmer(extra ~ group + (1 | ID), data = sleep)
+#'   bayesfactor(model)
+#' }
 #' }
 #'
-#' # Frequentist models
-#' # ---------------
-#' m0 <- lm(extra ~ 1, data = sleep)
-#' m1 <- lm(extra ~ group, data = sleep)
-#' m2 <- lm(extra ~ group + ID, data = sleep)
+#' if (require("logspline")) {
+#'   # Frequentist models
+#'   # ---------------
+#'   m0 <- lm(extra ~ 1, data = sleep)
+#'   m1 <- lm(extra ~ group, data = sleep)
+#'   m2 <- lm(extra ~ group + ID, data = sleep)
 #'
-#' comparison <- bayesfactor(m0, m1, m2)
-#' comparison
+#'   comparison <- bayesfactor(m0, m1, m2)
+#'   comparison
 #'
-#' bayesfactor(comparison)
+#'   bayesfactor(comparison)
+#' }
 #' @export
 bayesfactor <-
   function(...,
-             prior = NULL,
-             direction = "two-sided",
-             null = 0,
-             hypothesis = NULL,
-             effects = c("fixed", "random", "all"),
-             verbose = TRUE,
-             denominator = 1,
-             match_models = FALSE,
-             prior_odds = NULL) {
+           prior = NULL,
+           direction = "two-sided",
+           null = 0,
+           hypothesis = NULL,
+           effects = c("fixed", "random", "all"),
+           verbose = TRUE,
+           denominator = 1,
+           match_models = FALSE,
+           prior_odds = NULL) {
     mods <- list(...)
+    effects <- match.arg(effects)
 
     if (length(mods) > 1) {
       bayesfactor_models(..., denominator = denominator)
