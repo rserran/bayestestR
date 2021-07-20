@@ -8,7 +8,6 @@
 }
 
 #' @keywords internal
-#' @importFrom insight get_parameters
 .clean_priors_and_posteriors.stanreg <- function(posterior, prior,
                                                  verbose = TRUE,
                                                  effects, component, ...) {
@@ -19,7 +18,7 @@
 
 
   prior <- try(unupdate(prior, verbose = verbose), silent = TRUE)
-  if (is(prior, "try-error")) {
+  if (methods::is(prior, "try-error")) {
     if (grepl("flat priors", prior)) {
       prior <- paste0(
         prior, "Could not therefore compute Bayes factors, as these inform about ",
@@ -45,7 +44,6 @@
 
 
 #' @keywords internal
-#' @importFrom insight get_parameters
 .clean_priors_and_posteriors.blavaan <- function(posterior, prior,
                                                  verbose = TRUE, ...) {
   # Get Priors
@@ -66,7 +64,6 @@
 
 
 #' @keywords internal
-#' @importFrom stats update
 .clean_priors_and_posteriors.emmGrid <- function(posterior,
                                                  prior,
                                                  verbose = TRUE) {
@@ -80,7 +77,7 @@
     )
   } else if (!inherits(prior, "emmGrid")) { # then is it a model
     prior <- try(unupdate(prior, verbose = verbose), silent = TRUE)
-    if (is(prior, "try-error")) {
+    if (methods::is(prior, "try-error")) {
       if (grepl("flat priors", prior)) {
         prior <- paste0(
           prior, "Could not therefore compute Bayes factors, as these inform about ",
@@ -123,7 +120,7 @@
     )
   } else if (!inherits(prior, "emm_list")) {
     prior <- try(unupdate(prior, verbose = verbose), silent = TRUE)
-    if (is(prior, "try-error")) {
+    if (methods::is(prior, "try-error")) {
       if (grepl("flat priors", prior)) {
         prior <- paste0(
           prior, "Could not therefore compute Bayes factors, as these inform about ",
@@ -162,7 +159,6 @@
 # BMA ---------------------------------------------------------------------
 
 #' @keywords internal
-#' @importFrom stats as.formula terms terms.formula
 .get_model_table <- function(BFGrid, priorOdds = NULL, add_effects_table = TRUE, ...) {
   denominator <- attr(BFGrid, "denominator")
   BFGrid <- rbind(BFGrid[denominator, ], BFGrid[-denominator, ])
@@ -170,7 +166,7 @@
 
   # This looks like it does nothing, but this is needed to prevent Inf in large BFs.
   # Small BFs are better than large BFs
-  BFGrid <- update(BFGrid, reference = "top")
+  BFGrid <- stats::update(BFGrid, reference = "top")
 
   # Prior and post odds
   Modelnames <- BFGrid$Model
@@ -258,8 +254,6 @@
 
 # make_BF_plot_data -------------------------------------------------------
 
-#' @importFrom stats median mad approx
-#' @importFrom utils stack
 #' @keywords internal
 .make_BF_plot_data <- function(posterior,
                                prior,

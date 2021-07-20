@@ -24,7 +24,6 @@ unupdate <- function(model, verbose = TRUE, ...) {
 
 #' @export
 #' @rdname unupdate
-#' @importFrom stats update getCall
 unupdate.stanreg <- function(model, verbose = TRUE, ...) {
   insight::check_if_installed("rstanarm")
 
@@ -57,9 +56,6 @@ unupdate.stanreg <- function(model, verbose = TRUE, ...) {
 
 #' @export
 #' @rdname unupdate
-#' @importFrom stats update
-#' @importFrom utils capture.output
-#' @importFrom methods is
 unupdate.brmsfit <- function(model, verbose = TRUE, ...) {
   insight::check_if_installed("brms")
 
@@ -77,7 +73,7 @@ unupdate.brmsfit <- function(model, verbose = TRUE, ...) {
     )), silent = TRUE)
   )
 
-  if (is(model_prior, "try-error")) {
+  if (methods::is(model_prior, "try-error")) {
     if (grepl("proper priors", model_prior)) {
       stop(
         "Cannot sample from flat priors (such as the default ",
@@ -95,9 +91,6 @@ unupdate.brmsfit <- function(model, verbose = TRUE, ...) {
 
 #' @export
 #' @rdname unupdate
-#' @importFrom stats update
-#' @importFrom utils capture.output
-#' @importFrom methods is
 unupdate.brmsfit_multiple <- function(model,
                                       verbose = TRUE,
                                       newdata = NULL,
@@ -122,7 +115,7 @@ unupdate.brmsfit_multiple <- function(model,
       )
     )), silent = TRUE))
 
-  if (is(model_prior, "try-error")) {
+  if (methods::is(model_prior, "try-error")) {
     if (grepl("proper priors", model_prior)) {
       stop(
         "Cannot sample from flat priors (such as the default ",
