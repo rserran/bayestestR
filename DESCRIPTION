@@ -1,7 +1,7 @@
 Type: Package
 Package: bayestestR
 Title: Understand and Describe Bayesian Models and Posterior Distributions
-Version: 0.11.5
+Version: 0.11.5.1
 Authors@R:
     c(person(given = "Dominique",
              family = "Makowski",
@@ -80,10 +80,12 @@ Suggests:
     dplyr,
     effectsize,
     emmeans,
+    gamm4,
     GGally,
     ggdist,
     ggplot2,
     ggridges,
+    glmmTMB,
     httr,
     KernSmooth,
     knitr,
@@ -95,6 +97,7 @@ Suggests:
     mediation,
     modelbased,
     parameters,
+    patchwork,
     performance,
     rmarkdown,
     rstan,
@@ -112,6 +115,6 @@ VignetteBuilder:
     knitr
 Encoding: UTF-8
 Language: en-US
-RoxygenNote: 7.1.2
+RoxygenNote: 7.1.2.9000
 Config/testthat/edition: 3
 Roxygen: list(markdown = TRUE)
