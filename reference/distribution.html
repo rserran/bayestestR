@@ -177,15 +177,19 @@ distribution, where <code>size=mu/phi</code>.</p></dd>
 <dt>lambda</dt>
 <dd><p>vector of (non-negative) means.</p></dd>
 <dt>xi</dt>
-<dd><p>the value of \(\xi\) such that the variance is 
-	\(\mbox{var}[Y]=\phi\mu^{\xi}\)</p></dd>
+<dd><p>For tweedie distributions, the value of <code>xi</code> such that the variance
+is <code>var(Y) = phi * mu^xi</code>.</p></dd>
 <dt>power</dt>
-<dd><p>a synonym for \(\xi\)</p></dd>
+<dd><p>Alias for <code>xi</code>.</p></dd>
 <dt>min</dt>
 <dd><p>lower and upper limits of the distribution.  Must be finite.</p></dd>
 <dt>max</dt>
 <dd><p>lower and upper limits of the distribution.  Must be finite.</p></dd>
 </dl></div>
+    <div class="section level2">
+    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
+    <p>When <code>random = FALSE</code>, these function return <code>q*(ppoints(n), ...)</code>.</p>
+    </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
