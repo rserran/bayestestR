@@ -36,7 +36,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">bayestestR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.11.5.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.11.5.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -501,10 +501,10 @@ Bayesian analysis of the Students’ (1908) Sleep data set.
 <pre><code>&gt; Bayes Factors for Model Comparison
 &gt; 
 &gt;      Model                                                       BF
-&gt; [m1] Petal.Length + (1 | Species)                          8.24e+24
-&gt; [m2] Petal.Length + (Petal.Length | Species)               4.77e+23
-&gt; [m3] Petal.Length + Petal.Width + (Petal.Length | Species) 1.52e+22
-&gt; [m4] Petal.Length * Petal.Width + (Petal.Length | Species) 5.93e+20
+&gt; [m1] Petal.Length + (1 | Species)                          3.82e+25
+&gt; [m2] Petal.Length + (Petal.Length | Species)               4.96e+24
+&gt; [m3] Petal.Length + Petal.Width + (Petal.Length | Species) 4.03e+23
+&gt; [m4] Petal.Length * Petal.Width + (Petal.Length | Species) 9.06e+22
 &gt; 
 &gt; * Against Denominator: [m0] 1 + (1 | Species)
 &gt; *   Bayes Factor Type: BIC approximation</code></pre>
@@ -920,9 +920,9 @@ BF_{\text{restricted vs. NULL}} = \frac
 &gt; Chain 1: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 &gt; Chain 1: Iteration: 2000 / 2000 [100%]  (Sampling)
 &gt; Chain 1: 
-&gt; Chain 1:  Elapsed Time: 0.08328 seconds (Warm-up)
-&gt; Chain 1:                0.104033 seconds (Sampling)
-&gt; Chain 1:                0.187313 seconds (Total)
+&gt; Chain 1:  Elapsed Time: 0.074976 seconds (Warm-up)
+&gt; Chain 1:                0.106214 seconds (Sampling)
+&gt; Chain 1:                0.18119 seconds (Total)
 &gt; Chain 1: 
 &gt; 
 &gt; SAMPLING FOR MODEL 'continuous' NOW (CHAIN 2).
@@ -945,15 +945,15 @@ BF_{\text{restricted vs. NULL}} = \frac
 &gt; Chain 2: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 &gt; Chain 2: Iteration: 2000 / 2000 [100%]  (Sampling)
 &gt; Chain 2: 
-&gt; Chain 2:  Elapsed Time: 0.080087 seconds (Warm-up)
-&gt; Chain 2:                0.089316 seconds (Sampling)
-&gt; Chain 2:                0.169403 seconds (Total)
+&gt; Chain 2:  Elapsed Time: 0.076556 seconds (Warm-up)
+&gt; Chain 2:                0.098167 seconds (Sampling)
+&gt; Chain 2:                0.174723 seconds (Total)
 &gt; Chain 2: 
 &gt; 
 &gt; SAMPLING FOR MODEL 'continuous' NOW (CHAIN 3).
 &gt; Chain 3: 
-&gt; Chain 3: Gradient evaluation took 2e-05 seconds
-&gt; Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 0.2 seconds.
+&gt; Chain 3: Gradient evaluation took 2.3e-05 seconds
+&gt; Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 0.23 seconds.
 &gt; Chain 3: Adjust your expectations accordingly!
 &gt; Chain 3: 
 &gt; Chain 3: 
@@ -970,15 +970,15 @@ BF_{\text{restricted vs. NULL}} = \frac
 &gt; Chain 3: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 &gt; Chain 3: Iteration: 2000 / 2000 [100%]  (Sampling)
 &gt; Chain 3: 
-&gt; Chain 3:  Elapsed Time: 0.073841 seconds (Warm-up)
-&gt; Chain 3:                0.08691 seconds (Sampling)
-&gt; Chain 3:                0.160751 seconds (Total)
+&gt; Chain 3:  Elapsed Time: 0.078707 seconds (Warm-up)
+&gt; Chain 3:                0.090428 seconds (Sampling)
+&gt; Chain 3:                0.169135 seconds (Total)
 &gt; Chain 3: 
 &gt; 
 &gt; SAMPLING FOR MODEL 'continuous' NOW (CHAIN 4).
 &gt; Chain 4: 
-&gt; Chain 4: Gradient evaluation took 2.4e-05 seconds
-&gt; Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 0.24 seconds.
+&gt; Chain 4: Gradient evaluation took 1.9e-05 seconds
+&gt; Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 0.19 seconds.
 &gt; Chain 4: Adjust your expectations accordingly!
 &gt; Chain 4: 
 &gt; Chain 4: 
@@ -995,9 +995,9 @@ BF_{\text{restricted vs. NULL}} = \frac
 &gt; Chain 4: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 &gt; Chain 4: Iteration: 2000 / 2000 [100%]  (Sampling)
 &gt; Chain 4: 
-&gt; Chain 4:  Elapsed Time: 0.07134 seconds (Warm-up)
-&gt; Chain 4:                0.088821 seconds (Sampling)
-&gt; Chain 4:                0.160161 seconds (Total)
+&gt; Chain 4:  Elapsed Time: 0.073669 seconds (Warm-up)
+&gt; Chain 4:                0.096117 seconds (Sampling)
+&gt; Chain 4:                0.169786 seconds (Total)
 &gt; Chain 4:</code></pre>
 <pre><code>&gt; Bayes Factor (Order-Restriction)
 &gt; 
