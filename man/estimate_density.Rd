@@ -5,15 +5,7 @@
 \alias{estimate_density.data.frame}
 \title{Density Estimation}
 \usage{
-estimate_density(
-  x,
-  method = "kernel",
-  precision = 2^10,
-  extend = FALSE,
-  extend_scale = 0.1,
-  bw = "SJ",
-  ...
-)
+estimate_density(x, ...)
 
 \method{estimate_density}{data.frame}(
   x,
@@ -23,6 +15,8 @@ estimate_density(
   extend_scale = 0.1,
   bw = "SJ",
   ci = NULL,
+  select = NULL,
+  at = NULL,
   group_by = NULL,
   ...
 )
@@ -31,6 +25,8 @@ estimate_density(
 \item{x}{Vector representing a posterior distribution, or a data frame of such
 vectors. Can also be a Bayesian model (\code{stanreg}, \code{brmsfit},
 \code{MCMCglmm}, \code{mcmc} or \code{bcplm}) or a \code{BayesFactor} model.}
+
+\item{...}{Currently not used.}
 
 \item{method}{Density estimation method. Can be \code{"kernel"} (default), \code{"logspline"} or \code{"KernSmooth"}.}
 
@@ -42,11 +38,13 @@ vectors. Can also be a Bayesian model (\code{stanreg}, \code{brmsfit},
 
 \item{bw}{See the eponymous argument in \code{density}. Here, the default has been changed for \code{"SJ"}, which is recommended.}
 
-\item{...}{Currently not used.}
+\item{ci}{The confidence interval threshold. Only used when \code{method = "kernel"}. This feature is experimental, use with caution.}
 
-\item{ci}{The confidence interval threshold. Only used when \code{method = "kernel"}.}
+\item{select}{Character vector of column names. If NULL (the default), all numeric variables will be selected.}
 
-\item{group_by}{Optional character vector. If not \code{NULL} and \code{x} is a data frame, density estimation is performed for each group (subset) indicated by \code{group_by}.}
+\item{at}{Optional character vector. If not \code{NULL} and input is a data frame, density estimation is performed for each group (subsets) indicated by \code{at}. See examples.}
+
+\item{group_by}{Deprecated in favourt of \code{at}.}
 }
 \description{
 This function is a wrapper over different methods of density estimation. By default, it uses the base R \code{density} with by default uses a different smoothing bandwidth (\code{"SJ"}) from the legacy default implemented the base R \code{density} function (\code{"nrd0"}). However, Deng \& Wickham suggest that \code{method = "KernSmooth"} is the fastest and the most accurate.
@@ -92,12 +90,12 @@ lines(density_extended$x, density_extended$y, col = "red", lwd = 3)
 lines(density_default$x, density_default$y, col = "black", lwd = 3)
 
 # Multiple columns
-df <- data.frame(replicate(4, rnorm(100)))
-head(estimate_density(df))
+head(estimate_density(iris))
+head(estimate_density(iris, select = "Sepal.Width"))
 
 # Grouped data
-estimate_density(iris, group_by = "Species")
-estimate_density(iris$Petal.Width, group_by = iris$Species)
+head(estimate_density(iris, at = "Species"))
+head(estimate_density(iris$Petal.Width, at = iris$Species))
 \dontrun{
 # rstanarm models
 # -----------------------------------------------
