@@ -40,11 +40,11 @@ vectors. Can also be a Bayesian model (\code{stanreg}, \code{brmsfit},
 
 \item{ci}{The confidence interval threshold. Only used when \code{method = "kernel"}. This feature is experimental, use with caution.}
 
-\item{select}{Character vector of column names. If NULL (the default), all numeric variables will be selected.}
+\item{select}{Character vector of column names. If NULL (the default), all numeric variables will be selected. Other arguments from \code{\link[datawizard:find_columns]{datawizard::find_columns()}} (such as \code{exclude}) can also be used.}
 
 \item{at}{Optional character vector. If not \code{NULL} and input is a data frame, density estimation is performed for each group (subsets) indicated by \code{at}. See examples.}
 
-\item{group_by}{Deprecated in favourt of \code{at}.}
+\item{group_by}{Deprecated in favour of \code{at}.}
 }
 \description{
 This function is a wrapper over different methods of density estimation. By default, it uses the base R \code{density} with by default uses a different smoothing bandwidth (\code{"SJ"}) from the legacy default implemented the base R \code{density} function (\code{"nrd0"}). However, Deng \& Wickham suggest that \code{method = "KernSmooth"} is the fastest and the most accurate.
