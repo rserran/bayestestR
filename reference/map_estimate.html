@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">bayestestR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.12.0.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.12.0.4</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -94,9 +94,6 @@
 <span class="co"># S3 method for numeric</span>
 <span class="fu">map_estimate</span><span class="op">(</span><span class="va">x</span>, precision <span class="op">=</span> <span class="fl">2</span><span class="op">^</span><span class="fl">10</span>, method <span class="op">=</span> <span class="st">"kernel"</span>, <span class="va">...</span><span class="op">)</span>
 
-<span class="co"># S3 method for bayesQR</span>
-<span class="fu">map_estimate</span><span class="op">(</span><span class="va">x</span>, precision <span class="op">=</span> <span class="fl">2</span><span class="op">^</span><span class="fl">10</span>, method <span class="op">=</span> <span class="st">"kernel"</span>, <span class="va">...</span><span class="op">)</span>
-
 <span class="co"># S3 method for stanreg</span>
 <span class="fu">map_estimate</span><span class="op">(</span>
   <span class="va">x</span>,
@@ -128,8 +125,10 @@
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>x</dt>
 <dd><p>Vector representing a posterior distribution, or a data frame of such
-vectors. Can also be a Bayesian model (<code>stanreg</code>, <code>brmsfit</code>,
-<code>MCMCglmm</code>, <code>mcmc</code> or <code>bcplm</code>) or a <code>BayesFactor</code> model.</p></dd>
+vectors. Can also be a Bayesian model. <strong>bayestestR</strong> supports a wide range
+of models (see, for example, <code>methods("hdi")</code>) and not all of those are
+documented in the 'Usage' section, because methods for other classes mostly
+resemble the arguments of the <code>.numeric</code> or <code>.data.frame</code>methods.</p></dd>
 <dt>precision</dt>
 <dd><p>Number of points of density data. See the <code>n</code> parameter in <code>density</code>.</p></dd>
 <dt>method</dt>
@@ -152,7 +151,8 @@ for the output.</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A numeric value if <code>posterior</code> is a vector. If <code>posterior</code>is a model-object, returns a data frame with following columns:</p><ul><li><p><code>Parameter</code> The model parameter(s), if <code>x</code> is a model-object. If <code>x</code> is a vector, this column is missing.</p></li>
+    <p>A numeric value if <code>x</code> is a vector. If <code>x</code> is a model-object,
+returns a data frame with following columns:</p><ul><li><p><code>Parameter</code> The model parameter(s), if <code>x</code> is a model-object. If <code>x</code> is a vector, this column is missing.</p></li>
 <li><p><code>MAP_Estimate</code> The MAP estimate for the posterior or each model parameter.</p></li>
 </ul></div>
 

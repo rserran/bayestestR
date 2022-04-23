@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">bayestestR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.12.0.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.12.0.4</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -91,30 +91,15 @@
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">rope</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span>
 
-<span class="co"># S3 method for default</span>
-<span class="fu">rope</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span>
-
 <span class="co"># S3 method for numeric</span>
-<span class="fu">rope</span><span class="op">(</span><span class="va">x</span>, range <span class="op">=</span> <span class="st">"default"</span>, ci <span class="op">=</span> <span class="fl">0.95</span>, ci_method <span class="op">=</span> <span class="st">"HDI"</span>, verbose <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S3 method for data.frame</span>
-<span class="fu">rope</span><span class="op">(</span><span class="va">x</span>, range <span class="op">=</span> <span class="st">"default"</span>, ci <span class="op">=</span> <span class="fl">0.95</span>, ci_method <span class="op">=</span> <span class="st">"HDI"</span>, verbose <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S3 method for emmGrid</span>
-<span class="fu">rope</span><span class="op">(</span><span class="va">x</span>, range <span class="op">=</span> <span class="st">"default"</span>, ci <span class="op">=</span> <span class="fl">0.95</span>, ci_method <span class="op">=</span> <span class="st">"HDI"</span>, verbose <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S3 method for BFBayesFactor</span>
-<span class="fu">rope</span><span class="op">(</span><span class="va">x</span>, range <span class="op">=</span> <span class="st">"default"</span>, ci <span class="op">=</span> <span class="fl">0.95</span>, ci_method <span class="op">=</span> <span class="st">"HDI"</span>, verbose <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S3 method for MCMCglmm</span>
-<span class="fu">rope</span><span class="op">(</span><span class="va">x</span>, range <span class="op">=</span> <span class="st">"default"</span>, ci <span class="op">=</span> <span class="fl">0.95</span>, ci_method <span class="op">=</span> <span class="st">"HDI"</span>, verbose <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span>
+<span class="fu">rope</span><span class="op">(</span><span class="va">x</span>, range <span class="op">=</span> <span class="st">"default"</span>, ci <span class="op">=</span> <span class="fl">0.95</span>, ci_method <span class="op">=</span> <span class="st">"ETI"</span>, verbose <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span>
 
 <span class="co"># S3 method for stanreg</span>
 <span class="fu">rope</span><span class="op">(</span>
   <span class="va">x</span>,
   range <span class="op">=</span> <span class="st">"default"</span>,
   ci <span class="op">=</span> <span class="fl">0.95</span>,
-  ci_method <span class="op">=</span> <span class="st">"HDI"</span>,
+  ci_method <span class="op">=</span> <span class="st">"ETI"</span>,
   effects <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"fixed"</span>, <span class="st">"random"</span>, <span class="st">"all"</span><span class="op">)</span>,
   component <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"location"</span>, <span class="st">"all"</span>, <span class="st">"conditional"</span>, <span class="st">"smooth_terms"</span>, <span class="st">"sigma"</span>,
     <span class="st">"distributional"</span>, <span class="st">"auxiliary"</span><span class="op">)</span>,
@@ -128,7 +113,7 @@
   <span class="va">x</span>,
   range <span class="op">=</span> <span class="st">"default"</span>,
   ci <span class="op">=</span> <span class="fl">0.95</span>,
-  ci_method <span class="op">=</span> <span class="st">"HDI"</span>,
+  ci_method <span class="op">=</span> <span class="st">"ETI"</span>,
   effects <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"fixed"</span>, <span class="st">"random"</span>, <span class="st">"all"</span><span class="op">)</span>,
   component <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"conditional"</span>, <span class="st">"zi"</span>, <span class="st">"zero_inflated"</span>, <span class="st">"all"</span><span class="op">)</span>,
   parameters <span class="op">=</span> <span class="cn">NULL</span>,
@@ -237,16 +222,16 @@ predictive variable selection (<cite>Piironen and Vehtari 2017</cite>).</p>
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
     
 <ul><li><p>Cohen, J. (1988). Statistical power analysis for the behavioural sciences.</p></li>
-<li><p>Kruschke, J. K. (2010). What to believe: Bayesian methods for data analysis. Trends in cognitive sciences, 14(7), 293-300. doi: <a href="https://doi.org/10.1016/j.tics.2010.05.001" class="external-link">10.1016/j.tics.2010.05.001</a>
+<li><p>Kruschke, J. K. (2010). What to believe: Bayesian methods for data analysis. Trends in cognitive sciences, 14(7), 293-300. <a href="https://doi.org/10.1016/j.tics.2010.05.001" class="external-link">doi:10.1016/j.tics.2010.05.001</a>
 .</p></li>
-<li><p>Kruschke, J. K. (2011). Bayesian assessment of null values via parameter estimation and model comparison. Perspectives on Psychological Science, 6(3), 299-312. doi: <a href="https://doi.org/10.1177/1745691611406925" class="external-link">10.1177/1745691611406925</a>
+<li><p>Kruschke, J. K. (2011). Bayesian assessment of null values via parameter estimation and model comparison. Perspectives on Psychological Science, 6(3), 299-312. <a href="https://doi.org/10.1177/1745691611406925" class="external-link">doi:10.1177/1745691611406925</a>
 .</p></li>
-<li><p>Kruschke, J. K. (2014). Doing Bayesian data analysis: A tutorial with R, JAGS, and Stan. Academic Press. doi: <a href="https://doi.org/10.1177/2515245918771304" class="external-link">10.1177/2515245918771304</a>
+<li><p>Kruschke, J. K. (2014). Doing Bayesian data analysis: A tutorial with R, JAGS, and Stan. Academic Press. <a href="https://doi.org/10.1177/2515245918771304" class="external-link">doi:10.1177/2515245918771304</a>
 .</p></li>
-<li><p>Kruschke, J. K. (2018). Rejecting or accepting parameter values in Bayesian estimation. Advances in Methods and Practices in Psychological Science, 1(2), 270-280. doi: <a href="https://doi.org/10.1177/2515245918771304" class="external-link">10.1177/2515245918771304</a>
+<li><p>Kruschke, J. K. (2018). Rejecting or accepting parameter values in Bayesian estimation. Advances in Methods and Practices in Psychological Science, 1(2), 270-280. <a href="https://doi.org/10.1177/2515245918771304" class="external-link">doi:10.1177/2515245918771304</a>
 .</p></li>
-<li><p>Makowski D, Ben-Shachar MS, Chen SHA, Lüdecke D (2019) Indices of Effect Existence and Significance in the Bayesian Framework. Frontiers in Psychology 2019;10:2767. doi: <a href="https://doi.org/10.3389/fpsyg.2019.02767" class="external-link">10.3389/fpsyg.2019.02767</a></p></li>
-<li><p>Piironen, J., &amp; Vehtari, A. (2017). Comparison of Bayesian predictive methods for model selection. Statistics and Computing, 27(3), 711–735. doi: <a href="https://doi.org/10.1007/s11222-016-9649-y" class="external-link">10.1007/s11222-016-9649-y</a></p></li>
+<li><p>Makowski D, Ben-Shachar MS, Chen SHA, Lüdecke D (2019) Indices of Effect Existence and Significance in the Bayesian Framework. Frontiers in Psychology 2019;10:2767. <a href="https://doi.org/10.3389/fpsyg.2019.02767" class="external-link">doi:10.3389/fpsyg.2019.02767</a></p></li>
+<li><p>Piironen, J., &amp; Vehtari, A. (2017). Comparison of Bayesian predictive methods for model selection. Statistics and Computing, 27(3), 711–735. <a href="https://doi.org/10.1007/s11222-016-9649-y" class="external-link">doi:10.1007/s11222-016-9649-y</a></p></li>
 </ul></div>
 
     <div class="section level2">
@@ -265,7 +250,7 @@ predictive variable selection (<cite>Piironen and Vehtari 2017</cite>).</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> inside ROPE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> -----------</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10.30 %    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10.32 %    </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span class="fu">rope</span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">1000</span>, <span class="fl">1</span>, <span class="fl">0.01</span><span class="op">)</span>, range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">0.1</span>, <span class="fl">0.1</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;"># Proportion of samples inside the ROPE [-0.10, 0.10]:</span></span>

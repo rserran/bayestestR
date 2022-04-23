@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">bayestestR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.12.0.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.12.0.4</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -121,8 +121,10 @@
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>x</dt>
 <dd><p>Vector representing a posterior distribution, or a data frame of such
-vectors. Can also be a Bayesian model (<code>stanreg</code>, <code>brmsfit</code>,
-<code>MCMCglmm</code>, <code>mcmc</code> or <code>bcplm</code>) or a <code>BayesFactor</code> model.</p></dd>
+vectors. Can also be a Bayesian model. <strong>bayestestR</strong> supports a wide range
+of models (see, for example, <code>methods("hdi")</code>) and not all of those are
+documented in the 'Usage' section, because methods for other classes mostly
+resemble the arguments of the <code>.numeric</code> or <code>.data.frame</code>methods.</p></dd>
 <dt>precision</dt>
 <dd><p>Number of points of density data. See the <code>n</code> parameter in <code>density</code>.</p></dd>
 <dt>method</dt>
@@ -155,7 +157,7 @@ for the output.</p></dd>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
     
-<ul><li><p>Makowski D, Ben-Shachar MS, Chen SHA, Lüdecke D (2019) Indices of Effect Existence and Significance in the Bayesian Framework. Frontiers in Psychology 2019;10:2767. doi: <a href="https://doi.org/10.3389/fpsyg.2019.02767" class="external-link">10.3389/fpsyg.2019.02767</a></p></li>
+<ul><li><p>Makowski D, Ben-Shachar MS, Chen SHA, Lüdecke D (2019) Indices of Effect Existence and Significance in the Bayesian Framework. Frontiers in Psychology 2019;10:2767. <a href="https://doi.org/10.3389/fpsyg.2019.02767" class="external-link">doi:10.3389/fpsyg.2019.02767</a></p></li>
 <li><p>Mills, J. A. (2018). Objective Bayesian Precise Hypothesis Testing. University of Cincinnati.</p></li>
 </ul></div>
     <div class="section level2">

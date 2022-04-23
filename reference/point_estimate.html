@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">bayestestR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.12.0.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.12.0.4</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -89,7 +89,7 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">point_estimate</span><span class="op">(</span><span class="va">x</span>, centrality <span class="op">=</span> <span class="st">"all"</span>, dispersion <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">point_estimate</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span>
 
 <span class="co"># S3 method for numeric</span>
 <span class="fu">point_estimate</span><span class="op">(</span><span class="va">x</span>, centrality <span class="op">=</span> <span class="st">"all"</span>, dispersion <span class="op">=</span> <span class="cn">FALSE</span>, threshold <span class="op">=</span> <span class="fl">0.1</span>, <span class="va">...</span><span class="op">)</span>
@@ -125,14 +125,16 @@
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>x</dt>
 <dd><p>Vector representing a posterior distribution, or a data frame of such
-vectors. Can also be a Bayesian model (<code>stanreg</code>, <code>brmsfit</code>,
-<code>MCMCglmm</code>, <code>mcmc</code> or <code>bcplm</code>) or a <code>BayesFactor</code> model.</p></dd>
+vectors. Can also be a Bayesian model. <strong>bayestestR</strong> supports a wide range
+of models (see, for example, <code>methods("hdi")</code>) and not all of those are
+documented in the 'Usage' section, because methods for other classes mostly
+resemble the arguments of the <code>.numeric</code> or <code>.data.frame</code>methods.</p></dd>
+<dt>...</dt>
+<dd><p>Additional arguments to be passed to or from methods.</p></dd>
 <dt>centrality</dt>
 <dd><p>The point-estimates (centrality indices) to compute.  Character (vector) or list with one or more of these options: <code>"median"</code>, <code>"mean"</code>, <code>"MAP"</code> or <code>"all"</code>.</p></dd>
 <dt>dispersion</dt>
 <dd><p>Logical, if <code>TRUE</code>, computes indices of dispersion related to the estimate(s) (<code>SD</code> and <code>MAD</code> for <code>mean</code> and <code>median</code>, respectively).</p></dd>
-<dt>...</dt>
-<dd><p>Additional arguments to be passed to or from methods.</p></dd>
 <dt>threshold</dt>
 <dd><p>For <code>centrality = "trimmed"</code> (i.e. trimmed mean), indicates the fraction (0 to 0.5) of observations to be trimmed from each end of the vector before the mean is computed.</p></dd>
 <dt>effects</dt>
@@ -155,7 +157,7 @@ for the output.</p></dd>
     </div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
-    <p><a href="https://easystats.github.io/bayestestR/articles/indicesEstimationComparison.html" class="external-link">Vignette In-Depth 1: Comparison of Point-Estimates</a></p>
+    <p>Makowski, D., Ben-Shachar, M. S., Chen, S. H. A., \&amp; Lüdecke, D. (2019). <em>Indices of Effect Existence and Significance in the Bayesian Framework</em>. Frontiers in Psychology 2019;10:2767. <a href="https://doi.org/10.3389/fpsyg.2019.02767" class="external-link">10.3389/fpsyg.2019.02767</a></p>
     </div>
 
     <div class="section level2">

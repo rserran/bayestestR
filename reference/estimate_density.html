@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">bayestestR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.12.0.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.12.0.4</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -111,8 +111,10 @@
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>x</dt>
 <dd><p>Vector representing a posterior distribution, or a data frame of such
-vectors. Can also be a Bayesian model (<code>stanreg</code>, <code>brmsfit</code>,
-<code>MCMCglmm</code>, <code>mcmc</code> or <code>bcplm</code>) or a <code>BayesFactor</code> model.</p></dd>
+vectors. Can also be a Bayesian model. <strong>bayestestR</strong> supports a wide range
+of models (see, for example, <code>methods("hdi")</code>) and not all of those are
+documented in the 'Usage' section, because methods for other classes mostly
+resemble the arguments of the <code>.numeric</code> or <code>.data.frame</code>methods.</p></dd>
 <dt>...</dt>
 <dd><p>Currently not used.</p></dd>
 <dt>method</dt>
@@ -166,9 +168,7 @@ vectors. Can also be a Bayesian model (<code>stanreg</code>, <code>brmsfit</code
 <span class="r-in"><span class="co"># Other Methods</span></span>
 <span class="r-in"><span class="va">density_logspline</span> <span class="op">&lt;-</span> <span class="fu">estimate_density</span><span class="op">(</span><span class="va">x</span>, method <span class="op">=</span> <span class="st">"logspline"</span><span class="op">)</span></span>
 <span class="r-in"><span class="va">density_KernSmooth</span> <span class="op">&lt;-</span> <span class="fu">estimate_density</span><span class="op">(</span><span class="va">x</span>, method <span class="op">=</span> <span class="st">"KernSmooth"</span><span class="op">)</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required namespace: KernSmooth</span>
 <span class="r-in"><span class="va">density_mixture</span> <span class="op">&lt;-</span> <span class="fu">estimate_density</span><span class="op">(</span><span class="va">x</span>, method <span class="op">=</span> <span class="st">"mixture"</span><span class="op">)</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required namespace: mclust</span>
 <span class="r-plt img"><img src="estimate_density-2.png" alt="" width="700" height="433"></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/graphics/hist.html" class="external-link">hist</a></span><span class="op">(</span><span class="va">x</span>, prob <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
