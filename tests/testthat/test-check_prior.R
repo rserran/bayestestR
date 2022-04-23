@@ -1,10 +1,10 @@
 .runThisTest <- Sys.getenv("RunAllbayestestRTests") == "yes"
 
 if (.runThisTest &&
-  require("rstanarm") &&
-  require("testthat") &&
-  require("bayestestR") &&
-  require("brms")) {
+  requiet("rstanarm") &&
+  requiet("testthat") &&
+  requiet("bayestestR") &&
+  requiet("brms")) {
   skip_on_cran()
 
   # stanreg --------------------------
@@ -54,7 +54,7 @@ if (.runThisTest &&
     expect_warning(expect_equal(
       check_prior(model2, method = "lakeland")$Prior_Quality,
       c(
-        "informative", "misinformative", "informative", "informative",
+        "informative", "informative", "informative", "informative",
         "informative", "not determinable", "not determinable", "not determinable"
       )
     ))

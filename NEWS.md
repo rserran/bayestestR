@@ -1,4 +1,4 @@
-# bayestestR 0.12.0
+# bayestestR 0.12.5
 
 ## Breaking
 
@@ -8,11 +8,19 @@
 
 * All `distribution_*(random = FALSE)` functions now rely on `ppoints()`, which will result in slightly different results, especially with small `n`s.
 
-## Canges
+* Uncertainty estimation now defaults to `"eti"` (formerly was `"hdi"`).
+
+## Changes
 
 * *bayestestR* functions now support `draws` objects from package *posterior*.
 
 * `rope_range()` now handles log(normal)-families and models with log-transformed outcomes.
+
+* New function `spi()`, to compute shortest probability intervals. Furthermore, the `"spi"` option was added as new method to compute uncertainty intervals.
+
+## Bug fixes
+
+* `bci()` for some objects incorrectly returned the equal-tailed intervals.
 
 # bayestestR 0.11.5
 

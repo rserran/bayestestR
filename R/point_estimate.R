@@ -8,7 +8,7 @@
 #' @param ... Additional arguments to be passed to or from methods.
 #' @inheritParams hdi
 #'
-#' @references [Vignette In-Depth 1: Comparison of Point-Estimates](https://easystats.github.io/bayestestR/articles/indicesEstimationComparison.html)
+#' @references Makowski, D., Ben-Shachar, M. S., Chen, S. H. A., \& Lüdecke, D. (2019). *Indices of Effect Existence and Significance in the Bayesian Framework*. Frontiers in Psychology 2019;10:2767. [10.3389/fpsyg.2019.02767](https://doi.org/10.3389/fpsyg.2019.02767)
 #'
 #' @note There is also a [`plot()`-method](https://easystats.github.io/see/articles/bayestestR.html) implemented in the \href{https://easystats.github.io/see/}{\pkg{see}-package}.
 #'
@@ -52,10 +52,15 @@
 #' }
 #'
 #' @export
-point_estimate <- function(x, centrality = "all", dispersion = FALSE, ...) {
+point_estimate <- function(x, ...) {
   UseMethod("point_estimate")
 }
 
+
+#' @export
+point_estimate.default <- function(x, ...) {
+  stop(insight::format_message(paste0("'point_estimate()' is not yet implemented for objects of class '", class(x)[1], "'.")), call. = FALSE)
+}
 
 
 #' @rdname point_estimate

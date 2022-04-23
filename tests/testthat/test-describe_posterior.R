@@ -1,10 +1,10 @@
-if (require("testthat") &&
-  suppressPackageStartupMessages(require("bayestestR", quietly = TRUE)) &&
-  require("rstanarm") &&
-  require("brms") &&
-  require("httr") &&
-  require("insight") &&
-  require("BayesFactor", quietly = TRUE)) {
+if (requiet("testthat") &&
+  requiet("bayestestR") &&
+  requiet("rstanarm") &&
+  requiet("brms") &&
+  requiet("httr") &&
+  requiet("insight") &&
+  requiet("BayesFactor")) {
   test_that("describe_posterior", {
     set.seed(333)
 
@@ -180,7 +180,7 @@ if (require("testthat") &&
       # expect_equal(dim(rez), c(4, 4))
     })
 
-    if (require("insight")) {
+    if (requiet("insight")) {
       m <- insight::download_model("stanreg_merMod_5")
       p <- insight::get_parameters(m, effects = "all")
 
@@ -221,7 +221,7 @@ if (require("testthat") &&
 
       # test BF
       set.seed(555)
-      rez_bf <- bayesfactor_parameters(x)
+      rez_bf <- suppressWarnings(bayesfactor_parameters(x))
       expect_equal(rez$log_BF, log(as.numeric(rez_bf)), tolerance = 0.1)
     })
 
@@ -263,7 +263,7 @@ if (require("testthat") &&
 
       set.seed(123)
       expect_equal(
-        describe_posterior(ttestBF(mtcars$wt, mu = 3), ci = 0.95),
+        describe_posterior(ttestBF(mtcars$wt, mu = 3), ci = 0.95, ci_method = "hdi"),
         structure(
           list(
             Parameter = "Difference", Median = 0.192275922178887, CI = 0.95,
@@ -282,10 +282,14 @@ if (require("testthat") &&
 
       set.seed(123)
       expect_warning(expect_equal(
-        describe_posterior(contingencyTableBF(
-          x = table(mtcars$am, mtcars$cyl),
-          sampleType = "poisson"
-        ), ci = 0.95),
+        describe_posterior(
+          contingencyTableBF(
+            x = table(mtcars$am, mtcars$cyl),
+            sampleType = "poisson"
+          ),
+          ci = 0.95,
+          ci_method = "hdi"
+        ),
         structure(
           list(
             Parameter = c(
@@ -483,7 +487,7 @@ if (require("testthat") &&
 
       set.seed(123)
       expect_equal(
-        describe_posterior(anovaBF(extra ~ group, data = sleep, progress = FALSE), ci = 0.95),
+        describe_posterior(anovaBF(extra ~ group, data = sleep, progress = FALSE), ci_method = "hdi", ci = 0.95),
         structure(
           list(
             Parameter = c(

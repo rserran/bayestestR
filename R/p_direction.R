@@ -135,6 +135,10 @@ p_direction <- function(x, ...) {
 pd <- p_direction
 
 
+#' @export
+p_direction.default <- function(x, ...) {
+  stop(insight::format_message(paste0("'p_direction()' is not yet implemented for objects of class '", class(x)[1], "'.")), call. = FALSE)
+}
 
 
 #' @rdname p_direction
@@ -177,7 +181,7 @@ p_direction.data.frame <- function(x, method = "direct", null = 0, ...) {
   x <- .select_nums(x)
 
   if (ncol(x) == 1) {
-    pd <- p_direction(x[, 1], method = method, null = null, ...)
+    pd <- p_direction(x[[1]], method = method, null = null, ...)
   } else {
     pd <- sapply(x, p_direction, method = method, null = null, simplify = TRUE, ...)
   }
