@@ -91,8 +91,8 @@ Click on the buttons above to access the package [documentation](https://easysta
 - [Probability of Direction (pd)](https://easystats.github.io/bayestestR/articles/probability_of_direction.html)
 - [Region of Practical Equivalence (ROPE)](https://easystats.github.io/bayestestR/articles/region_of_practical_equivalence.html)
 - [Bayes Factors (BF)](https://easystats.github.io/bayestestR/articles/bayes_factors.html)
-- [Comparison of Point-Estimates](https://easystats.github.io/bayestestR/articles/indicesEstimationComparison.html)
-- [Comparison of Indices of Effect Existence](https://www.frontiersin.org/articles/10.3389/fpsyg.2019.02767/full)
+- [Comparison of Point-Estimates](https://easystats.github.io/bayestestR/articles/web_only/indicesEstimationComparison.html)
+- [Comparison of Indices of Effect Existence](https://doi.org/10.3389/fpsyg.2019.02767)
 - [Reporting Guidelines](https://easystats.github.io/bayestestR/articles/guidelines.html)
 
 
@@ -101,7 +101,7 @@ Click on the buttons above to access the package [documentation](https://easysta
 
 In the Bayesian framework, parameters are estimated in a probabilistic fashion as *distributions*. These distributions can be summarised and described by reporting four types of indices:
 
-- [**Centrality**](https://easystats.github.io/bayestestR/articles/indicesEstimationComparison.html)
+- [**Centrality**](https://easystats.github.io/bayestestR/articles/web_only/indicesEstimationComparison.html)
   - `mean()`, `median()` or [`map_estimate()`](https://easystats.github.io/bayestestR/reference/map_estimate.html) for an estimation of the mode.
   - [`point_estimate()`](https://easystats.github.io/bayestestR/reference/point_estimate.html) can be used to get them at once and can be run directly on models.
   

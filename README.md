@@ -91,9 +91,9 @@ these vignettes:
 -   [Bayes Factors
     (BF)](https://easystats.github.io/bayestestR/articles/bayes_factors.html)
 -   [Comparison of
-    Point-Estimates](https://easystats.github.io/bayestestR/articles/indicesEstimationComparison.html)
+    Point-Estimates](https://easystats.github.io/bayestestR/articles/web_only/indicesEstimationComparison.html)
 -   [Comparison of Indices of Effect
-    Existence](https://www.frontiersin.org/articles/10.3389/fpsyg.2019.02767/full)
+    Existence](https://doi.org/10.3389/fpsyg.2019.02767)
 -   [Reporting
     Guidelines](https://easystats.github.io/bayestestR/articles/guidelines.html)
 
@@ -103,7 +103,7 @@ In the Bayesian framework, parameters are estimated in a probabilistic
 fashion as *distributions*. These distributions can be summarised and
 described by reporting four types of indices:
 
--   [**Centrality**](https://easystats.github.io/bayestestR/articles/indicesEstimationComparison.html)
+-   [**Centrality**](https://easystats.github.io/bayestestR/articles/web_only/indicesEstimationComparison.html)
     -   `mean()`, `median()` or
         [`map_estimate()`](https://easystats.github.io/bayestestR/reference/map_estimate.html)
         for an estimation of the mode.
@@ -159,9 +159,9 @@ describe_posterior(
 )
 ## Summary of Posterior Distribution
 ## 
-## Parameter |    Median |        95% CI |     pd |   ps
-## -----------------------------------------------------
-## Posterior | -5.48e-03 | [-1.90, 1.97] | 50.19% | 0.46
+## Parameter | Median |        95% CI |     pd |   ps
+## --------------------------------------------------
+## Posterior |  -0.02 | [-1.94, 1.92] | 50.66% | 0.47
 ```
 
 `describe_posterior()` works for many objects, including more complex
@@ -458,7 +458,7 @@ Compute the density of a given point of a distribution.
 
 ``` r
 density_at(rnorm(1000, 1, 1), 1)
-## [1] 0.37
+## [1] 0.36
 ```
 
 ## Code of Conduct
