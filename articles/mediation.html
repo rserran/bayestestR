@@ -150,8 +150,10 @@
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Fit Bayesian mediation model in rstanarm</span></span>
 <span><span class="va">m3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://mc-stan.org/rstanarm/reference/stan_mvmer.html" class="external-link">stan_mvmer</a></span><span class="op">(</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">job_seek</span> <span class="op">~</span> <span class="va">treat</span> <span class="op">+</span> <span class="va">econ_hard</span> <span class="op">+</span> <span class="va">sex</span> <span class="op">+</span> <span class="va">age</span> <span class="op">+</span> <span class="op">(</span><span class="fl">1</span> <span class="op">|</span> <span class="va">occp</span><span class="op">)</span>,</span>
-<span>       <span class="va">depress2</span> <span class="op">~</span> <span class="va">treat</span> <span class="op">+</span> <span class="va">job_seek</span> <span class="op">+</span> <span class="va">econ_hard</span> <span class="op">+</span> <span class="va">sex</span> <span class="op">+</span> <span class="va">age</span> <span class="op">+</span> <span class="op">(</span><span class="fl">1</span> <span class="op">|</span> <span class="va">occp</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>    <span class="va">job_seek</span> <span class="op">~</span> <span class="va">treat</span> <span class="op">+</span> <span class="va">econ_hard</span> <span class="op">+</span> <span class="va">sex</span> <span class="op">+</span> <span class="va">age</span> <span class="op">+</span> <span class="op">(</span><span class="fl">1</span> <span class="op">|</span> <span class="va">occp</span><span class="op">)</span>,</span>
+<span>    <span class="va">depress2</span> <span class="op">~</span> <span class="va">treat</span> <span class="op">+</span> <span class="va">job_seek</span> <span class="op">+</span> <span class="va">econ_hard</span> <span class="op">+</span> <span class="va">sex</span> <span class="op">+</span> <span class="va">age</span> <span class="op">+</span> <span class="op">(</span><span class="fl">1</span> <span class="op">|</span> <span class="va">occp</span><span class="op">)</span></span>
+<span>  <span class="op">)</span>,</span>
 <span>  data <span class="op">=</span> <span class="va">jobs</span>,</span>
 <span>  cores <span class="op">=</span> <span class="fl">4</span>,</span>
 <span>  refresh <span class="op">=</span> <span class="fl">0</span></span>
@@ -278,34 +280,34 @@
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">jobs</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1234</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">model</span> <span class="op">&lt;-</span> <span class="st">' # direct effects</span></span>
+<span><span class="va">model</span> <span class="op">&lt;-</span> <span class="st">" # direct effects</span></span>
 <span><span class="st">             depress2 ~ c1*treat + c2*econ_hard + c3*sex + c4*age + b*job_seek</span></span>
-<span><span class="st">             </span></span>
+<span><span class="st"></span></span>
 <span><span class="st">           # mediation</span></span>
 <span><span class="st">             job_seek ~ a1*treat + a2*econ_hard + a3*sex + a4*age</span></span>
-<span><span class="st">             </span></span>
+<span><span class="st"></span></span>
 <span><span class="st">           # indirect effects (a*b)</span></span>
 <span><span class="st">             indirect_treat := a1*b</span></span>
 <span><span class="st">             indirect_econ_hard := a2*b</span></span>
 <span><span class="st">             indirect_sex := a3*b</span></span>
 <span><span class="st">             indirect_age := a4*b</span></span>
-<span><span class="st">             </span></span>
+<span><span class="st"></span></span>
 <span><span class="st">           # total effects</span></span>
 <span><span class="st">             total_treat := c1 + (a1*b)</span></span>
 <span><span class="st">             total_econ_hard := c2 + (a2*b)</span></span>
 <span><span class="st">             total_sex := c3 + (a3*b)</span></span>
 <span><span class="st">             total_age := c4 + (a4*b)</span></span>
-<span><span class="st">         '</span></span>
+<span><span class="st">         "</span></span>
 <span><span class="va">m4</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lavaan/man/sem.html" class="external-link">sem</a></span><span class="op">(</span><span class="va">model</span>, data <span class="op">=</span> <span class="va">jobs</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">m4</span><span class="op">)</span></span>
-<span><span class="co">#&gt; lavaan 0.6-11 ended normally after 1 iterations</span></span>
+<span><span class="co">#&gt; lavaan 0.6-12 ended normally after 1 iterations</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;   Estimator                                         ML</span></span>
 <span><span class="co">#&gt;   Optimization method                           NLMINB</span></span>
 <span><span class="co">#&gt;   Number of model parameters                        11</span></span>
-<span><span class="co">#&gt;                                                       </span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;   Number of observations                           899</span></span>
-<span><span class="co">#&gt;                                                       </span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Model Test User Model:</span></span>
 <span><span class="co">#&gt;                                                       </span></span>
 <span><span class="co">#&gt;   Test statistic                                 0.000</span></span>
