@@ -2,13 +2,14 @@
 
 if (.runThisTest &&
   requiet("rstanarm") &&
-  requiet("testthat") &&
-  requiet("bayestestR") &&
+
+
   requiet("BH") &&
   requiet("RcppEigen") &&
   requiet("brms")) {
   skip_on_cran()
   skip_on_os(os = "windows")
+  skip_if_offline()
 
   # stanreg --------------------------
 

@@ -1,14 +1,14 @@
+skip_if_offline()
 .runThisTest <- Sys.getenv("RunAllbayestestRTests") == "yes"
 
 if (.runThisTest &&
-  requiet("testthat") &&
-  requiet("bayestestR") &&
+
+
   requiet("rstanarm") &&
   requiet("brms") &&
   requiet("httr") &&
-  requiet("insight") &&
-  requiet("BayesFactor") &&
-  packageVersion("insight") > "0.13.2") {
+
+  requiet("BayesFactor")) {
   test_that("describe_prior", {
     # Bayes Factor ----------------------------------------
 

@@ -1,4 +1,6 @@
-if (requiet("testthat") && requiet("bayestestR") && requiet("rstanarm") && requiet("brms")) {
+skip_if_offline()
+
+if (requiet("rstanarm") && requiet("brms")) {
   test_that("p_direction", {
     set.seed(333)
     x <- bayestestR::distribution_normal(10000, 1, 1)
