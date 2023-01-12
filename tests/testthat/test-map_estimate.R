@@ -1,6 +1,6 @@
 skip_if_offline()
 
-if (requireNamespace("rstanarm", quietly = TRUE)) {
+if (requiet("rstanarm")) {
   # numeric ----------------------
   test_that("map_estimate", {
     expect_equal(
@@ -10,7 +10,7 @@ if (requireNamespace("rstanarm", quietly = TRUE)) {
     )
   })
 
-  if (require("insight") && require("BayesFactor")) {
+  if (requiet("BayesFactor")) {
     # stanreg ----------------------
     m <- insight::download_model("stanreg_merMod_5")
 
