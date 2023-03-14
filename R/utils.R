@@ -1,3 +1,8 @@
+# small wrapper around this commonly used try-catch
+.safe <- function(code, on_error = NULL) {
+  tryCatch(code, error = function(e) on_error)
+}
+
 # select rows where values in "variable" match "value"
 #' @keywords internal
 .select_rows <- function(data, variable, value) {
@@ -13,7 +18,9 @@
 
 #' @keywords internal
 .get_direction <- function(direction) {
-  if (length(direction) > 1) warning("Using first 'direction' value.", call. = FALSE)
+  if (length(direction) > 1) {
+    insight::format_warning("Using first 'direction' value.")
+  }
 
   if (is.numeric(direction[1])) {
     return(sign(direction[1]))
