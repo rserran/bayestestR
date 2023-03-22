@@ -39,7 +39,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">bayestestR</a>
 
-    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.13.0.7</small>
+    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.13.0.10</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -497,7 +497,8 @@ higher than the prior densities.</p>
 <code class="sourceCode R"><span><span class="va">my_first_si</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/si.html">si</a></span><span class="op">(</span></span>
 <span>  posterior <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>group2 <span class="op">=</span> <span class="va">posterior</span><span class="op">)</span>,</span>
 <span>  prior <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>group2 <span class="op">=</span> <span class="va">prior</span><span class="op">)</span>,</span>
-<span>  BF <span class="op">=</span> <span class="fl">1</span></span>
+<span>  BF <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">my_first_si</span><span class="op">)</span></span></code></pre></div>
@@ -1071,7 +1072,7 @@ distribution, and estimate the HDI.</p>
 <p>In <code>bayestestR</code>, we can do this with the
 <code><a href="../reference/weighted_posteriors.html">weighted_posteriors()</a></code> function:</p>
 <div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">BMA_draws</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/weighted_posteriors.html">weighted_posteriors</a></span><span class="op">(</span><span class="va">mod</span>, <span class="va">mod_carb</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">BMA_draws</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/weighted_posteriors.html">weighted_posteriors</a></span><span class="op">(</span><span class="va">mod</span>, <span class="va">mod_carb</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">BMA_hdi</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hdi.html">hdi</a></span><span class="op">(</span><span class="va">BMA_draws</span>, ci <span class="op">=</span> <span class="fl">0.95</span><span class="op">)</span></span>
 <span><span class="va">BMA_hdi</span></span></code></pre></div>
@@ -1293,7 +1294,7 @@ restriction):</p>
 <span>  data <span class="op">=</span> <span class="va">df</span>,</span>
 <span>  prior <span class="op">=</span> <span class="fu"><a href="https://mc-stan.org/rstanarm/reference/priors.html" class="external-link">normal</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>, autoscale <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>,</span>
 <span>  family <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/family.html" class="external-link">gaussian</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  chains <span class="op">=</span> <span class="fl">10</span>, iter <span class="op">=</span> <span class="fl">5000</span>, warmup <span class="op">=</span> <span class="fl">1000</span>,</span>
+<span>  chains <span class="op">=</span> <span class="fl">10</span>, iter <span class="op">=</span> <span class="fl">5000</span>, warmup <span class="op">=</span> <span class="fl">1000</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">em_sum</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/emmeans/man/emmeans.html" class="external-link">emmeans</a></span><span class="op">(</span><span class="va">fit_sum</span>, <span class="op">~</span><span class="va">Species</span><span class="op">)</span> <span class="co"># the posterior marginal means</span></span>
@@ -1320,9 +1321,9 @@ restriction):</p>
 &gt; Chain 1: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 &gt; Chain 1: Iteration: 2000 / 2000 [100%]  (Sampling)
 &gt; Chain 1: 
-&gt; Chain 1:  Elapsed Time: 0.035038 seconds (Warm-up)
-&gt; Chain 1:                0.058306 seconds (Sampling)
-&gt; Chain 1:                0.093344 seconds (Total)
+&gt; Chain 1:  Elapsed Time: 0.032395 seconds (Warm-up)
+&gt; Chain 1:                0.053656 seconds (Sampling)
+&gt; Chain 1:                0.086051 seconds (Total)
 &gt; Chain 1: 
 &gt; 
 &gt; SAMPLING FOR MODEL 'continuous' NOW (CHAIN 2).
@@ -1345,9 +1346,9 @@ restriction):</p>
 &gt; Chain 2: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 &gt; Chain 2: Iteration: 2000 / 2000 [100%]  (Sampling)
 &gt; Chain 2: 
-&gt; Chain 2:  Elapsed Time: 0.036031 seconds (Warm-up)
-&gt; Chain 2:                0.05294 seconds (Sampling)
-&gt; Chain 2:                0.088971 seconds (Total)
+&gt; Chain 2:  Elapsed Time: 0.03326 seconds (Warm-up)
+&gt; Chain 2:                0.048557 seconds (Sampling)
+&gt; Chain 2:                0.081817 seconds (Total)
 &gt; Chain 2: 
 &gt; 
 &gt; SAMPLING FOR MODEL 'continuous' NOW (CHAIN 3).
@@ -1370,15 +1371,15 @@ restriction):</p>
 &gt; Chain 3: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 &gt; Chain 3: Iteration: 2000 / 2000 [100%]  (Sampling)
 &gt; Chain 3: 
-&gt; Chain 3:  Elapsed Time: 0.035355 seconds (Warm-up)
-&gt; Chain 3:                0.050853 seconds (Sampling)
-&gt; Chain 3:                0.086208 seconds (Total)
+&gt; Chain 3:  Elapsed Time: 0.032993 seconds (Warm-up)
+&gt; Chain 3:                0.046356 seconds (Sampling)
+&gt; Chain 3:                0.079349 seconds (Total)
 &gt; Chain 3: 
 &gt; 
 &gt; SAMPLING FOR MODEL 'continuous' NOW (CHAIN 4).
 &gt; Chain 4: 
-&gt; Chain 4: Gradient evaluation took 1.2e-05 seconds
-&gt; Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 0.12 seconds.
+&gt; Chain 4: Gradient evaluation took 1.3e-05 seconds
+&gt; Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 0.13 seconds.
 &gt; Chain 4: Adjust your expectations accordingly!
 &gt; Chain 4: 
 &gt; Chain 4: 
@@ -1395,9 +1396,9 @@ restriction):</p>
 &gt; Chain 4: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 &gt; Chain 4: Iteration: 2000 / 2000 [100%]  (Sampling)
 &gt; Chain 4: 
-&gt; Chain 4:  Elapsed Time: 0.034108 seconds (Warm-up)
-&gt; Chain 4:                0.052375 seconds (Sampling)
-&gt; Chain 4:                0.086483 seconds (Total)
+&gt; Chain 4:  Elapsed Time: 0.031596 seconds (Warm-up)
+&gt; Chain 4:                0.049014 seconds (Sampling)
+&gt; Chain 4:                0.08061 seconds (Total)
 &gt; Chain 4:</code></pre>
 <pre><code>&gt; Bayes Factor (Order-Restriction)
 &gt; 
