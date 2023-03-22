@@ -22,7 +22,8 @@
 #'   model.
 #' @inheritParams hdi
 #'
-#' @note There is also a [`plot()`-method](https://easystats.github.io/see/articles/bayestestR.html) implemented in the \href{https://easystats.github.io/see/}{\pkg{see}-package}.
+#' @note There is also a [`plot()`-method](https://easystats.github.io/see/articles/bayestestR.html)
+#' implemented in the \href{https://easystats.github.io/see/}{\pkg{see}-package}.
 #'
 #' @details
 #' If the passed models are supported by \pkg{insight} the DV of all models will be tested for equality
@@ -33,7 +34,9 @@
 #'   - `brmsfit` models must have been fitted with `save_pars = save_pars(all = TRUE)`.
 #'   - `stanreg` models must have been fitted with a defined `diagnostic_file`.
 #' - For `BFBayesFactor`, `bayesfactor_models()` is mostly a wraparound `BayesFactor::extractBF()`.
-#' - For all other model types, Bayes factors are computed using the BIC approximation. Note that BICs are extracted from using [insight::get_loglikelihood], see documentation there for options for dealing with transformed responses and REML estimation.
+#' - For all other model types, Bayes factors are computed using the BIC approximation.
+#'   Note that BICs are extracted from using [insight::get_loglikelihood], see documentation
+#'   there for options for dealing with transformed responses and REML estimation.
 #'
 #' In order to correctly and precisely estimate Bayes factors, a rule of thumb
 #' are the 4 P's: **P**roper **P**riors and **P**lentiful
@@ -107,7 +110,7 @@
 #'     family = gaussian(),
 #'     diagnostic_file = file.path(tempdir(), "df2.csv")
 #'   )
-#'   bayesfactor_models(stan_m1, stan_m2, denominator = stan_m0)
+#'   bayesfactor_models(stan_m1, stan_m2, denominator = stan_m0, verbose = FALSE)
 #' }
 #'
 #'
@@ -115,15 +118,15 @@
 #' # --------------------
 #' # (note the save_pars MUST be set to save_pars(all = TRUE) in order to work)
 #' if (require("brms")) {
-#'   brm1 <- brm(Sepal.Length ~ 1, data = iris, save_all_pars = TRUE)
-#'   brm2 <- brm(Sepal.Length ~ Species, data = iris, save_all_pars = TRUE)
+#'   brm1 <- brm(Sepal.Length ~ 1, data = iris, save_pars = save_pars(all = TRUE))
+#'   brm2 <- brm(Sepal.Length ~ Species, data = iris, save_pars = save_pars(all = TRUE))
 #'   brm3 <- brm(
 #'     Sepal.Length ~ Species + Petal.Length,
 #'     data = iris,
 #'     save_pars = save_pars(all = TRUE)
 #'   )
 #'
-#'   bayesfactor_models(brm1, brm2, brm3, denominator = 1)
+#'   bayesfactor_models(brm1, brm2, brm3, denominator = 1, verbose = FALSE)
 #' }
 #'
 #'
@@ -139,14 +142,24 @@
 #'   bayesfactor_models(BF) # basically the same
 #' }
 #' }
+#'
 #' @references
-#' \itemize{
-#'   \item Gronau, Q. F., Singmann, H., & Wagenmakers, E. J. (2017). Bridgesampling: An R package for estimating normalizing constants. arXiv preprint arXiv:1710.08162.
-#'   \item Kass, R. E., and Raftery, A. E. (1995). Bayes Factors. Journal of the American Statistical Association, 90(430), 773-795.
-#'   \item Robert, C. P. (2016). The expected demise of the Bayes factor. Journal of Mathematical Psychology, 72, 33–37.
-#'   \item Wagenmakers, E. J. (2007). A practical solution to the pervasive problems of p values. Psychonomic bulletin & review, 14(5), 779-804.
-#'   \item Wetzels, R., Matzke, D., Lee, M. D., Rouder, J. N., Iverson, G. J., and Wagenmakers, E.-J. (2011). Statistical Evidence in Experimental Psychology: An Empirical Comparison Using 855 t Tests. Perspectives on Psychological Science, 6(3), 291–298. \doi{10.1177/1745691611406923}
-#' }
+#' - Gronau, Q. F., Singmann, H., & Wagenmakers, E. J. (2017). Bridgesampling: An R package for estimating
+#'   normalizing constants. arXiv preprint arXiv:1710.08162.
+#'
+#' - Kass, R. E., and Raftery, A. E. (1995). Bayes Factors. Journal of the American Statistical Association,
+#'   90(430), 773-795.
+#'
+#' - Robert, C. P. (2016). The expected demise of the Bayes factor. Journal of Mathematical Psychology,
+#'   72, 33–37.
+#'
+#' - Wagenmakers, E. J. (2007). A practical solution to the pervasive problems of p values.
+#'   Psychonomic bulletin & review, 14(5), 779-804.
+#'
+#' - Wetzels, R., Matzke, D., Lee, M. D., Rouder, J. N., Iverson, G. J., and Wagenmakers, E.-J. (2011).
+#'   Statistical Evidence in Experimental Psychology: An Empirical Comparison Using 855 t Tests.
+#'   Perspectives on Psychological Science, 6(3), 291–298. \doi{10.1177/1745691611406923}
+#'
 #' @export
 bayesfactor_models <- function(..., denominator = 1, verbose = TRUE) {
   UseMethod("bayesfactor_models")
@@ -254,11 +267,10 @@ bayesfactor_models.default <- function(..., denominator = 1, verbose = TRUE) {
     if (is.null(alg$iterations)) alg$iterations <- alg$sample
     (alg$iterations - alg$warmup) * alg$chains
   })
-  if (any(n_samps < 4e4)) {
-    warning(
-      "Bayes factors might not be precise.\n",
-      "For precise Bayes factors, sampling at least 40,000 posterior samples is recommended.",
-      call. = FALSE, immediate. = TRUE
+  if (any(n_samps < 4e4) && verbose) {
+    insight::format_warning(
+      "Bayes factors might not be precise.",
+      "For precise Bayes factors, sampling at least 40,000 posterior samples is recommended."
     )
   }
 
@@ -391,7 +403,7 @@ bayesfactor_models.BFBayesFactor <- function(..., verbose = TRUE) {
   mBFs <- c(0, BayesFactor::extractBF(models, TRUE, TRUE))
   mforms <- sapply(c(models@denominator, models@numerator), function(x) x@shortName)
 
-  if (!"BFlinearModel" %in% class(models@denominator)) {
+  if (!inherits(models@denominator, "BFlinearModel")) {
     mforms <- .clean_non_linBF_mods(mforms)
   } else {
     mforms[mforms == "Intercept only"] <- "1"
@@ -406,7 +418,7 @@ bayesfactor_models.BFBayesFactor <- function(..., verbose = TRUE) {
   .bf_models_output(res,
     denominator = 1,
     bf_method = "JZS (BayesFactor)",
-    unsupported_models = !"BFlinearModel" %in% class(models@denominator)
+    unsupported_models = !inherits(models@denominator, "BFlinearModel")
   )
 }
 

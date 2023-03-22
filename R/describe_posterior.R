@@ -54,17 +54,30 @@
 #'
 #' if (require("logspline")) {
 #'   x <- rnorm(1000)
-#'   describe_posterior(x)
-#'   describe_posterior(x, centrality = "all", dispersion = TRUE, test = "all")
-#'   describe_posterior(x, ci = c(0.80, 0.90))
+#'   describe_posterior(x, verbose = FALSE)
+#'   describe_posterior(x,
+#'     centrality = "all",
+#'     dispersion = TRUE,
+#'     test = "all",
+#'     verbose = FALSE
+#'   )
+#'   describe_posterior(x, ci = c(0.80, 0.90), verbose = FALSE)
 #'
 #'   df <- data.frame(replicate(4, rnorm(100)))
-#'   describe_posterior(df)
-#'   describe_posterior(df, centrality = "all", dispersion = TRUE, test = "all")
-#'   describe_posterior(df, ci = c(0.80, 0.90))
+#'   describe_posterior(df, verbose = FALSE)
+#'   describe_posterior(
+#'     df,
+#'     centrality = "all",
+#'     dispersion = TRUE,
+#'     test = "all",
+#'     verbose = FALSE
+#'   )
+#'   describe_posterior(df, ci = c(0.80, 0.90), verbose = FALSE)
 #'
 #'   df <- data.frame(replicate(4, rnorm(20)))
-#'   head(reshape_iterations(describe_posterior(df, keep_iterations = TRUE)))
+#'   head(reshape_iterations(
+#'     describe_posterior(df, keep_iterations = TRUE, verbose = FALSE)
+#'   ))
 #' }
 #' \dontrun{
 #' # rstanarm models
@@ -78,14 +91,6 @@
 #'   # emmeans estimates
 #'   # -----------------------------------------------
 #'   describe_posterior(emtrends(model, ~1, "wt"))
-#' }
-#'
-#' # brms models
-#' # -----------------------------------------------
-#' if (require("brms")) {
-#'   model <- brms::brm(mpg ~ wt + cyl, data = mtcars)
-#'   describe_posterior(model)
-#'   describe_posterior(model, ci = c(0.80, 0.90))
 #' }
 #'
 #' # BayesFactor objects
@@ -131,7 +136,7 @@ describe_posterior.default <- function(posteriors, ...) {
 
   # we need this information from the original object
   if (all(rope_range == "default")) {
-    rope_range <- rope_range(x)
+    rope_range <- rope_range(x, ...)
   }
 
   if (!is.data.frame(x) && !is.numeric(x)) {
@@ -671,9 +676,9 @@ describe_posterior.effectsize_std_params <- function(posteriors,
                                                      ...) {
   class(posteriors) <- "data.frame"
 
-  no_unique <- sapply(posteriors, function(col) {
+  no_unique <- vapply(posteriors, function(col) {
     length(unique(col)) == 1
-  })
+  }, FUN.VALUE = TRUE)
 
   if (any(no_unique)) {
     no_unique <- which(no_unique)
@@ -739,7 +744,7 @@ describe_posterior.get_predicted <- function(posteriors,
       ...
     )
   } else {
-    stop("No iterations present in the output.", call. = FALSE)
+    insight::format_error("No iterations present in the output.")
   }
 }
 
@@ -763,7 +768,7 @@ describe_posterior.emmGrid <- function(posteriors,
                                        BF = 1,
                                        ...) {
   if (any(c("all", "bf", "bayesfactor", "bayes_factor") %in% tolower(test)) ||
-    "si" %in% tolower(ci_method)) {
+        "si" %in% tolower(ci_method)) {
     samps <- .clean_priors_and_posteriors(posteriors, bf_prior)
     bf_prior <- samps$prior
     posteriors <- samps$posterior
@@ -823,12 +828,16 @@ describe_posterior.stanreg <- function(posteriors,
                                        diagnostic = c("ESS", "Rhat"),
                                        priors = FALSE,
                                        effects = c("fixed", "random", "all"),
-                                       component = c("location", "all", "conditional", "smooth_terms", "sigma", "distributional", "auxiliary"),
+                                       component = c(
+                                         "location", "all", "conditional",
+                                         "smooth_terms", "sigma", "distributional",
+                                         "auxiliary"
+                                       ),
                                        parameters = NULL,
                                        BF = 1,
                                        ...) {
   if ((any(c("all", "bf", "bayesfactor", "bayes_factor") %in% tolower(test)) ||
-    "si" %in% tolower(ci_method)) && is.null(bf_prior)) {
+         "si" %in% tolower(ci_method)) && is.null(bf_prior)) {
     bf_prior <- suppressMessages(unupdate(posteriors))
   }
 
@@ -892,7 +901,11 @@ describe_posterior.stanmvreg <- function(posteriors,
                                          diagnostic = c("ESS", "Rhat"),
                                          priors = FALSE,
                                          effects = c("fixed", "random", "all"),
-                                         component = c("location", "all", "conditional", "smooth_terms", "sigma", "distributional", "auxiliary"),
+                                         component = c(
+                                           "location", "all", "conditional",
+                                           "smooth_terms", "sigma", "distributional",
+                                           "auxiliary"
+                                         ),
                                          parameters = NULL,
                                          ...) {
   effects <- match.arg(effects)
@@ -1009,7 +1022,11 @@ describe_posterior.brmsfit <- function(posteriors,
                                        bf_prior = NULL,
                                        diagnostic = c("ESS", "Rhat"),
                                        effects = c("fixed", "random", "all"),
-                                       component = c("conditional", "zi", "zero_inflated", "all", "location", "distributional", "auxiliary"),
+                                       component = c(
+                                         "conditional", "zi", "zero_inflated",
+                                         "all", "location", "distributional",
+                                         "auxiliary"
+                                       ),
                                        parameters = NULL,
                                        BF = 1,
                                        priors = FALSE,
@@ -1018,7 +1035,7 @@ describe_posterior.brmsfit <- function(posteriors,
   component <- match.arg(component)
 
   if ((any(c("all", "bf", "bayesfactor", "bayes_factor") %in% tolower(test)) ||
-    "si" %in% tolower(ci_method)) && is.null(bf_prior)) {
+         "si" %in% tolower(ci_method)) && is.null(bf_prior)) {
     bf_prior <- suppressMessages(unupdate(posteriors))
   }
 

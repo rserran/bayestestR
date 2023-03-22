@@ -20,8 +20,8 @@ si(posterior, prior = NULL, BF = 1, verbose = TRUE, ...)
   BF = 1,
   verbose = TRUE,
   effects = c("fixed", "random", "all"),
-  component = c("location", "all", "conditional", "smooth_terms", "sigma",
-    "distributional", "auxiliary"),
+  component = c("location", "conditional", "all", "smooth_terms", "sigma", "auxiliary",
+    "distributional"),
   parameters = NULL,
   ...
 )
@@ -32,8 +32,8 @@ si(posterior, prior = NULL, BF = 1, verbose = TRUE, ...)
   BF = 1,
   verbose = TRUE,
   effects = c("fixed", "random", "all"),
-  component = c("location", "all", "conditional", "smooth_terms", "sigma",
-    "distributional", "auxiliary"),
+  component = c("location", "conditional", "all", "smooth_terms", "sigma", "auxiliary",
+    "distributional"),
   parameters = NULL,
   ...
 )
@@ -44,8 +44,8 @@ si(posterior, prior = NULL, BF = 1, verbose = TRUE, ...)
   BF = 1,
   verbose = TRUE,
   effects = c("fixed", "random", "all"),
-  component = c("location", "all", "conditional", "smooth_terms", "sigma",
-    "distributional", "auxiliary"),
+  component = c("location", "conditional", "all", "smooth_terms", "sigma", "auxiliary",
+    "distributional"),
   parameters = NULL,
   ...
 )
@@ -179,10 +179,11 @@ my_custom_priors <-
   set_prior("student_t(3, 0, 1)", class = "b") +
   set_prior("student_t(3, 0, 1)", class = "sd", group = "ID")
 
-brms_model <- brm(extra ~ group + (1 | ID),
+brms_model <- suppressWarnings(brm(extra ~ group + (1 | ID),
   data = sleep,
-  prior = my_custom_priors
-)
+  prior = my_custom_priors,
+  refresh = 0
+))
 si(brms_model)
 }
 \dontshow{\}) # examplesIf}
