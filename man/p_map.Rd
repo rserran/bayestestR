@@ -45,7 +45,8 @@ resemble the arguments of the \code{.numeric} or \code{.data.frame}methods.}
 
 \item{precision}{Number of points of density data. See the \code{n} parameter in \code{density}.}
 
-\item{method}{Density estimation method. Can be \code{"kernel"} (default), \code{"logspline"} or \code{"KernSmooth"}.}
+\item{method}{Density estimation method. Can be \code{"kernel"} (default), \code{"logspline"}
+or \code{"KernSmooth"}.}
 
 \item{...}{Currently not used.}
 
@@ -84,11 +85,13 @@ p_map(rnorm(1000, 0, 1))
 p_map(rnorm(1000, 10, 1))
 \dontrun{
 library(rstanarm)
-model <- stan_glm(mpg ~ wt + gear, data = mtcars, chains = 2, iter = 200, refresh = 0)
+model <- suppressWarnings(
+  stan_glm(mpg ~ wt + gear, data = mtcars, chains = 2, iter = 200, refresh = 0)
+)
 p_map(model)
 
 library(emmeans)
-p_map(emtrends(model, ~1, "wt"))
+p_map(emtrends(model, ~1, "wt", data = mtcars))
 
 library(brms)
 model <- brms::brm(mpg ~ wt + cyl, data = mtcars)

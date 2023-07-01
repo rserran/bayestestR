@@ -278,17 +278,19 @@ if (require("rstanarm") && require("emmeans") && require("logspline")) {
 
   # emmGrid objects
   # ---------------
-  group_diff <- pairs(emmeans(stan_model, ~group))
+  group_diff <- suppressWarnings(
+    pairs(emmeans(stan_model, ~group, data = sleep))
+  )
   bayesfactor_parameters(group_diff, prior = stan_model, verbose = FALSE)
 
   # Or
-  group_diff_prior <- pairs(emmeans(unupdate(stan_model), ~group))
-  bayesfactor_parameters(group_diff, prior = group_diff_prior, verbose = FALSE)
+  # group_diff_prior <- pairs(emmeans(unupdate(stan_model), ~group))
+  # bayesfactor_parameters(group_diff, prior = group_diff_prior, verbose = FALSE)
 }
 
 # brms models
 # -----------
-if (require("brms")) {
+if (require("brms") && require("logspline")) {
   contrasts(sleep$group) <- contr.equalprior_pairs # see vingette
   my_custom_priors <-
     set_prior("student_t(3, 0, 1)", class = "b") +

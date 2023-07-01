@@ -132,12 +132,14 @@ eti(df)
 eti(df, ci = c(0.80, 0.89, 0.95))
 \dontrun{
 library(rstanarm)
-model <- stan_glm(mpg ~ wt + gear, data = mtcars, chains = 2, iter = 200, refresh = 0)
+model <- suppressWarnings(
+  stan_glm(mpg ~ wt + gear, data = mtcars, chains = 2, iter = 200, refresh = 0)
+)
 eti(model)
 eti(model, ci = c(0.80, 0.89, 0.95))
 
 library(emmeans)
-eti(emtrends(model, ~1, "wt"))
+eti(suppressWarnings(emtrends(model, ~1, "wt", data = mtcars)))
 
 library(brms)
 model <- brms::brm(mpg ~ wt + cyl, data = mtcars)

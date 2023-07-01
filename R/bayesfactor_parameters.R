@@ -132,17 +132,19 @@
 #'
 #'   # emmGrid objects
 #'   # ---------------
-#'   group_diff <- pairs(emmeans(stan_model, ~group))
+#'   group_diff <- suppressWarnings(
+#'     pairs(emmeans(stan_model, ~group, data = sleep))
+#'   )
 #'   bayesfactor_parameters(group_diff, prior = stan_model, verbose = FALSE)
 #'
 #'   # Or
-#'   group_diff_prior <- pairs(emmeans(unupdate(stan_model), ~group))
-#'   bayesfactor_parameters(group_diff, prior = group_diff_prior, verbose = FALSE)
+#'   # group_diff_prior <- pairs(emmeans(unupdate(stan_model), ~group))
+#'   # bayesfactor_parameters(group_diff, prior = group_diff_prior, verbose = FALSE)
 #' }
 #'
 #' # brms models
 #' # -----------
-#' if (require("brms")) {
+#' if (require("brms") && require("logspline")) {
 #'   contrasts(sleep$group) <- contr.equalprior_pairs # see vingette
 #'   my_custom_priors <-
 #'     set_prior("student_t(3, 0, 1)", class = "b") +
@@ -199,7 +201,7 @@ bayesfactor_pointnull <- function(posterior,
                                   verbose = TRUE,
                                   ...) {
   if (length(null) > 1 && verbose) {
-    message("'null' is a range - computing a ROPE based Bayes factor.")
+    insight::format_alert("`null` is a range - computing a ROPE based Bayes factor.")
   }
 
   bayesfactor_parameters(
