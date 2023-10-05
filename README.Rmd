@@ -44,7 +44,7 @@ You can reference the package and its documentation as follows:
 
 ## Installation
 
-[![CRAN](http://www.r-pkg.org/badges/version/bayestestR)](https://cran.r-project.org/package=bayestestR) [![insight status badge](https://easystats.r-universe.dev/badges/bayestestR)](https://easystats.r-universe.dev) [![R-CMD-check](https://github.com/easystats/datawizard/workflows/R-CMD-check/badge.svg?branch=main)](https://github.com/easystats/datawizard/actions)
+[![CRAN](http://www.r-pkg.org/badges/version/bayestestR)](https://cran.r-project.org/package=bayestestR) [![insight status badge](https://easystats.r-universe.dev/badges/bayestestR)](https://easystats.r-universe.dev) [![R-CMD-check](https://github.com/easystats/bayestestR/workflows/R-CMD-check/badge.svg?branch=main)](https://github.com/easystats/bayestestR/actions)
 
 
 The *bayestestR* package is available on CRAN, while its latest development version is available on R-universe (from _rOpenSci_).
@@ -146,18 +146,16 @@ describe_posterior(
 )
 ```
 
-```{r message=FALSE, warning=FALSE, echo=FALSE, eval=curl::has_internet()}
+```{r message=FALSE, warning=FALSE, echo=FALSE}
 model <- insight::download_model("brms_zi_3")
-if (!is.null(model)) {
-  describe_posterior(
-    model,
-    effects = "all",
-    component = "all",
-    test = c("p_direction", "p_significance"),
-    centrality = "all",
-    verbose = FALSE
-  )
-}
+describe_posterior(
+  model,
+  effects = "all",
+  component = "all",
+  test = c("p_direction", "p_significance"),
+  centrality = "all",
+  verbose = FALSE
+)
 ```
 
 
