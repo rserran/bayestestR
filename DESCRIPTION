@@ -1,7 +1,7 @@
 Type: Package
 Package: bayestestR
 Title: Understand and Describe Bayesian Models and Posterior Distributions
-Version: 0.13.1.7
+Version: 0.13.2
 Authors@R:
     c(person(given = "Dominique",
              family = "Makowski",
@@ -66,8 +66,8 @@ Description: Provides utilities to describe posterior
 Depends:
     R (>= 3.6)
 Imports:
-    insight (>= 0.19.5),
-    datawizard (>= 0.9.0),
+    insight (>= 0.19.8),
+    datawizard (>= 0.9.1),
     graphics,
     methods,
     stats,
@@ -92,7 +92,7 @@ Suggests:
     knitr,
     lavaan,
     lme4,
-    logspline,
+    logspline (>= 2.1.21),
     MASS,
     mclust,
     mediation,
@@ -116,7 +116,7 @@ VignetteBuilder:
     knitr
 Encoding: UTF-8
 Language: en-US
-RoxygenNote: 7.2.3.9000
+RoxygenNote: 7.3.1
 Roxygen: list(markdown = TRUE)
 Config/testthat/edition: 3
 Config/testthat/parallel: true
@@ -125,6 +125,3 @@ Config/Needs/website:
     rstudio/bslib,
     r-lib/pkgdown,
     easystats/easystatstemplate
-Remotes: 
-  rvlenth/emmeans,
-  easystats/insight

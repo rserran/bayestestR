@@ -136,7 +136,7 @@ bayesfactor_restricted.stanreg <- function(posterior, hypothesis, prior = NULL,
   component <- match.arg(component)
 
   samps <- .clean_priors_and_posteriors(posterior, prior,
-    effects, component,
+    effects = effects, component = component,
     verbose = verbose
   )
 
@@ -217,17 +217,17 @@ bayesfactor_restricted.data.frame <- function(posterior, hypothesis, prior = NUL
 
   posterior_l <- as.data.frame(lapply(p_hypothesis, .test_hypothesis, data = posterior))
   prior_l <- as.data.frame(lapply(p_hypothesis, .test_hypothesis, data = prior))
-  colnames(posterior_l) <- colnames(prior_l) <- if (!is.null(names(hypothesis))) names(hypothesis) else hypothesis
+  colnames(posterior_l) <- colnames(prior_l) <- if (is.null(names(hypothesis))) hypothesis else names(hypothesis)
 
   posterior_p <- sapply(posterior_l, mean)
   prior_p <- sapply(prior_l, mean)
-  BF <- posterior_p / prior_p
+  log_BF <- log(posterior_p) - log(prior_p)
 
   res <- data.frame(
     Hypothesis = hypothesis,
     p_prior = prior_p,
     p_posterior = posterior_p,
-    log_BF = log(BF)
+    log_BF = log_BF
   )
 
   attr(res, "bool_results") <- list(posterior = posterior_l, prior = prior_l)
