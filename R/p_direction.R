@@ -41,7 +41,7 @@
 #'
 #' In most cases, it seems that the *pd* has a direct correspondence with the
 #' frequentist one-sided *p*-value through the formula (for two-sided *p*):
-#' \deqn{p = 2 \times (1 - p_d)}{p = 2 * (1 - pd)}
+#' \ifelse{html}{\out{p = 2 * (1 - p<sub>d</sub>)}}{\eqn{p = 2 \times (1 - p_d)}}
 #' Thus, a two-sided p-value of respectively `.1`, `.05`, `.01` and `.001` would
 #' correspond approximately to a *pd* of `95%`, `97.5%`, `99.5%` and `99.95%`.
 #' See [pd_to_p()] for details.
@@ -389,8 +389,8 @@ p_direction.bamlss <- function(x,
 #' @export
 p_direction.emmGrid <- function(x, method = "direct", null = 0, as_p = FALSE, remove_na = TRUE, ...) {
   xdf <- insight::get_parameters(x)
-
   out <- p_direction(xdf, method = method, null = null, as_p = as_p, remove_na = remove_na, ...)
+  out <- .append_datagrid(out, x)
   attr(out, "object_name") <- insight::safe_deparse_symbol(substitute(x))
   out
 }
@@ -398,6 +398,22 @@ p_direction.emmGrid <- function(x, method = "direct", null = 0, as_p = FALSE, re
 
 #' @export
 p_direction.emm_list <- p_direction.emmGrid
+
+#' @rdname p_direction
+#' @export
+p_direction.slopes <- function(x, method = "direct", null = 0, as_p = FALSE, remove_na = TRUE, ...) {
+  xrvar <- .get_marginaleffects_draws(x)
+  out <- p_direction(xrvar, method = method, null = null, as_p = as_p, remove_na = remove_na, ...)
+  out <- .append_datagrid(out, x)
+  attr(out, "object_name") <- insight::safe_deparse_symbol(substitute(x))
+  out
+}
+
+#' @export
+p_direction.comparisons <- p_direction.slopes
+
+#' @export
+p_direction.predictions <- p_direction.slopes
 
 
 #' @keywords internal
