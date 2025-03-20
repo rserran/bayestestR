@@ -59,7 +59,7 @@
 #'
 #' @note There is an `as.data.frame()` method that returns the posterior
 #'   samples of the effects, which can be used for further processing in the
-#'   different \pkg{bayestestR} package.
+#'   **bayestestR** package.
 #'
 #' @references
 #'
@@ -139,7 +139,6 @@ mediation.brmsfit <- function(model,
 }
 
 
-#' @rdname mediation
 #' @export
 mediation.stanmvreg <- function(model, treatment, mediator, response = NULL, centrality = "median", ci = 0.95, method = "ETI", ...) {
   .mediation(
