@@ -1,12 +1,12 @@
 Type: Package
 Package: bayestestR
 Title: Understand and Describe Bayesian Models and Posterior Distributions
-Version: 0.15.2.6
+Version: 0.15.2.9
 Authors@R:
     c(person(given = "Dominique",
              family = "Makowski",
              role = c("aut", "cre"),
-             email = "dom.makowski@gmail.com",
+             email = "officialeasystats@gmail.com",
              comment = c(ORCID = "0000-0001-5375-9967")),
       person(given = "Daniel",
              family = "Lüdecke",
@@ -56,7 +56,7 @@ Authors@R:
              role = "ctb",
              email = "sam@crawley.nz",
              comment = c(ORCID = "0000-0002-7847-0411")))
-Maintainer: Dominique Makowski <dom.makowski@gmail.com>
+Maintainer: Dominique Makowski <officialeasystats@gmail.com>
 Description: Provides utilities to describe posterior
     distributions and Bayesian models. It includes point-estimates such as
     Maximum A Posteriori (MAP), measures of dispersion (Highest Density
@@ -128,4 +128,4 @@ Config/testthat/parallel: true
 Config/rcmdcheck/ignore-inconsequential-notes: true
 Config/Needs/website: easystats/easystatstemplate
 Config/Needs/check: stan-dev/cmdstanr
-Remotes: easystats/insight
+Remotes: easystats/insight, easystats/modelbased
