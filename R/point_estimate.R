@@ -113,7 +113,7 @@ point_estimate.numeric <- function(x, centrality = "all", dispersion = FALSE, th
 
   # MAP
   if ("map" %in% estimate_list) {
-    out$MAP <- as.numeric(map_estimate(x))
+    out$MAP <- as.numeric(map_estimate(x, ...))
   }
 
   # MODE
@@ -329,7 +329,8 @@ point_estimate.brmsfit <- function(x,
         x,
         effects = effects,
         component = component,
-        parameters = parameters
+        parameters = parameters,
+        ...
       ),
       centrality = centrality,
       dispersion = dispersion,

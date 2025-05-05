@@ -1,4 +1,4 @@
-# bayestestR (devel)
+# bayestestR 0.15.3
 
 ## Changes
 
@@ -13,6 +13,9 @@
 
 * `describe_posterior()` now returns a columns with response variables for
   *marginaleffects* objects applied to multivariate response Stan models.
+
+* Fixed issue in `map_estimate()` and `point_estimate(centrality = "MAP")` for
+  vectors with only one unique value.
 
 # bayestestR 0.15.2
 

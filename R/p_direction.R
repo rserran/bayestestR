@@ -20,6 +20,7 @@
 #' @param rvar_col Name of an `rvar`-type column. If `NULL`, each column in the
 #' data frame is assumed to represent draws from a posterior distribution.
 #' @inheritParams hdi
+#' @inheritParams insight::get_parameters.BFBayesFactor
 #'
 #' @inheritSection hdi Model components
 #'
@@ -576,7 +577,8 @@ p_direction.brmsfit <- function(x,
         x,
         effects = effects,
         component = component,
-        parameters = parameters
+        parameters = parameters,
+        ...
       ),
       method = method,
       null = null,
