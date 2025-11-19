@@ -283,9 +283,9 @@ stan_model <- stan_lmer(extra ~ group + (1 | ID), data = sleep)
 #> Chain 1: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 1: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 1: 
-#> Chain 1:  Elapsed Time: 0.201 seconds (Warm-up)
-#> Chain 1:                0.215 seconds (Sampling)
-#> Chain 1:                0.416 seconds (Total)
+#> Chain 1:  Elapsed Time: 0.199 seconds (Warm-up)
+#> Chain 1:                0.213 seconds (Sampling)
+#> Chain 1:                0.412 seconds (Total)
 #> Chain 1: 
 #> 
 #> SAMPLING FOR MODEL 'continuous' NOW (CHAIN 2).
@@ -308,9 +308,9 @@ stan_model <- stan_lmer(extra ~ group + (1 | ID), data = sleep)
 #> Chain 2: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 2: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 2: 
-#> Chain 2:  Elapsed Time: 0.192 seconds (Warm-up)
-#> Chain 2:                0.171 seconds (Sampling)
-#> Chain 2:                0.363 seconds (Total)
+#> Chain 2:  Elapsed Time: 0.189 seconds (Warm-up)
+#> Chain 2:                0.17 seconds (Sampling)
+#> Chain 2:                0.359 seconds (Total)
 #> Chain 2: 
 #> 
 #> SAMPLING FOR MODEL 'continuous' NOW (CHAIN 3).
@@ -333,15 +333,15 @@ stan_model <- stan_lmer(extra ~ group + (1 | ID), data = sleep)
 #> Chain 3: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 3: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 3: 
-#> Chain 3:  Elapsed Time: 0.178 seconds (Warm-up)
-#> Chain 3:                0.173 seconds (Sampling)
-#> Chain 3:                0.351 seconds (Total)
+#> Chain 3:  Elapsed Time: 0.175 seconds (Warm-up)
+#> Chain 3:                0.171 seconds (Sampling)
+#> Chain 3:                0.346 seconds (Total)
 #> Chain 3: 
 #> 
 #> SAMPLING FOR MODEL 'continuous' NOW (CHAIN 4).
 #> Chain 4: 
-#> Chain 4: Gradient evaluation took 1.4e-05 seconds
-#> Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 0.14 seconds.
+#> Chain 4: Gradient evaluation took 1.5e-05 seconds
+#> Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 0.15 seconds.
 #> Chain 4: Adjust your expectations accordingly!
 #> Chain 4: 
 #> Chain 4: 
@@ -358,9 +358,9 @@ stan_model <- stan_lmer(extra ~ group + (1 | ID), data = sleep)
 #> Chain 4: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 4: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 4: 
-#> Chain 4:  Elapsed Time: 0.195 seconds (Warm-up)
-#> Chain 4:                0.134 seconds (Sampling)
-#> Chain 4:                0.329 seconds (Total)
+#> Chain 4:  Elapsed Time: 0.193 seconds (Warm-up)
+#> Chain 4:                0.133 seconds (Sampling)
+#> Chain 4:                0.326 seconds (Total)
 #> Chain 4: 
 si(stan_model, verbose = FALSE)
 #> Support Interval
