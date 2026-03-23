@@ -223,7 +223,7 @@ Following are valid options:
 For models of class `brmsfit` (package **brms**), even more options are
 possible for the `component` argument, which are not all documented in
 detail here. See also
-[[`?insight::find_parameters`](https://easystats.github.io/insight/reference/find_parameters.html)](https://easystats.github.io/insight/reference/find_parameters.BGGM.html).
+[`?insight::find_parameters`](https://easystats.github.io/insight/reference/find_parameters.BGGM.html).
 
 ## See also
 
@@ -241,13 +241,13 @@ library(bayestestR)
 
 posterior <- rnorm(1000)
 eti(posterior)
-#> 95% ETI: [-1.99, 1.84]
+#> 95% ETI: [-1.93, 1.84]
 eti(posterior, ci = c(0.80, 0.89, 0.95))
 #> Equal-Tailed Interval
 #> 
 #> 80% ETI       |       89% ETI |       95% ETI
 #> ---------------------------------------------
-#> [-1.29, 1.25] | [-1.58, 1.53] | [-1.99, 1.84]
+#> [-1.29, 1.25] | [-1.58, 1.53] | [-1.93, 1.84]
 
 df <- data.frame(replicate(4, rnorm(100)))
 eti(df)
@@ -255,7 +255,7 @@ eti(df)
 #> 
 #> Parameter |       95% ETI
 #> -------------------------
-#> X1        | [-1.80, 2.19]
+#> X1        | [-1.93, 2.19]
 #> X2        | [-1.70, 1.96]
 #> X3        | [-1.91, 1.63]
 #> X4        | [-1.87, 1.87]
@@ -264,8 +264,8 @@ eti(df, ci = c(0.80, 0.89, 0.95))
 #> 
 #> Parameter |       80% ETI |       89% ETI |       95% ETI
 #> ---------------------------------------------------------
-#> X1        | [-1.09, 1.33] | [-1.72, 1.78] | [-1.80, 2.19]
-#> X2        | [-0.96, 1.59] | [-1.40, 1.70] | [-1.70, 1.96]
+#> X1        | [-1.16, 1.28] | [-1.74, 1.78] | [-1.93, 2.19]
+#> X2        | [-0.96, 1.62] | [-1.40, 1.70] | [-1.70, 1.96]
 #> X3        | [-1.07, 0.88] | [-1.52, 1.15] | [-1.91, 1.63]
 #> X4        | [-1.20, 1.18] | [-1.67, 1.47] | [-1.87, 1.87]
 # \donttest{
@@ -277,24 +277,24 @@ eti(model)
 #> 
 #> Parameter   |        95% ETI | Effects |   Component
 #> ----------------------------------------------------
-#> (Intercept) | [27.81, 47.11] |   fixed | conditional
-#> wt          | [-6.63, -4.01] |   fixed | conditional
-#> gear        | [-2.12,  1.63] |   fixed | conditional
+#> (Intercept) | [29.80, 50.38] |   fixed | conditional
+#> wt          | [-6.99, -3.94] |   fixed | conditional
+#> gear        | [-2.21,  1.24] |   fixed | conditional
 eti(model, ci = c(0.80, 0.89, 0.95))
 #> Equal-Tailed Interval
 #> 
 #> Parameter   |        80% ETI |        89% ETI |        95% ETI | Effects |   Component
 #> --------------------------------------------------------------------------------------
-#> (Intercept) | [32.55, 44.06] | [30.67, 45.94] | [27.81, 47.11] |   fixed | conditional
-#> wt          | [-6.20, -4.60] | [-6.38, -4.34] | [-6.63, -4.01] |   fixed | conditional
-#> gear        | [-1.35,  0.86] | [-1.61,  1.33] | [-2.12,  1.63] |   fixed | conditional
+#> (Intercept) | [32.43, 45.66] | [31.18, 47.98] | [29.80, 50.38] |   fixed | conditional
+#> wt          | [-6.44, -4.62] | [-6.66, -4.35] | [-6.99, -3.94] |   fixed | conditional
+#> gear        | [-1.52,  0.79] | [-1.88,  0.99] | [-2.21,  1.24] |   fixed | conditional
 
 eti(emmeans::emtrends(model, ~1, "wt", data = mtcars))
 #> Equal-Tailed Interval
 #> 
 #> X1      |        95% ETI
 #> ------------------------
-#> overall | [-6.63, -4.01]
+#> overall | [-6.99, -3.94]
 
 model <- brms::brm(mpg ~ wt + cyl, data = mtcars)
 #> Compiling Stan program...
@@ -302,8 +302,8 @@ model <- brms::brm(mpg ~ wt + cyl, data = mtcars)
 #> 
 #> SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 1).
 #> Chain 1: 
-#> Chain 1: Gradient evaluation took 8e-06 seconds
-#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.08 seconds.
+#> Chain 1: Gradient evaluation took 5e-06 seconds
+#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.05 seconds.
 #> Chain 1: Adjust your expectations accordingly!
 #> Chain 1: 
 #> Chain 1: 
@@ -395,9 +395,9 @@ model <- brms::brm(mpg ~ wt + cyl, data = mtcars)
 #> Chain 4: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 4: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 4: 
-#> Chain 4:  Elapsed Time: 0.021 seconds (Warm-up)
+#> Chain 4:  Elapsed Time: 0.022 seconds (Warm-up)
 #> Chain 4:                0.018 seconds (Sampling)
-#> Chain 4:                0.039 seconds (Total)
+#> Chain 4:                0.04 seconds (Total)
 #> Chain 4: 
 eti(model)
 #> Equal-Tailed Interval

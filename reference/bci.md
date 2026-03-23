@@ -223,7 +223,7 @@ Following are valid options:
 For models of class `brmsfit` (package **brms**), even more options are
 possible for the `component` argument, which are not all documented in
 detail here. See also
-[[`?insight::find_parameters`](https://easystats.github.io/insight/reference/find_parameters.html)](https://easystats.github.io/insight/reference/find_parameters.BGGM.html).
+[`?insight::find_parameters`](https://easystats.github.io/insight/reference/find_parameters.BGGM.html).
 
 ## References
 
@@ -244,11 +244,11 @@ Other ci:
 ``` r
 posterior <- rnorm(1000)
 bci(posterior)
-#> 95% ETI: [-1.78, 2.10]
+#> 95% ETI: [-1.78, 2.11]
 bci(posterior, ci = c(0.80, 0.89, 0.95))
 #> Equal-Tailed Interval
 #> 
 #> 80% ETI       |       89% ETI |       95% ETI
 #> ---------------------------------------------
-#> [-1.17, 1.33] | [-1.52, 1.69] | [-1.78, 2.10]
+#> [-1.17, 1.34] | [-1.52, 1.70] | [-1.78, 2.11]
 ```

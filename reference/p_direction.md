@@ -172,7 +172,7 @@ to the probability of direction (pd).
 ## Note
 
 There is also a
-[[`plot()`](https://rdrr.io/r/graphics/plot.default.html)-method](https://easystats.github.io/see/articles/bayestestR.html)
+[`plot()`-method](https://easystats.github.io/see/articles/bayestestR.html)
 implemented in the [see-package](https://easystats.github.io/see/).
 
 ## What is the *pd*?
@@ -296,7 +296,7 @@ Following are valid options:
 For models of class `brmsfit` (package **brms**), even more options are
 possible for the `component` argument, which are not all documented in
 detail here. See also
-[[`?insight::find_parameters`](https://easystats.github.io/insight/reference/find_parameters.html)](https://easystats.github.io/insight/reference/find_parameters.BGGM.html).
+[`?insight::find_parameters`](https://easystats.github.io/insight/reference/find_parameters.BGGM.html).
 
 ## References
 
@@ -329,13 +329,13 @@ p_direction(posterior)
 #> 
 #> Parameter |     pd
 #> ------------------
-#> Posterior | 84.60%
+#> Posterior | 84.50%
 p_direction(posterior, method = "kernel")
 #> Probability of Direction
 #> 
 #> Parameter |     pd
 #> ------------------
-#> Posterior | 83.27%
+#> Posterior | 83.17%
 
 # Simulate a dataframe of posterior distributions
 # -----------------------------------------------
@@ -347,17 +347,17 @@ p_direction(df)
 #> ------------------
 #> X1        | 51.00%
 #> X2        | 52.00%
-#> X3        | 52.00%
-#> X4        | 56.00%
+#> X3        | 51.00%
+#> X4        | 58.00%
 p_direction(df, method = "kernel")
 #> Probability of Direction
 #> 
 #> Parameter |     pd
 #> ------------------
-#> X1        | 51.65%
-#> X2        | 52.15%
-#> X3        | 50.93%
-#> X4        | 57.91%
+#> X1        | 51.24%
+#> X2        | 51.93%
+#> X3        | 50.15%
+#> X4        | 59.86%
 
 # \donttest{
 # rstanarm models
@@ -380,8 +380,8 @@ p_direction(model, method = "kernel")
 #> Parameter   |      pd
 #> ---------------------
 #> (Intercept) | 100.00%
-#> wt          |  99.99%
-#> cyl         |  99.99%
+#> wt          |  99.98%
+#> cyl         |  99.97%
 
 # emmeans
 # -----------------------------------------------
@@ -418,9 +418,9 @@ model <- brms::brm(mpg ~ wt + cyl, data = mtcars)
 #> Chain 1: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 1: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 1: 
-#> Chain 1:  Elapsed Time: 0.021 seconds (Warm-up)
-#> Chain 1:                0.016 seconds (Sampling)
-#> Chain 1:                0.037 seconds (Total)
+#> Chain 1:  Elapsed Time: 0.022 seconds (Warm-up)
+#> Chain 1:                0.021 seconds (Sampling)
+#> Chain 1:                0.043 seconds (Total)
 #> Chain 1: 
 #> 
 #> SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 2).
@@ -493,9 +493,9 @@ model <- brms::brm(mpg ~ wt + cyl, data = mtcars)
 #> Chain 4: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 4: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 4: 
-#> Chain 4:  Elapsed Time: 0.021 seconds (Warm-up)
-#> Chain 4:                0.018 seconds (Sampling)
-#> Chain 4:                0.039 seconds (Total)
+#> Chain 4:  Elapsed Time: 0.02 seconds (Warm-up)
+#> Chain 4:                0.017 seconds (Sampling)
+#> Chain 4:                0.037 seconds (Total)
 #> Chain 4: 
 p_direction(model)
 #> Probability of Direction 
@@ -508,11 +508,11 @@ p_direction(model)
 p_direction(model, method = "kernel")
 #> Probability of Direction 
 #> 
-#> Parameter   |      pd
-#> ---------------------
-#> (Intercept) | 100.00%
-#> wt          | 100.00%
-#> cyl         |  99.98%
+#> Parameter   |     pd
+#> --------------------
+#> (Intercept) |   100%
+#> wt          | 99.99%
+#> cyl         | 99.97%
 
 # BayesFactor objects
 # -----------------------------------------------
@@ -534,16 +534,16 @@ p_direction(bf, method = "kernel")
 x <- data.frame(mu = c(0, 0.5, 1), sigma = c(1, 0.5, 0.25))
 x$my_rvar <- posterior::rvar_rng(rnorm, 3, mean = x$mu, sd = x$sigma)
 x
-#>    mu sigma         my_rvar
-#> 1 0.0  1.00 -0.00015 ± 1.00
-#> 2 0.5  0.50  0.50430 ± 0.51
-#> 3 1.0  0.25  1.00141 ± 0.25
+#>    mu sigma      my_rvar
+#> 1 0.0  1.00 -0.01 ± 0.98
+#> 2 0.5  0.50  0.49 ± 0.50
+#> 3 1.0  0.25  1.00 ± 0.25
 p_direction(x, rvar_col = "my_rvar")
 #> Probability of Direction
 #> 
 #> mu   | sigma |     pd
 #> ---------------------
 #> 0.00 |  1.00 | 50.10%
-#> 0.50 |  0.50 | 84.12%
+#> 0.50 |  0.50 | 83.90%
 #> 1.00 |  0.25 |   100%
 ```

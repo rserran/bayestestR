@@ -196,7 +196,7 @@ to the distribution will change the resulting HDI.
 ## Note
 
 There is also a
-[[`plot()`](https://rdrr.io/r/graphics/plot.default.html)-method](https://easystats.github.io/see/articles/bayestestR.html)
+[`plot()`-method](https://easystats.github.io/see/articles/bayestestR.html)
 implemented in the [see-package](https://easystats.github.io/see/).
 
 ## Model components
@@ -229,7 +229,7 @@ Following are valid options:
 For models of class `brmsfit` (package **brms**), even more options are
 possible for the `component` argument, which are not all documented in
 detail here. See also
-[[`?insight::find_parameters`](https://easystats.github.io/insight/reference/find_parameters.html)](https://easystats.github.io/insight/reference/find_parameters.BGGM.html).
+[`?insight::find_parameters`](https://easystats.github.io/insight/reference/find_parameters.BGGM.html).
 
 ## References
 
@@ -266,13 +266,13 @@ library(bayestestR)
 
 posterior <- rnorm(1000)
 hdi(posterior, ci = 0.89)
-#> 89% HDI: [-1.46, 1.78]
+#> 89% HDI: [-1.46, 1.79]
 hdi(posterior, ci = c(0.80, 0.90, 0.95))
 #> Highest Density Interval
 #> 
 #> 80% HDI       |       90% HDI |       95% HDI
 #> ---------------------------------------------
-#> [-1.39, 1.23] | [-1.56, 1.80] | [-2.06, 1.82]
+#> [-1.39, 1.24] | [-1.59, 1.77] | [-2.10, 1.80]
 
 hdi(iris[1:4])
 #> Identical densities found along different segments of the distribution,
@@ -309,24 +309,24 @@ hdi(model)
 #> 
 #> Parameter   |        95% HDI
 #> ----------------------------
-#> (Intercept) | [28.15, 49.37]
-#> wt          | [-7.09, -4.08]
-#> gear        | [-2.17,  1.51]
+#> (Intercept) | [29.21, 49.50]
+#> wt          | [-6.99, -4.05]
+#> gear        | [-2.18,  1.68]
 hdi(model, ci = c(0.80, 0.90, 0.95))
 #> Highest Density Interval 
 #> 
 #> Parameter   |        80% HDI |        90% HDI |        95% HDI
 #> --------------------------------------------------------------
-#> (Intercept) | [33.23, 46.04] | [31.50, 49.37] | [28.15, 49.37]
-#> wt          | [-6.54, -4.65] | [-6.69, -4.18] | [-7.09, -4.08]
-#> gear        | [-1.30,  1.01] | [-1.77,  1.31] | [-2.17,  1.51]
+#> (Intercept) | [31.68, 46.67] | [29.21, 47.18] | [29.21, 49.50]
+#> wt          | [-6.30, -4.23] | [-6.70, -4.11] | [-6.99, -4.05]
+#> gear        | [-1.53,  1.08] | [-1.89,  1.41] | [-2.18,  1.68]
 
 hdi(emmeans::emtrends(model, ~1, "wt", data = mtcars))
 #> Highest Density Interval
 #> 
 #> X1      |        95% HDI
 #> ------------------------
-#> overall | [-7.09, -4.08]
+#> overall | [-6.99, -4.05]
 
 model <- brms::brm(mpg ~ wt + cyl, data = mtcars)
 #> Compiling Stan program...
@@ -353,8 +353,8 @@ model <- brms::brm(mpg ~ wt + cyl, data = mtcars)
 #> Chain 1: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 1: 
 #> Chain 1:  Elapsed Time: 0.02 seconds (Warm-up)
-#> Chain 1:                0.017 seconds (Sampling)
-#> Chain 1:                0.037 seconds (Total)
+#> Chain 1:                0.016 seconds (Sampling)
+#> Chain 1:                0.036 seconds (Total)
 #> Chain 1: 
 #> 
 #> SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 2).
@@ -402,9 +402,9 @@ model <- brms::brm(mpg ~ wt + cyl, data = mtcars)
 #> Chain 3: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 3: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 3: 
-#> Chain 3:  Elapsed Time: 0.02 seconds (Warm-up)
+#> Chain 3:  Elapsed Time: 0.021 seconds (Warm-up)
 #> Chain 3:                0.017 seconds (Sampling)
-#> Chain 3:                0.037 seconds (Total)
+#> Chain 3:                0.038 seconds (Total)
 #> Chain 3: 
 #> 
 #> SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 4).
@@ -427,9 +427,9 @@ model <- brms::brm(mpg ~ wt + cyl, data = mtcars)
 #> Chain 4: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 4: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 4: 
-#> Chain 4:  Elapsed Time: 0.019 seconds (Warm-up)
+#> Chain 4:  Elapsed Time: 0.02 seconds (Warm-up)
 #> Chain 4:                0.018 seconds (Sampling)
-#> Chain 4:                0.037 seconds (Total)
+#> Chain 4:                0.038 seconds (Total)
 #> Chain 4: 
 hdi(model)
 #> Highest Density Interval 

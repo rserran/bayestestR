@@ -179,7 +179,7 @@ rope(
 ## Note
 
 There is also a
-[[`plot()`](https://rdrr.io/r/graphics/plot.default.html)-method](https://easystats.github.io/see/articles/bayestestR.html)
+[`plot()`-method](https://easystats.github.io/see/articles/bayestestR.html)
 implemented in the [see-package](https://easystats.github.io/see/).
 
 ## ROPE
@@ -274,7 +274,7 @@ Following are valid options:
 For models of class `brmsfit` (package **brms**), even more options are
 possible for the `component` argument, which are not all documented in
 detail here. See also
-[[`?insight::find_parameters`](https://easystats.github.io/insight/reference/find_parameters.html)](https://easystats.github.io/insight/reference/find_parameters.BGGM.html).
+[`?insight::find_parameters`](https://easystats.github.io/insight/reference/find_parameters.BGGM.html).
 
 ## References
 
@@ -366,7 +366,7 @@ rope(model)
 #> -------------------------
 #> (Intercept) |      0.00 %
 #> wt          |      0.00 %
-#> gear        |     52.11 %
+#> gear        |     43.68 %
 #> 
 rope(model, ci = c(0.90, 0.95))
 #> # Proportions of samples inside the ROPE [-0.60, 0.60]:
@@ -377,7 +377,7 @@ rope(model, ci = c(0.90, 0.95))
 #> -------------------------
 #> (Intercept) |      0.00 %
 #> wt          |      0.00 %
-#> gear        |     55.00 %
+#> gear        |     46.11 %
 #> 
 #> 
 #> ROPE for the 95% HDI:
@@ -386,7 +386,7 @@ rope(model, ci = c(0.90, 0.95))
 #> -------------------------
 #> (Intercept) |      0.00 %
 #> wt          |      0.00 %
-#> gear        |     52.11 %
+#> gear        |     43.68 %
 #> 
 #> 
 
@@ -398,7 +398,7 @@ rope(model, range = list(c(-10, 5), c(-0.2, 0.2), "default"))
 #> -------------------------
 #> (Intercept) |      0.00 %
 #> wt          |      0.00 %
-#> gear        |      9.47 %
+#> gear        |     10.53 %
 #> 
 
 # named ROPE ranges

@@ -112,7 +112,7 @@ Following are valid options:
 For models of class `brmsfit` (package **brms**), even more options are
 possible for the `component` argument, which are not all documented in
 detail here. See also
-[[`?insight::find_parameters`](https://easystats.github.io/insight/reference/find_parameters.html)](https://easystats.github.io/insight/reference/find_parameters.BGGM.html).
+[`?insight::find_parameters`](https://easystats.github.io/insight/reference/find_parameters.BGGM.html).
 
 ## References
 
@@ -130,8 +130,8 @@ model <- suppressWarnings(
 )
 mcse(model)
 #>     Parameter       MCSE
-#> 1 (Intercept) 0.13752712
-#> 2          wt 0.03455307
-#> 3          am 0.07082405
+#> 1 (Intercept) 0.16538278
+#> 2          wt 0.04132833
+#> 3          am 0.07838402
 # }
 ```

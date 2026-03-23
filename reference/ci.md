@@ -151,7 +151,7 @@ assumptions, the data should not seem very surprising" (*Gelman &
 Greenland 2019*).
 
 There is also a
-[[`plot()`](https://rdrr.io/r/graphics/plot.default.html)-method](https://easystats.github.io/see/articles/bayestestR.html)
+[`plot()`-method](https://easystats.github.io/see/articles/bayestestR.html)
 implemented in the [see-package](https://easystats.github.io/see/).
 
 ## Model components
@@ -184,7 +184,7 @@ Following are valid options:
 For models of class `brmsfit` (package **brms**), even more options are
 possible for the `component` argument, which are not all documented in
 detail here. See also
-[[`?insight::find_parameters`](https://easystats.github.io/insight/reference/find_parameters.html)](https://easystats.github.io/insight/reference/find_parameters.BGGM.html).
+[`?insight::find_parameters`](https://easystats.github.io/insight/reference/find_parameters.BGGM.html).
 
 ## References
 
@@ -207,9 +207,9 @@ library(bayestestR)
 
 posterior <- rnorm(1000)
 ci(posterior, method = "ETI")
-#> 95% ETI: [-1.93, 1.97]
+#> 95% ETI: [-2.00, 1.96]
 ci(posterior, method = "HDI")
-#> 95% HDI: [-1.85, 2.04]
+#> 95% HDI: [-1.91, 2.03]
 
 df <- data.frame(replicate(4, rnorm(100)))
 ci(df, method = "ETI", ci = c(0.80, 0.89, 0.95))
@@ -217,19 +217,19 @@ ci(df, method = "ETI", ci = c(0.80, 0.89, 0.95))
 #> 
 #> Parameter |       80% ETI |       89% ETI |       95% ETI
 #> ---------------------------------------------------------
-#> X1        | [-1.46, 1.27] | [-1.60, 1.62] | [-1.96, 1.96]
-#> X2        | [-1.19, 1.34] | [-1.42, 1.48] | [-2.02, 1.84]
-#> X3        | [-1.26, 1.18] | [-1.72, 1.51] | [-2.20, 1.66]
-#> X4        | [-1.01, 1.61] | [-1.33, 1.73] | [-1.85, 2.22]
+#> X1        | [-1.46, 1.35] | [-1.70, 1.63] | [-1.94, 1.94]
+#> X2        | [-1.21, 1.34] | [-1.51, 1.71] | [-1.81, 2.08]
+#> X3        | [-1.20, 1.19] | [-1.54, 1.48] | [-2.02, 1.71]
+#> X4        | [-1.22, 1.51] | [-1.88, 1.61] | [-2.20, 1.82]
 ci(df, method = "HDI", ci = c(0.80, 0.89, 0.95))
 #> Highest Density Interval
 #> 
 #> Parameter |       80% HDI |       89% HDI |       95% HDI
 #> ---------------------------------------------------------
-#> X1        | [-1.64, 1.02] | [-1.55, 1.73] | [-1.97, 1.80]
-#> X2        | [-1.44, 0.99] | [-1.44, 1.49] | [-2.29, 1.72]
-#> X3        | [-0.98, 1.35] | [-1.46, 1.56] | [-2.34, 1.52]
-#> X4        | [-1.00, 1.62] | [-1.22, 1.89] | [-1.47, 2.39]
+#> X1        | [-1.38, 1.37] | [-1.95, 1.37] | [-1.77, 2.17]
+#> X2        | [-1.20, 1.35] | [-1.64, 1.52] | [-2.15, 1.80]
+#> X3        | [-1.21, 1.17] | [-1.46, 1.56] | [-2.07, 1.72]
+#> X4        | [-1.03, 1.52] | [-1.45, 1.74] | [-2.34, 1.71]
 
 model <- suppressWarnings(rstanarm::stan_glm(
   mpg ~ wt,
@@ -240,39 +240,39 @@ ci(model, method = "ETI", ci = c(0.80, 0.89))
 #> 
 #> Parameter   |        80% ETI |        89% ETI | Effects |   Component
 #> ---------------------------------------------------------------------
-#> (Intercept) | [34.88, 39.92] | [34.57, 40.72] |   fixed | conditional
-#> wt          | [-6.12, -4.71] | [-6.44, -4.53] |   fixed | conditional
+#> (Intercept) | [34.59, 39.93] | [34.12, 40.56] |   fixed | conditional
+#> wt          | [-6.10, -4.52] | [-6.27, -4.33] |   fixed | conditional
 ci(model, method = "HDI", ci = c(0.80, 0.89))
 #> Highest Density Interval 
 #> 
 #> Parameter   |        80% HDI |        89% HDI
 #> ---------------------------------------------
-#> (Intercept) | [34.55, 39.51] | [34.47, 40.19]
-#> wt          | [-6.15, -4.75] | [-6.14, -4.41]
+#> (Intercept) | [34.36, 39.67] | [34.20, 40.60]
+#> wt          | [-6.09, -4.51] | [-6.37, -4.47]
 bf <- BayesFactor::ttestBF(x = rnorm(100, 1, 1))
 ci(bf, method = "ETI")
 #> Equal-Tailed Interval
 #> 
 #> Parameter  |      95% ETI
 #> -------------------------
-#> Difference | [0.73, 1.08]
+#> Difference | [0.80, 1.23]
 ci(bf, method = "HDI")
 #> Highest Density Interval
 #> 
 #> Parameter  |      95% HDI
 #> -------------------------
-#> Difference | [0.74, 1.09]
+#> Difference | [0.81, 1.24]
 model <- emmeans::emtrends(model, ~1, "wt", data = mtcars)
 ci(model, method = "ETI")
 #> Equal-Tailed Interval
 #> 
 #> X1      |        95% ETI
 #> ------------------------
-#> overall | [-6.69, -4.42]
+#> overall | [-6.37, -4.20]
 ci(model, method = "HDI")
 #> Highest Density Interval
 #> 
 #> X1      |        95% HDI
 #> ------------------------
-#> overall | [-6.53, -4.38]
+#> overall | [-6.37, -4.18]
 ```

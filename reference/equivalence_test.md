@@ -219,7 +219,7 @@ Vehtari 2017).
 There is a [`print()`](https://rdrr.io/r/base/print.html)-method with a
 `digits`-argument to control the amount of digits in the output, and
 there is a
-[[`plot()`](https://rdrr.io/r/graphics/plot.default.html)-method](https://easystats.github.io/see/articles/bayestestR.html)
+[`plot()`-method](https://easystats.github.io/see/articles/bayestestR.html)
 to visualize the results from the equivalence-test (for models only).
 
 ## Model components
@@ -252,7 +252,7 @@ Following are valid options:
 For models of class `brmsfit` (package **brms**), even more options are
 possible for the `component` argument, which are not all documented in
 detail here. See also
-[[`?insight::find_parameters`](https://easystats.github.io/insight/reference/find_parameters.html)](https://easystats.github.io/insight/reference/find_parameters.BGGM.html).
+[`?insight::find_parameters`](https://easystats.github.io/insight/reference/find_parameters.BGGM.html).
 
 ## References
 
@@ -315,7 +315,7 @@ equivalence_test(x = rnorm(1000, 1, 1), ci = c(.50, .99))
 #> 
 #> H0        | inside ROPE |       99% HDI
 #> ---------------------------------------
-#> Undecided |      5.25 % | [-1.35, 3.39]
+#> Undecided |      5.25 % | [-1.39, 3.39]
 #> 
 #> 
 
@@ -328,7 +328,7 @@ print(test, digits = 4)
 #> 
 #> H0       | inside ROPE |          50% HDI
 #> -----------------------------------------
-#> Rejected |    0.0000 % | [0.3279, 1.7164]
+#> Rejected |    0.0000 % | [0.3196, 1.7164]
 #> 
 #> 
 #> H0        | inside ROPE |           99% HDI
@@ -341,8 +341,8 @@ model <- rstanarm::stan_glm(mpg ~ wt + cyl, data = mtcars)
 #> 
 #> SAMPLING FOR MODEL 'continuous' NOW (CHAIN 1).
 #> Chain 1: 
-#> Chain 1: Gradient evaluation took 2e-05 seconds
-#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.2 seconds.
+#> Chain 1: Gradient evaluation took 2.1e-05 seconds
+#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.21 seconds.
 #> Chain 1: Adjust your expectations accordingly!
 #> Chain 1: 
 #> Chain 1: 
@@ -359,8 +359,8 @@ model <- rstanarm::stan_glm(mpg ~ wt + cyl, data = mtcars)
 #> Chain 1: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 1: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 1: 
-#> Chain 1:  Elapsed Time: 0.043 seconds (Warm-up)
-#> Chain 1:                0.037 seconds (Sampling)
+#> Chain 1:  Elapsed Time: 0.044 seconds (Warm-up)
+#> Chain 1:                0.036 seconds (Sampling)
 #> Chain 1:                0.08 seconds (Total)
 #> Chain 1: 
 #> 
@@ -384,9 +384,9 @@ model <- rstanarm::stan_glm(mpg ~ wt + cyl, data = mtcars)
 #> Chain 2: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 2: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 2: 
-#> Chain 2:  Elapsed Time: 0.05 seconds (Warm-up)
-#> Chain 2:                0.048 seconds (Sampling)
-#> Chain 2:                0.098 seconds (Total)
+#> Chain 2:  Elapsed Time: 0.045 seconds (Warm-up)
+#> Chain 2:                0.041 seconds (Sampling)
+#> Chain 2:                0.086 seconds (Total)
 #> Chain 2: 
 #> 
 #> SAMPLING FOR MODEL 'continuous' NOW (CHAIN 3).
@@ -409,9 +409,9 @@ model <- rstanarm::stan_glm(mpg ~ wt + cyl, data = mtcars)
 #> Chain 3: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 3: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 3: 
-#> Chain 3:  Elapsed Time: 0.046 seconds (Warm-up)
-#> Chain 3:                0.042 seconds (Sampling)
-#> Chain 3:                0.088 seconds (Total)
+#> Chain 3:  Elapsed Time: 0.045 seconds (Warm-up)
+#> Chain 3:                0.048 seconds (Sampling)
+#> Chain 3:                0.093 seconds (Total)
 #> Chain 3: 
 #> 
 #> SAMPLING FOR MODEL 'continuous' NOW (CHAIN 4).
@@ -434,9 +434,9 @@ model <- rstanarm::stan_glm(mpg ~ wt + cyl, data = mtcars)
 #> Chain 4: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 4: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 4: 
-#> Chain 4:  Elapsed Time: 0.043 seconds (Warm-up)
-#> Chain 4:                0.038 seconds (Sampling)
-#> Chain 4:                0.081 seconds (Total)
+#> Chain 4:  Elapsed Time: 0.036 seconds (Warm-up)
+#> Chain 4:                0.036 seconds (Sampling)
+#> Chain 4:                0.072 seconds (Total)
 #> Chain 4: 
 equivalence_test(model)
 #> Possible multicollinearity between cyl and wt (r = 0.78). This might
@@ -447,9 +447,9 @@ equivalence_test(model)
 #> 
 #> Parameter   |       H0 | inside ROPE |        95% HDI
 #> -----------------------------------------------------
-#> (Intercept) | Rejected |      0.00 % | [36.22, 43.04]
-#> wt          | Rejected |      0.00 % | [-4.79, -1.66]
-#> cyl         | Rejected |      0.00 % | [-2.33, -0.67]
+#> (Intercept) | Rejected |      0.00 % | [36.23, 43.24]
+#> wt          | Rejected |      0.00 % | [-4.78, -1.60]
+#> cyl         | Rejected |      0.00 % | [-2.36, -0.65]
 #> 
 #> 
 # multiple ROPE ranges - asymmetric, symmetric, default
@@ -460,9 +460,9 @@ equivalence_test(model, range = list(c(10, 40), c(-5, -4), "default"))
 #> 
 #> Parameter   |        H0 | inside ROPE |        95% HDI |           ROPE
 #> -----------------------------------------------------------------------
-#> (Intercept) | Undecided |     57.97 % | [36.22, 43.04] | [10.00, 40.00]
-#> wt          | Undecided |     11.84 % | [-4.79, -1.66] | [-5.00, -4.00]
-#> cyl         |  Rejected |      0.00 % | [-2.33, -0.67] |  [-0.10, 0.10]
+#> (Intercept) | Undecided |     56.71 % | [36.23, 43.24] | [10.00, 40.00]
+#> wt          | Undecided |     12.66 % | [-4.78, -1.60] | [-5.00, -4.00]
+#> cyl         |  Rejected |      0.00 % | [-2.36, -0.65] |  [-0.10, 0.10]
 #> 
 #> 
 # named ROPE ranges
@@ -473,9 +473,9 @@ equivalence_test(model, range = list(wt = c(-5, -4), `(Intercept)` = c(10, 40)))
 #> 
 #> Parameter   |        H0 | inside ROPE |        95% HDI |           ROPE
 #> -----------------------------------------------------------------------
-#> (Intercept) | Undecided |     57.97 % | [36.22, 43.04] | [10.00, 40.00]
-#> wt          | Undecided |     11.84 % | [-4.79, -1.66] | [-5.00, -4.00]
-#> cyl         |  Rejected |      0.00 % | [-2.33, -0.67] |  [-0.10, 0.10]
+#> (Intercept) | Undecided |     56.71 % | [36.23, 43.24] | [10.00, 40.00]
+#> wt          | Undecided |     12.66 % | [-4.78, -1.60] | [-5.00, -4.00]
+#> cyl         |  Rejected |      0.00 % | [-2.36, -0.65] |  [-0.10, 0.10]
 #> 
 #> 
 
@@ -484,7 +484,7 @@ test <- equivalence_test(model)
 #> Possible multicollinearity between cyl and wt (r = 0.78). This might
 #>   lead to inappropriate results. See 'Details' in '?equivalence_test'.
 plot(test)
-#> Picking joint bandwidth of 0.0888
+#> Picking joint bandwidth of 0.0913
 
 
 equivalence_test(emmeans::emtrends(model, ~1, "wt", data = mtcars))
@@ -494,7 +494,7 @@ equivalence_test(emmeans::emtrends(model, ~1, "wt", data = mtcars))
 #> 
 #> X1      |       H0 | inside ROPE |        95% HDI
 #> -------------------------------------------------
-#> overall | Rejected |      0.00 % | [-4.79, -1.66]
+#> overall | Rejected |      0.00 % | [-4.78, -1.60]
 #> 
 #> 
 
@@ -529,8 +529,8 @@ model <- brms::brm(mpg ~ wt + cyl, data = mtcars)
 #> 
 #> SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 2).
 #> Chain 2: 
-#> Chain 2: Gradient evaluation took 4e-06 seconds
-#> Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 0.04 seconds.
+#> Chain 2: Gradient evaluation took 3e-06 seconds
+#> Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 0.03 seconds.
 #> Chain 2: Adjust your expectations accordingly!
 #> Chain 2: 
 #> Chain 2: 
@@ -548,14 +548,14 @@ model <- brms::brm(mpg ~ wt + cyl, data = mtcars)
 #> Chain 2: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 2: 
 #> Chain 2:  Elapsed Time: 0.019 seconds (Warm-up)
-#> Chain 2:                0.018 seconds (Sampling)
-#> Chain 2:                0.037 seconds (Total)
+#> Chain 2:                0.017 seconds (Sampling)
+#> Chain 2:                0.036 seconds (Total)
 #> Chain 2: 
 #> 
 #> SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 3).
 #> Chain 3: 
-#> Chain 3: Gradient evaluation took 4e-06 seconds
-#> Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 0.04 seconds.
+#> Chain 3: Gradient evaluation took 3e-06 seconds
+#> Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 0.03 seconds.
 #> Chain 3: Adjust your expectations accordingly!
 #> Chain 3: 
 #> Chain 3: 
@@ -579,8 +579,8 @@ model <- brms::brm(mpg ~ wt + cyl, data = mtcars)
 #> 
 #> SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 4).
 #> Chain 4: 
-#> Chain 4: Gradient evaluation took 1.1e-05 seconds
-#> Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 0.11 seconds.
+#> Chain 4: Gradient evaluation took 3e-06 seconds
+#> Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 0.03 seconds.
 #> Chain 4: Adjust your expectations accordingly!
 #> Chain 4: 
 #> Chain 4: 
@@ -598,8 +598,8 @@ model <- brms::brm(mpg ~ wt + cyl, data = mtcars)
 #> Chain 4: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 4: 
 #> Chain 4:  Elapsed Time: 0.02 seconds (Warm-up)
-#> Chain 4:                0.016 seconds (Sampling)
-#> Chain 4:                0.036 seconds (Total)
+#> Chain 4:                0.015 seconds (Sampling)
+#> Chain 4:                0.035 seconds (Total)
 #> Chain 4: 
 equivalence_test(model)
 #> Possible multicollinearity between b_cyl and b_wt (r = 0.79). This might

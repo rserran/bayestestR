@@ -144,7 +144,7 @@ Following are valid options:
 For models of class `brmsfit` (package **brms**), even more options are
 possible for the `component` argument, which are not all documented in
 detail here. See also
-[[`?insight::find_parameters`](https://easystats.github.io/insight/reference/find_parameters.html)](https://easystats.github.io/insight/reference/find_parameters.BGGM.html).
+[`?insight::find_parameters`](https://easystats.github.io/insight/reference/find_parameters.BGGM.html).
 
 ## References
 
@@ -172,9 +172,9 @@ model <- suppressWarnings(rstanarm::stan_glm(
 ))
 effective_sample(model)
 #>     Parameter ESS ESS_tail
-#> 1 (Intercept) 124      148
-#> 2          wt 131      131
-#> 3        gear 126      152
+#> 1 (Intercept) 162      131
+#> 2          wt 217      108
+#> 3        gear 177      108
 
 model <- suppressWarnings(brms::brm(
   mpg ~ wt,
