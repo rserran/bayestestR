@@ -56,7 +56,7 @@ sexit(x, significant = "default", large = "default", ci = 0.95, ...)
 - ci:
 
   Value or vector of probability of the (credible) interval - CI
-  (between 0 and 1) to be estimated. Default to `.95` (`95%`).
+  (between 0 and 1) to be estimated. Default to `.95` (95%).
 
 - ...:
 

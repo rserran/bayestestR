@@ -48,7 +48,7 @@ spi(x, ci = 0.95, use_iterations = FALSE, verbose = TRUE, ...)
 - ci:
 
   Value or vector of probability of the (credible) interval - CI
-  (between 0 and 1) to be estimated. Default to `.95` (`95%`).
+  (between 0 and 1) to be estimated. Default to `.95` (95%).
 
 - verbose:
 

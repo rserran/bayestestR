@@ -235,20 +235,20 @@ model <- suppressWarnings(rstanarm::stan_glm(
   mpg ~ wt,
   data = mtcars, chains = 2, iter = 200, refresh = 0
 ))
-ci(model, method = "ETI", ci = c(0.80, 0.89))
+ci(model, method = "ETI", ci = c(0.80, 0.89, 0.95))
 #> Equal-Tailed Interval
 #> 
-#> Parameter   |        80% ETI |        89% ETI | Effects |   Component
-#> ---------------------------------------------------------------------
-#> (Intercept) | [34.59, 39.93] | [34.12, 40.56] |   fixed | conditional
-#> wt          | [-6.10, -4.52] | [-6.27, -4.33] |   fixed | conditional
-ci(model, method = "HDI", ci = c(0.80, 0.89))
+#> Parameter   |        80% ETI |        89% ETI |        95% ETI | Effects |   Component
+#> --------------------------------------------------------------------------------------
+#> (Intercept) | [34.59, 39.93] | [34.12, 40.56] | [33.42, 41.04] |   fixed | conditional
+#> wt          | [-6.10, -4.52] | [-6.27, -4.33] | [-6.37, -4.20] |   fixed | conditional
+ci(model, method = "HDI", ci = c(0.80, 0.89, 0.95))
 #> Highest Density Interval 
 #> 
-#> Parameter   |        80% HDI |        89% HDI
-#> ---------------------------------------------
-#> (Intercept) | [34.36, 39.67] | [34.20, 40.60]
-#> wt          | [-6.09, -4.51] | [-6.37, -4.47]
+#> Parameter   |        80% HDI |        89% HDI |        95% HDI
+#> --------------------------------------------------------------
+#> (Intercept) | [34.36, 39.67] | [34.20, 40.60] | [33.36, 40.92]
+#> wt          | [-6.09, -4.51] | [-6.37, -4.47] | [-6.37, -4.18]
 bf <- BayesFactor::ttestBF(x = rnorm(100, 1, 1))
 ci(bf, method = "ETI")
 #> Equal-Tailed Interval
