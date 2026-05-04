@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="index.html">bayestestR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.17.0.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.17.0.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -81,6 +81,7 @@
 <h2 id="package-versioning">Package versioning<a class="anchor" aria-label="anchor" href="#package-versioning"></a></h2>
 <ul><li><p>Package versions follow Semantic Versioning conventions.</p></li>
 <li><p>If pull requests include user-visible changes, the “developer” version number should be increased (e.g. from 0.10.1.5 to 0.10.1.6). This ensures that <code>easystats::install_latest()</code> will download the latest versions.</p></li>
+<li><p>For the NEWS file, the current development version should not be indicated by a version number, but rather with <code>(devel)</code>.</p></li>
 </ul></div>
 <div class="section level2">
 <h2 id="code-style--formatting">Code Style &amp; Formatting<a class="anchor" aria-label="anchor" href="#code-style--formatting"></a></h2>
@@ -90,11 +91,6 @@
 <strong>Spacing:</strong>
 <ul><li>Use spaces around all infix operators (<code>&lt;-</code>, <code>==</code>, <code>+</code>, etc.).</li>
 <li>Place a space after a comma, but not before.</li>
-</ul></li>
-<li>
-<strong>Curly Braces:</strong>
-<ul><li>For function definitions, the opening <code>{</code> should be on its own line.</li>
-<li>For <code>if</code>/<code>else</code> statements, the opening <code>{</code> can be on the same line.</li>
 </ul></li>
 <li>
 <strong>Line Length:</strong> Keep lines to a reasonable length (e.g., under 80-100 characters) to improve readability.</li>
@@ -154,9 +150,11 @@
 <ul><li>Use base-R wherever possible (to reduce hard dependencies)</li>
 <li>Make sure R-version requirements are not too strict</li>
 <li>
-<strong>Package Functions:</strong> Always use the <code>::</code> operator to call functions from other packages (e.g., <code><a href="https://rdrr.io/r/stats/shapiro.test.html" class="external-link">stats::shapiro.test</a></code>, <code><a href="https://easystats.github.io/insight/reference/model_info.html" class="external-link">insight::model_info</a></code>). Do not use <code><a href="https://rdrr.io/r/base/library.html" class="external-link">library()</a></code> or <code><a href="https://rdrr.io/r/base/library.html" class="external-link">require()</a></code> at the top of a file (no full import, only selective import of functions).</li>
+<strong>Package Functions:</strong> Always use the <code>::</code> operator to call functions from other packages (e.g., <code><a href="https://rdrr.io/r/stats/shapiro.test.html" class="external-link">stats::shapiro.test</a></code>, <code><a href="https://easystats.github.io/insight/reference/model_info.html" class="external-link">insight::model_info</a></code>). Do not use <code><a href="https://rdrr.io/r/base/library.html" class="external-link">library()</a></code> or <code><a href="https://rdrr.io/r/base/library.html" class="external-link">require()</a></code> at the top of a file (no full import, only selective import of functions). However, in test files, package vignettes (.rmd), or in the package documentation, <code>::</code> is not required for core R packages like <code>stats</code> or <code>tools</code>.</li>
 <li>
 <strong>Conditional Checks:</strong> Use <code>insight::check_if_installed("pkg_name")</code> to check if a package is available before using it, especially for optional (“Suggests”) dependencies.</li>
+<li>
+<strong>Argument validation:</strong> Use <code><a href="https://easystats.github.io/insight/reference/validate_argument.html" class="external-link">insight::validate_argument()</a></code> instead of <code><a href="https://rdrr.io/r/base/match.arg.html" class="external-link">match.arg()</a></code> to validate correct input of arguments, unless you need <code>several.ok</code>. In this case, rely on <code><a href="https://rdrr.io/r/base/match.arg.html" class="external-link">match.arg()</a></code>.</li>
 </ul></div>
 <div class="section level2">
 <h2 id="s3-object-system">S3 Object System<a class="anchor" aria-label="anchor" href="#s3-object-system"></a></h2>
@@ -170,10 +168,13 @@
 <h2 id="error-handling-and-messaging">Error Handling and Messaging<a class="anchor" aria-label="anchor" href="#error-handling-and-messaging"></a></h2>
 <ul><li>Use <code>tryCatch</code> for operations that might fail. The internal <code>.safe()</code> helper is a good example.</li>
 <li>Use the <code>insight</code> package’s functions for user-facing messages:
-<ul><li><code><a href="https://easystats.github.io/insight/reference/format_message.html" class="external-link">insight::format_error()</a></code></li>
-<li><code><a href="https://easystats.github.io/insight/reference/format_message.html" class="external-link">insight::format_warning()</a></code></li>
-<li><code><a href="https://easystats.github.io/insight/reference/format_message.html" class="external-link">insight::format_alert()</a></code></li>
-<li><code><a href="https://easystats.github.io/insight/reference/print_color.html" class="external-link">insight::print_color()</a></code></li>
+<ul><li>For errors: <code><a href="https://easystats.github.io/insight/reference/format_message.html" class="external-link">insight::format_error()</a></code>
+</li>
+<li>For warnings: <code><a href="https://easystats.github.io/insight/reference/format_message.html" class="external-link">insight::format_warning()</a></code>
+</li>
+<li>For messages: <code><a href="https://easystats.github.io/insight/reference/format_message.html" class="external-link">insight::format_alert()</a></code>
+</li>
+<li>To highlight messages: <code><a href="https://easystats.github.io/insight/reference/print_color.html" class="external-link">insight::print_color()</a></code> Note that character vectors are not pasted together, unlike in <code><a href="https://rdrr.io/r/base/message.html" class="external-link">message()</a></code>, thus you usually want to use something like <code><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste()</a></code> to concatenate the string. Character vectors will add a new paragraph for each string element, not paste them together.</li>
 </ul></li>
 </ul></div>
 </div>
