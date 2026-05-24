@@ -1,13 +1,30 @@
-# bayestestR 0.17.0.xxx
-
-## New functionality
-
-* `as.matrix()` for `bayesfactor_restricted()`, to obtain a matrix of Bayes
-  factors between all restricted models.
+# bayestestR 0.18.1
 
 ## Changes
 
-* `as.matrix(<bf>)` now returns class `bayesfactor_matrix` and has a simpler printing.
+* `mcse()` gains a `centrality` argument to return the appropriate MCSE.
+
+## Bug fixes
+
+* Fixed failing CRAN checks.
+
+# bayestestR 0.18.0
+
+## New functionality
+
+* Improved Bayes factor methods:
+
+  * New docs at `?bayesfactor_methods`
+
+  * `as.matrix()` for `bayesfactor_restricted()`, to obtain a matrix of Bayes factors between all restricted models.
+
+* Added support for `CmdStanFit` models from `{cmdstanr}` and expanded support for `stanfit` models from `rstan`.
+
+
+## Changes
+
+* `as.matrix(<bf>)` now returns class `bayesfactor_matrix` and has a simpler
+  printing.
 
 * `diagnostic_posterior()` works with 'raw' MCMC samples (i.e., lists of data
   frames or matrices representing samples of parameters from chains, or 3D arrays)
