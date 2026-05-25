@@ -139,8 +139,8 @@ model <- suppressWarnings(rstanarm::stan_lmer(extra ~ group + (1 | ID), data = s
 #> 
 #> SAMPLING FOR MODEL 'continuous' NOW (CHAIN 1).
 #> Chain 1: 
-#> Chain 1: Gradient evaluation took 4.7e-05 seconds
-#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.47 seconds.
+#> Chain 1: Gradient evaluation took 5.9e-05 seconds
+#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.59 seconds.
 #> Chain 1: Adjust your expectations accordingly!
 #> Chain 1: 
 #> Chain 1: 
@@ -164,8 +164,8 @@ model <- suppressWarnings(rstanarm::stan_lmer(extra ~ group + (1 | ID), data = s
 #> 
 #> SAMPLING FOR MODEL 'continuous' NOW (CHAIN 2).
 #> Chain 2: 
-#> Chain 2: Gradient evaluation took 1.7e-05 seconds
-#> Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 0.17 seconds.
+#> Chain 2: Gradient evaluation took 1.8e-05 seconds
+#> Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 0.18 seconds.
 #> Chain 2: Adjust your expectations accordingly!
 #> Chain 2: 
 #> Chain 2: 
@@ -182,15 +182,15 @@ model <- suppressWarnings(rstanarm::stan_lmer(extra ~ group + (1 | ID), data = s
 #> Chain 2: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 2: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 2: 
-#> Chain 2:  Elapsed Time: 0.163 seconds (Warm-up)
+#> Chain 2:  Elapsed Time: 0.173 seconds (Warm-up)
 #> Chain 2:                0.164 seconds (Sampling)
-#> Chain 2:                0.327 seconds (Total)
+#> Chain 2:                0.337 seconds (Total)
 #> Chain 2: 
 #> 
 #> SAMPLING FOR MODEL 'continuous' NOW (CHAIN 3).
 #> Chain 3: 
-#> Chain 3: Gradient evaluation took 1.7e-05 seconds
-#> Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 0.17 seconds.
+#> Chain 3: Gradient evaluation took 1.8e-05 seconds
+#> Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 0.18 seconds.
 #> Chain 3: Adjust your expectations accordingly!
 #> Chain 3: 
 #> Chain 3: 
@@ -207,15 +207,15 @@ model <- suppressWarnings(rstanarm::stan_lmer(extra ~ group + (1 | ID), data = s
 #> Chain 3: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 3: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 3: 
-#> Chain 3:  Elapsed Time: 0.179 seconds (Warm-up)
-#> Chain 3:                0.113 seconds (Sampling)
-#> Chain 3:                0.292 seconds (Total)
+#> Chain 3:  Elapsed Time: 0.177 seconds (Warm-up)
+#> Chain 3:                0.112 seconds (Sampling)
+#> Chain 3:                0.289 seconds (Total)
 #> Chain 3: 
 #> 
 #> SAMPLING FOR MODEL 'continuous' NOW (CHAIN 4).
 #> Chain 4: 
-#> Chain 4: Gradient evaluation took 1.6e-05 seconds
-#> Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 0.16 seconds.
+#> Chain 4: Gradient evaluation took 1.7e-05 seconds
+#> Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 0.17 seconds.
 #> Chain 4: Adjust your expectations accordingly!
 #> Chain 4: 
 #> Chain 4: 
@@ -232,9 +232,9 @@ model <- suppressWarnings(rstanarm::stan_lmer(extra ~ group + (1 | ID), data = s
 #> Chain 4: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 4: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 4: 
-#> Chain 4:  Elapsed Time: 0.162 seconds (Warm-up)
-#> Chain 4:                0.187 seconds (Sampling)
-#> Chain 4:                0.349 seconds (Total)
+#> Chain 4:  Elapsed Time: 0.161 seconds (Warm-up)
+#> Chain 4:                0.186 seconds (Sampling)
+#> Chain 4:                0.347 seconds (Total)
 #> Chain 4: 
 bayesfactor(model, verbose = FALSE)
 #> Bayes Factor (Savage-Dickey density ratio) 
@@ -257,11 +257,11 @@ comparison <- bayesfactor(m0, m1, m2)
 comparison
 #> Bayes Factors for Model Comparison
 #> 
-#>       Model            BF
-#> [..2] group          1.30
-#> [..3] group + ID 1.12e+04
+#>     Model            BF
+#> [2] group          1.30
+#> [3] group + ID 1.12e+04
 #> 
-#> * Against Denominator: [..1] (Intercept only)
+#> * Against Denominator: [1] (Intercept only)
 #> *   Bayes Factor Type: BIC approximation
 
 bayesfactor(comparison)

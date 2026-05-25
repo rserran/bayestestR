@@ -1,14 +1,36 @@
 # Changelog
 
-## bayestestR 0.17.0.xxx
+## bayestestR 0.18.1
 
-CRAN release: 2025-08-29
+CRAN release: 2026-05-24
+
+### Changes
+
+- [`mcse()`](https://easystats.github.io/bayestestR/reference/mcse.md)
+  gains a `centrality` argument to return the appropriate MCSE.
+
+### Bug fixes
+
+- Fixed failing CRAN checks.
+
+## bayestestR 0.18.0
+
+CRAN release: 2026-05-21
 
 ### New functionality
 
-- [`as.matrix()`](https://rdrr.io/r/base/matrix.html) for
-  [`bayesfactor_restricted()`](https://easystats.github.io/bayestestR/reference/bayesfactor_restricted.md),
-  to obtain a matrix of Bayes factors between all restricted models.
+- Improved Bayes factor methods:
+
+  - New docs at
+    [`?bayesfactor_methods`](https://easystats.github.io/bayestestR/reference/bayesfactor_methods.md)
+
+  - [`as.matrix()`](https://rdrr.io/r/base/matrix.html) for
+    [`bayesfactor_restricted()`](https://easystats.github.io/bayestestR/reference/bayesfactor_restricted.md),
+    to obtain a matrix of Bayes factors between all restricted models.
+
+- Added support for `CmdStanFit` models from
+  [cmdstanr](https://mc-stan.org/cmdstanr/) and expanded support for
+  `stanfit` models from `rstan`.
 
 ### Changes
 

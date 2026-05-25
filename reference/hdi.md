@@ -312,8 +312,8 @@ model <- brms::brm(mpg ~ wt + cyl, data = mtcars)
 #> 
 #> SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 1).
 #> Chain 1: 
-#> Chain 1: Gradient evaluation took 1e-05 seconds
-#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.1 seconds.
+#> Chain 1: Gradient evaluation took 7e-06 seconds
+#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.07 seconds.
 #> Chain 1: Adjust your expectations accordingly!
 #> Chain 1: 
 #> Chain 1: 
@@ -355,9 +355,9 @@ model <- brms::brm(mpg ~ wt + cyl, data = mtcars)
 #> Chain 2: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 2: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 2: 
-#> Chain 2:  Elapsed Time: 0.018 seconds (Warm-up)
+#> Chain 2:  Elapsed Time: 0.017 seconds (Warm-up)
 #> Chain 2:                0.015 seconds (Sampling)
-#> Chain 2:                0.033 seconds (Total)
+#> Chain 2:                0.032 seconds (Total)
 #> Chain 2: 
 #> 
 #> SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 3).
@@ -406,8 +406,8 @@ model <- brms::brm(mpg ~ wt + cyl, data = mtcars)
 #> Chain 4: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 4: 
 #> Chain 4:  Elapsed Time: 0.017 seconds (Warm-up)
-#> Chain 4:                0.016 seconds (Sampling)
-#> Chain 4:                0.033 seconds (Total)
+#> Chain 4:                0.015 seconds (Sampling)
+#> Chain 4:                0.032 seconds (Total)
 #> Chain 4: 
 hdi(model)
 #> Highest Density Interval 

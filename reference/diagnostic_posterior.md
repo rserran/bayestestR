@@ -18,6 +18,7 @@ diagnostic_posterior(
   effects = "fixed",
   component = "location",
   parameters = NULL,
+  centrality = "median",
   ...
 )
 ```
@@ -105,6 +106,15 @@ diagnostic_posterior(
   Regular expression pattern that describes the parameters that should
   be returned.
 
+- centrality:
+
+  The point-estimate (centrality index) for which to compute the MCSE.
+  Can be `"median"` (default) or `"mean"`. To not break other functions
+  like
+  [`describe_posterior()`](https://easystats.github.io/bayestestR/reference/describe_posterior.md)
+  or `diagnostic_posterior()`, all other values are silently converted
+  to `"median"`.
+
 ## Details
 
 **Effective Sample (ESS)** should be as large as possible, although for
@@ -187,9 +197,9 @@ model <- suppressWarnings(
 )
 diagnostic_posterior(model)
 #>     Parameter      Rhat       MCSE ESS_tail ESS_bulk
-#> 1 (Intercept) 0.9980336 0.36239857      156      192
-#> 2        gear 0.9917174 0.06502841      155      223
-#> 3          wt 0.9978902 0.04771990      150      192
+#> 1 (Intercept) 0.9980336 0.57188282      156      192
+#> 2        gear 0.9917174 0.08797432      155      223
+#> 3          wt 0.9978902 0.05090726      150      192
 
 # brms models
 # -----------------------------------------------
@@ -224,8 +234,8 @@ model <- brms::brm(mpg ~ wt + cyl, data = mtcars)
 #> 
 #> SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 2).
 #> Chain 2: 
-#> Chain 2: Gradient evaluation took 3e-06 seconds
-#> Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 0.03 seconds.
+#> Chain 2: Gradient evaluation took 4e-06 seconds
+#> Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 0.04 seconds.
 #> Chain 2: Adjust your expectations accordingly!
 #> Chain 2: 
 #> Chain 2: 
@@ -249,8 +259,8 @@ model <- brms::brm(mpg ~ wt + cyl, data = mtcars)
 #> 
 #> SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 3).
 #> Chain 3: 
-#> Chain 3: Gradient evaluation took 4e-06 seconds
-#> Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 0.04 seconds.
+#> Chain 3: Gradient evaluation took 3e-06 seconds
+#> Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 0.03 seconds.
 #> Chain 3: Adjust your expectations accordingly!
 #> Chain 3: 
 #> Chain 3: 
@@ -298,9 +308,9 @@ model <- brms::brm(mpg ~ wt + cyl, data = mtcars)
 #> Chain 4: 
 diagnostic_posterior(model)
 #>     Parameter     Rhat ESS_tail ESS_bulk       MCSE
-#> 1 b_Intercept 1.002513     3129     4728 0.02600493
-#> 2       b_cyl 1.003602     1961     1912 0.01004421
-#> 3        b_wt 1.003249     1940     1743 0.01934729
+#> 1 b_Intercept 1.002513     3129     4728 0.03944959
+#> 2       b_cyl 1.003602     1961     1912 0.01141464
+#> 3        b_wt 1.003249     1940     1743 0.02174196
 # }
 set.seed(101)
 mkdata <- function(nrow = 1000, ncol = 2, parnm = LETTERS[1:ncol]) {
