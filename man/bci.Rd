@@ -174,11 +174,11 @@ DiCiccio, T. J. and B. Efron. (1996). Bootstrap Confidence Intervals.
 Statistical Science. 11(3): 189–212. 10.1214/ss/1032280214
 }
 \seealso{
-Other ci: 
-\code{\link{ci}()},
-\code{\link{eti}()},
-\code{\link{hdi}()},
-\code{\link{si}()},
-\code{\link{spi}()}
+Other ci:
+\code{\link[=ci]{ci()}},
+\code{\link[=eti]{eti()}},
+\code{\link[=hdi]{hdi()}},
+\code{\link[=si]{si()}},
+\code{\link[=spi]{spi()}}
 }
 \concept{ci}

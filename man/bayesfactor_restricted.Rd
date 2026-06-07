@@ -298,9 +298,9 @@ Retrieved from https://richarddmorey.org/category/order-restrictions/.
 }
 }
 \seealso{
-Other Bayes factors: 
-\code{\link{bayesfactor_inclusion}()},
-\code{\link{bayesfactor_models}()},
-\code{\link{bayesfactor_parameters}()}
+Other Bayes factors:
+\code{\link[=bayesfactor_inclusion]{bayesfactor_inclusion()}},
+\code{\link[=bayesfactor_models]{bayesfactor_models()}},
+\code{\link[=bayesfactor_parameters]{bayesfactor_parameters()}}
 }
 \concept{Bayes factors}

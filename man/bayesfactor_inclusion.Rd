@@ -115,10 +115,10 @@ for variable selection and model averaging. Journal of Computational and Graphic
 \seealso{
 \code{\link[=weighted_posteriors]{weighted_posteriors()}} for Bayesian parameter averaging.
 
-Other Bayes factors: 
-\code{\link{bayesfactor_models}()},
-\code{\link{bayesfactor_parameters}()},
-\code{\link{bayesfactor_restricted}()}
+Other Bayes factors:
+\code{\link[=bayesfactor_models]{bayesfactor_models()}},
+\code{\link[=bayesfactor_parameters]{bayesfactor_parameters()}},
+\code{\link[=bayesfactor_restricted]{bayesfactor_restricted()}}
 }
 \author{
 Mattan S. Ben-Shachar

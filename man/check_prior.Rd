@@ -85,7 +85,8 @@ determined).
 \description{
 Performs a simple test to check whether the prior is informative to the
 posterior. This idea, and the accompanying heuristics, were discussed in
-\emph{Gelman et al. 2017}.
+\emph{Gelman et al. 2017}. For a visual check of the prior predictive
+distribution, see \code{\link[performance:check_priors]{performance::check_priors()}}.
 }
 \examples{
 \dontshow{if (require("rstanarm") && require("see")) withAutoprint(\{ # examplesIf}
