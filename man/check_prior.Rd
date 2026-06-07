@@ -21,15 +21,15 @@ check_prior(model, method = "gelman", simulate_priors = TRUE, ...)
 \arguments{
 \item{model}{A \code{stanreg}, \code{stanfit}, \code{brmsfit}, \code{blavaan}, or \code{MCMCglmm} object.}
 
-\item{method}{Can be \code{"gelman"} or \code{"lakeland"}. For the
-\code{"gelman"} method, if the SD of the posterior is more than 0.1 times
-the SD of the prior, then the prior is considered as informative. For the
-\code{"lakeland"} method, the prior is considered as informative if the
-posterior falls within the \verb{95\%} HDI of the prior.}
+\item{method}{Can be \code{"gelman"} or \code{"lakeland"}. For the \code{"gelman"} method,
+if the SD of the posterior is more than 0.1 times the SD of the prior, then
+the prior is considered as informative. For the \code{"lakeland"} method, the
+prior is considered as informative if the posterior falls within the \verb{95\%}
+HDI of the prior.}
 
 \item{simulate_priors}{Should prior distributions be simulated using
-\code{\link[=simulate_prior]{simulate_prior()}} (default; faster) or sampled via
-\code{\link[=unupdate]{unupdate()}} (slower, more accurate).}
+\code{\link[=simulate_prior]{simulate_prior()}} (default; faster) or sampled via \code{\link[=unupdate]{unupdate()}} (slower,
+more accurate).}
 
 \item{...}{Currently not used.}
 
@@ -77,10 +77,9 @@ for the output.}
 \item{verbose}{Toggle off warnings.}
 }
 \value{
-A data frame with two columns: The parameter names and the quality
-of the prior (which might be \code{"informative"}, \code{"uninformative"})
-or \code{"not determinable"} if the prior distribution could not be
-determined).
+A data frame with two columns: The parameter names and the quality of
+the prior (which might be \code{"informative"}, \code{"uninformative"}) or
+\code{"not determinable"} if the prior distribution could not be determined).
 }
 \description{
 Performs a simple test to check whether the prior is informative to the
@@ -114,4 +113,7 @@ plot(si(model, verbose = FALSE))
 Gelman, A., Simpson, D., and Betancourt, M. (2017). The Prior Can Often Only
 Be Understood in the Context of the Likelihood. Entropy, 19(10), 555.
 \doi{10.3390/e19100555}
+}
+\seealso{
+\code{\link[performance:check_priors]{performance::check_priors()}}
 }

@@ -5,21 +5,22 @@
 #' _Gelman et al. 2017_. For a visual check of the prior predictive
 #' distribution, see [`performance::check_priors()`].
 #'
-#' @param method Can be `"gelman"` or `"lakeland"`. For the
-#'   `"gelman"` method, if the SD of the posterior is more than 0.1 times
-#'   the SD of the prior, then the prior is considered as informative. For the
-#'   `"lakeland"` method, the prior is considered as informative if the
-#'   posterior falls within the `95%` HDI of the prior.
+#' @param method Can be `"gelman"` or `"lakeland"`. For the `"gelman"` method,
+#' if the SD of the posterior is more than 0.1 times the SD of the prior, then
+#' the prior is considered as informative. For the `"lakeland"` method, the
+#' prior is considered as informative if the posterior falls within the `95%`
+#' HDI of the prior.
 #' @param simulate_priors Should prior distributions be simulated using
-#'   [simulate_prior()] (default; faster) or sampled via
-#'   [unupdate()] (slower, more accurate).
+#' [simulate_prior()] (default; faster) or sampled via [unupdate()] (slower,
+#' more accurate).
 #' @inheritParams effective_sample
 #' @inheritParams hdi
 #'
-#' @return A data frame with two columns: The parameter names and the quality
-#'   of the prior (which might be `"informative"`, `"uninformative"`)
-#'   or `"not determinable"` if the prior distribution could not be
-#'   determined).
+#' @seealso [`performance::check_priors()`]
+#'
+#' @return A data frame with two columns: The parameter names and the quality of
+#' the prior (which might be `"informative"`, `"uninformative"`) or
+#' `"not determinable"` if the prior distribution could not be determined).
 #'
 #' @examplesIf require("rstanarm") && require("see")
 #' \donttest{
