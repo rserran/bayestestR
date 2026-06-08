@@ -135,63 +135,26 @@ effective_sample.stanreg <- function(
 
 
 #' @export
-effective_sample.stanmvreg <- function(
-  model,
-  effects = "fixed",
-  component = "location",
-  parameters = NULL,
-  ...
-) {
-  pars <- insight::get_parameters(
-    model,
-    effects = effects,
-    component = component,
-    parameters = parameters
-  )
-
-  insight::check_if_installed("posterior")
-  idx <- as.data.frame(posterior::summarise_draws(model))
-  rows_to_keep <- idx$variable %in% colnames(pars)
-  # ess_*() functions are defined in:
-  # https://github.com/stan-dev/posterior/blob/master/R/convergence.R
-
-  data.frame(
-    Parameter = idx$variable[rows_to_keep],
-    ESS_bulk = round(idx[rows_to_keep, "ess_bulk"]),
-    ESS_tail = round(idx[rows_to_keep, "ess_tail"]),
-    stringsAsFactors = FALSE,
-    row.names = NULL
-  )
-}
+effective_sample.stanmvreg <- effective_sample.stanreg
 
 
 #' @export
 effective_sample.stanfit <- function(model, effects = "fixed", parameters = NULL, ...) {
-  pars <- insight::get_parameters(
+  effective_sample.brmsfit(
     model,
     effects = effects,
-    parameters = parameters
-  )
-
-  insight::check_if_installed("posterior")
-  idx <- as.data.frame(posterior::summarise_draws(model))
-  rows_to_keep <- idx$variable %in% colnames(pars)
-  # ess_*() functions are defined in:
-  # https://github.com/stan-dev/posterior/blob/master/R/convergence.R
-
-  data.frame(
-    Parameter = idx$variable[rows_to_keep],
-    ESS_bulk = round(idx[rows_to_keep, "ess_bulk"]),
-    ESS_tail = round(idx[rows_to_keep, "ess_tail"]),
-    stringsAsFactors = FALSE,
-    row.names = NULL
+    component = "conditional",
+    parameters = parameters,
+    ...
   )
 }
+
 
 #' @export
 effective_sample.CmdStanFit <- function(model, ...) {
   diagnostic_posterior(model, diagnostic = c("ESS", "ESS_tail"))
 }
+
 
 #' @export
 effective_sample.blavaan <- function(model, parameters = NULL, ...) {
