@@ -195,11 +195,11 @@ eti(bf, ci = c(0.80, 0.89, 0.95))
 \dontshow{\}) # examplesIf}
 }
 \seealso{
-Other ci: 
-\code{\link{bci}()},
-\code{\link{ci}()},
-\code{\link{hdi}()},
-\code{\link{si}()},
-\code{\link{spi}()}
+Other ci:
+\code{\link[=bci]{bci()}},
+\code{\link[=ci]{ci()}},
+\code{\link[=hdi]{hdi()}},
+\code{\link[=si]{si()}},
+\code{\link[=spi]{spi()}}
 }
 \concept{ci}

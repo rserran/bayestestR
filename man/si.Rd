@@ -230,11 +230,11 @@ Wagenmakers, E., Gronau, Q. F., Dablander, F., & Etz, A. (2018, November 22).
 The Support Interval. \doi{10.31234/osf.io/zwnxb}
 }
 \seealso{
-Other ci: 
-\code{\link{bci}()},
-\code{\link{ci}()},
-\code{\link{eti}()},
-\code{\link{hdi}()},
-\code{\link{spi}()}
+Other ci:
+\code{\link[=bci]{bci()}},
+\code{\link[=ci]{ci()}},
+\code{\link[=eti]{eti()}},
+\code{\link[=hdi]{hdi()}},
+\code{\link[=spi]{spi()}}
 }
 \concept{ci}

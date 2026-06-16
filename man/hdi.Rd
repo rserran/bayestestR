@@ -207,12 +207,12 @@ examples in R and Stan. Chapman and Hall/CRC.
 Other interval functions, such as \code{\link[=hdi]{hdi()}}, \code{\link[=eti]{eti()}}, \code{\link[=bci]{bci()}},
 \code{\link[=spi]{spi()}}, \code{\link[=si]{si()}}.
 
-Other ci: 
-\code{\link{bci}()},
-\code{\link{ci}()},
-\code{\link{eti}()},
-\code{\link{si}()},
-\code{\link{spi}()}
+Other ci:
+\code{\link[=bci]{bci()}},
+\code{\link[=ci]{ci()}},
+\code{\link[=eti]{eti()}},
+\code{\link[=si]{si()}},
+\code{\link[=spi]{spi()}}
 }
 \author{
 Credits go to \strong{ggdistribute} and \href{https://github.com/mikemeredith/HDInterval}{\strong{HDInterval}}.

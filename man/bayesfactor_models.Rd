@@ -224,10 +224,10 @@ Perspectives on Psychological Science, 6(3), 291–298. \doi{10.1177/17456916114
 \seealso{
 \code{\link[=bayesfactor_inclusion]{bayesfactor_inclusion()}} for testing predictors across Bayesian models.
 
-Other Bayes factors: 
-\code{\link{bayesfactor_inclusion}()},
-\code{\link{bayesfactor_parameters}()},
-\code{\link{bayesfactor_restricted}()}
+Other Bayes factors:
+\code{\link[=bayesfactor_inclusion]{bayesfactor_inclusion()}},
+\code{\link[=bayesfactor_parameters]{bayesfactor_parameters()}},
+\code{\link[=bayesfactor_restricted]{bayesfactor_restricted()}}
 }
 \author{
 Mattan S. Ben-Shachar

@@ -37,11 +37,11 @@ following the description in Rouder, Morey, Speckman, & Province (2012, p.
 363).
 }
 \details{
-When using \code{\link[stats:contrast]{stats::contr.treatment}}, each dummy variable is the difference
+When using \code{\link[stats:contr.treatment]{stats::contr.treatment}}, each dummy variable is the difference
 between each level and the reference level. While this is useful if setting
 different priors for each coefficient, it should not be used if one is trying
 to set a general prior for differences between means, as it (as well as
-\code{\link[stats:contrast]{stats::contr.sum}} and others) results in unequal marginal priors on the
+\code{\link[stats:contr.sum]{stats::contr.sum}} and others) results in unequal marginal priors on the
 means the the difference between them.
 
 \if{html}{\out{<div class="sourceCode">}}\preformatted{library(brms)
