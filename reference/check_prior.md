@@ -2,7 +2,8 @@
 
 Performs a simple test to check whether the prior is informative to the
 posterior. This idea, and the accompanying heuristics, were discussed in
-*Gelman et al. 2017*.
+*Gelman et al. 2017*. For a visual check of the prior predictive
+distribution, see `performance::check_priors()`.
 
 ## Usage
 
@@ -116,6 +117,10 @@ the prior (which might be `"informative"`, `"uninformative"`) or
 Gelman, A., Simpson, D., and Betancourt, M. (2017). The Prior Can Often
 Only Be Understood in the Context of the Likelihood. Entropy, 19(10),
 555. [doi:10.3390/e19100555](https://doi.org/10.3390/e19100555)
+
+## See also
+
+`performance::check_priors()`
 
 ## Examples
 
