@@ -1267,7 +1267,8 @@ savage–dickey method. *Cognitive Psychology*, *60*(3), 158–189.
     throughout this vignette, but `bayestestR` also supports
     [brms](https://github.com/paul-buerkner/brms),
     [blavaan](https://ecmerkle.github.io/blavaan/),
-    [rstan](https://mc-stan.org/rstan/), `{cmdstanr}`,
+    [rstan](https://mc-stan.org/rstan/),
+    [cmdstanr](https://mc-stan.org/cmdstanr/),
     [BayesFactor](https://richarddmorey.github.io/BayesFactor/) and
     more.
 
