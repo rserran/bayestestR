@@ -1,7 +1,7 @@
 Type: Package
 Package: bayestestR
 Title: Understand and Describe Bayesian Models and Posterior Distributions
-Version: 0.18.1.1
+Version: 0.18.1.2
 Authors@R:
     c(person(given = "Dominique",
              family = "Makowski",
@@ -94,6 +94,7 @@ Suggests:
     knitr,
     lavaan,
     lme4,
+    lmerTest,
     logspline (>= 2.1.21),
     marginaleffects (>= 0.29.0),
     MASS,
