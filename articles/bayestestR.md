@@ -124,7 +124,9 @@ You can install `bayestestR` along with the whole
 [**easystats**](https://github.com/easystats/easystats) suite by running
 the following:
 
-[`install.packages`](https://rdrr.io/r/utils/install.packages.html)`(``"remotes"``)`` ``remotes``::``install_github``(``"easystats/easystats"``)`
+\
+[`install.packages`](https://rdrr.io/r/utils/install.packages.html)`(``"remotes"``)`\
+`remotes``::``install_github``(``"easystats/easystats"``)`
 
 Let’s also install and load the
 [`rstanarm`](https://mc-stan.org/rstanarm/), that allows fitting
@@ -132,7 +134,9 @@ Bayesian models, as well as
 [`bayestestR`](https://github.com/easystats/bayestestR), to describe
 them.
 
-[`install.packages`](https://rdrr.io/r/utils/install.packages.html)`(``"rstanarm"``)`` `[`library`](https://rdrr.io/r/base/library.html)`(`[`rstanarm`](https://mc-stan.org/rstanarm/)`)`
+\
+[`install.packages`](https://rdrr.io/r/utils/install.packages.html)`(``"rstanarm"``)`\
+[`library`](https://rdrr.io/r/base/library.html)`(`[`rstanarm`](https://mc-stan.org/rstanarm/)`)`
 
 ### Traditional linear regression
 
@@ -143,7 +147,9 @@ from the famous
 [`iris`](https://en.wikipedia.org/wiki/Iris_flower_data_set) dataset,
 included by default in R.
 
-`model`` ``<-`` `[`lm`](https://rdrr.io/r/stats/lm.html)`(``Sepal.Length`` ``~`` ``Petal.Length``, data ``=`` ``iris``)`` `[`summary`](https://rdrr.io/r/base/summary.html)`(``model``)`
+\
+`model`` ``<-`` `[`lm`](https://rdrr.io/r/stats/lm.html)`(``Sepal.Length`` ``~`` ``Petal.Length``, data ``=`` ``iris``)`\
+[`summary`](https://rdrr.io/r/base/summary.html)`(``model``)`
 
     Call:
     lm(formula = Sepal.Length ~ Petal.Length, data = iris)
@@ -174,7 +180,11 @@ obvious that people use it instead of the Bayesian framework… right?
 
 ### Bayesian linear regression
 
-`model`` ``<-`` `[`stan_glm`](https://mc-stan.org/rstanarm/reference/stan_glm.html)`(``Sepal.Length`` ``~`` ``Petal.Length``, data ``=`` ``iris``)`` ``posteriors`` ``<-`` `[`describe_posterior`](https://easystats.github.io/bayestestR/reference/describe_posterior.md)`(``model``)`` ``# for a nicer table`` `[`print_md`](https://easystats.github.io/insight/reference/display.html)`(``posteriors``, digits ``=`` ``2``)`
+\
+`model`` ``<-`` `[`stan_glm`](https://mc-stan.org/rstanarm/reference/stan_glm.html)`(``Sepal.Length`` ``~`` ``Petal.Length``, data ``=`` ``iris``)`\
+`posteriors`` ``<-`` `[`describe_posterior`](https://easystats.github.io/bayestestR/reference/describe_posterior.md)`(``model``)`\
+`# for a nicer table`\
+[`print_md`](https://easystats.github.io/insight/reference/display.html)`(``posteriors``, digits ``=`` ``2``)`
 
 | Parameter | Median | 95% CI | pd | ROPE | % in ROPE | Rhat | ESS (tail) |
 |:---|---:|:---|:---|:---|---:|:---|---:|

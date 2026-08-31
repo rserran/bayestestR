@@ -55,19 +55,135 @@ frequentist models. The code used for generation is available
 [here](https://easystats.github.io/circus/articles/bayesian_indices.html)
 (please note that it takes usually several days/weeks to complete).
 
-[`library`](https://rdrr.io/r/base/library.html)`(`[`ggplot2`](https://ggplot2.tidyverse.org)`)`` `[`library`](https://rdrr.io/r/base/library.html)`(`[`datawizard`](https://easystats.github.io/datawizard/)`)`` `[`library`](https://rdrr.io/r/base/library.html)`(`[`see`](https://easystats.github.io/see/)`)`` `[`library`](https://rdrr.io/r/base/library.html)`(`[`parameters`](https://easystats.github.io/parameters/)`)`` `` ``df`` ``<-`` `[`read.csv`](https://rdrr.io/r/utils/read.table.html)`(``"https://raw.github.com/easystats/circus/main/data/bayesSim_study1.csv"``)`
+\
+[`library`](https://rdrr.io/r/base/library.html)`(`[`ggplot2`](https://ggplot2.tidyverse.org)`)`\
+[`library`](https://rdrr.io/r/base/library.html)`(`[`datawizard`](https://easystats.github.io/datawizard/)`)`\
+[`library`](https://rdrr.io/r/base/library.html)`(`[`see`](https://easystats.github.io/see/)`)`\
+[`library`](https://rdrr.io/r/base/library.html)`(`[`parameters`](https://easystats.github.io/parameters/)`)`\
+\
+`df`` ``<-`` `[`read.csv`](https://rdrr.io/r/utils/read.table.html)`(``"https://raw.github.com/easystats/circus/main/data/bayesSim_study1.csv"``)`
 
 #### Results
 
 ##### Sensitivity to Noise
 
-`dat`` ``<-`` ``df`` ``dat`` ``<-`` `[`data_select`](https://easystats.github.io/datawizard/reference/extract_column_names.html)`(`` `` ``dat``,`` `` select ``=`` `[`c`](https://rdrr.io/r/base/c.html)`(`` `` ``"error"``,`` `` ``"true_effect"``,`` `` ``"outcome_type"``,`` `` ``"Coefficient"``,`` `` ``"Median"``,`` `` ``"Mean"``,`` `` ``"MAP"`` `` ``)`` ``)`` ``dat`` ``<-`` `[`reshape_longer`](https://easystats.github.io/datawizard/reference/data_to_long.html)`(`` `` ``dat``,`` `` select ``=`` ``-`[`c`](https://rdrr.io/r/base/c.html)`(``"error"``, ``"true_effect"``, ``"outcome_type"``)``,`` `` names_to ``=`` ``"estimate"``,`` `` values_to ``=`` ``"value"`` ``)`` ``dat``$``temp`` ``<-`` `[`as.factor`](https://rdrr.io/r/base/factor.html)`(`[`cut`](https://rdrr.io/r/base/cut.html)`(``dat``$``error``, ``10``, labels ``=`` ``FALSE``)``)`` `` ``tmp`` ``<-`` `[`lapply`](https://rdrr.io/r/base/lapply.html)`(`[`split`](https://rdrr.io/r/base/split.html)`(``dat``, ``dat``$``temp``)``, ``function``(``x``)`` ``{`` `` ``x``$``error_group`` ``<-`` `[`rep`](https://rdrr.io/r/base/rep.html)`(`[`round`](https://rdrr.io/r/base/Round.html)`(`[`mean`](https://rdrr.io/r/base/mean.html)`(``x``$``error``)``, ``1``)``, times ``=`` `[`nrow`](https://rdrr.io/r/base/nrow.html)`(``x``)``)`` `` `[`return`](https://rdrr.io/r/base/function.html)`(``x``)`` ``}``)`` `` ``dat`` ``<-`` `[`do.call`](https://rdrr.io/r/base/do.call.html)`(``rbind``, ``tmp``)`` ``dat`` ``<-`` `[`data_filter`](https://easystats.github.io/datawizard/reference/data_match.html)`(``dat``, ``value`` ``<`` ``6``)`` `` `[`ggplot`](https://ggplot2.tidyverse.org/reference/ggplot.html)`(`` `` ``dat``,`` `` `[`aes`](https://ggplot2.tidyverse.org/reference/aes.html)`(`` `` x ``=`` ``error_group``,`` `` y ``=`` ``value``,`` `` fill ``=`` ``estimate``,`` `` group ``=`` `[`interaction`](https://rdrr.io/r/base/interaction.html)`(``estimate``, ``error_group``)`` `` ``)`` ``)`` ``+`` `` ``# geom_hline(yintercept = 0) +`` `` ``# geom_point(alpha=0.05, size=2, stroke = 0, shape=16) +`` `` ``# geom_smooth(method="loess") +`` `` `[`geom_boxplot`](https://ggplot2.tidyverse.org/reference/geom_boxplot.html)`(``outlier.shape ``=`` ``NA``)`` ``+`` `` `[`theme_modern`](https://easystats.github.io/see/reference/theme_modern.html)`(``)`` ``+`` `` `[`scale_fill_manual`](https://ggplot2.tidyverse.org/reference/scale_manual.html)`(`` `` values ``=`` `[`c`](https://rdrr.io/r/base/c.html)`(`` `` ``"Coefficient"`` ``=`` ``"#607D8B"``,`` `` ``"MAP"`` ``=`` ``"#795548"``,`` `` ``"Mean"`` ``=`` ``"#FF9800"``,`` `` ``"Median"`` ``=`` ``"#FFEB3B"`` `` ``)``,`` `` name ``=`` ``"Index"`` `` ``)`` ``+`` `` `[`ylab`](https://ggplot2.tidyverse.org/reference/labs.html)`(``"Point-estimate"``)`` ``+`` `` `[`xlab`](https://ggplot2.tidyverse.org/reference/labs.html)`(``"Noise"``)`` ``+`` `` `[`facet_wrap`](https://ggplot2.tidyverse.org/reference/facet_wrap.html)`(``~`` ``outcome_type`` ``*`` ``true_effect``, scales ``=`` ``"free"``)`
+\
+`dat`` ``<-`` ``df`\
+`dat`` ``<-`` `[`data_select`](https://easystats.github.io/datawizard/reference/extract_column_names.html)`(`\
+`  ``dat``,`\
+`  select ``=`` `[`c`](https://rdrr.io/r/base/c.html)`(`\
+`    ``"error"``,`\
+`    ``"true_effect"``,`\
+`    ``"outcome_type"``,`\
+`    ``"Coefficient"``,`\
+`    ``"Median"``,`\
+`    ``"Mean"``,`\
+`    ``"MAP"`\
+`  ``)`\
+`)`\
+`dat`` ``<-`` `[`reshape_longer`](https://easystats.github.io/datawizard/reference/data_to_long.html)`(`\
+`  ``dat``,`\
+`  select ``=`` ``-`[`c`](https://rdrr.io/r/base/c.html)`(``"error"``, ``"true_effect"``, ``"outcome_type"``)``,`\
+`  names_to ``=`` ``"estimate"``,`\
+`  values_to ``=`` ``"value"`\
+`)`\
+`dat``$``temp`` ``<-`` `[`as.factor`](https://rdrr.io/r/base/factor.html)`(`[`cut`](https://rdrr.io/r/base/cut.html)`(``dat``$``error``, ``10``, labels ``=`` ``FALSE``)``)`\
+\
+`tmp`` ``<-`` `[`lapply`](https://rdrr.io/r/base/lapply.html)`(`[`split`](https://rdrr.io/r/base/split.html)`(``dat``, ``dat``$``temp``)``, ``function``(``x``)`` ``{`\
+`  ``x``$``error_group`` ``<-`` `[`rep`](https://rdrr.io/r/base/rep.html)`(`[`round`](https://rdrr.io/r/base/Round.html)`(`[`mean`](https://rdrr.io/r/base/mean.html)`(``x``$``error``)``, ``1``)``, times ``=`` `[`nrow`](https://rdrr.io/r/base/nrow.html)`(``x``)``)`\
+`  `[`return`](https://rdrr.io/r/base/function.html)`(``x``)`\
+`}``)`\
+\
+`dat`` ``<-`` `[`do.call`](https://rdrr.io/r/base/do.call.html)`(``rbind``, ``tmp``)`\
+`dat`` ``<-`` `[`data_filter`](https://easystats.github.io/datawizard/reference/data_match.html)`(``dat``, ``value`` ``<`` ``6``)`\
+\
+[`ggplot`](https://ggplot2.tidyverse.org/reference/ggplot.html)`(`\
+`  ``dat``,`\
+`  `[`aes`](https://ggplot2.tidyverse.org/reference/aes.html)`(`\
+`    x ``=`` ``error_group``,`\
+`    y ``=`` ``value``,`\
+`    fill ``=`` ``estimate``,`\
+`    group ``=`` `[`interaction`](https://rdrr.io/r/base/interaction.html)`(``estimate``, ``error_group``)`\
+`  ``)`\
+`)`` ``+`\
+`  ``# geom_hline(yintercept = 0) +`\
+`  ``# geom_point(alpha=0.05, size=2, stroke = 0, shape=16) +`\
+`  ``# geom_smooth(method="loess") +`\
+`  `[`geom_boxplot`](https://ggplot2.tidyverse.org/reference/geom_boxplot.html)`(``outlier.shape ``=`` ``NA``)`` ``+`\
+`  `[`theme_modern`](https://easystats.github.io/see/reference/theme_modern.html)`(``)`` ``+`\
+`  `[`scale_fill_manual`](https://ggplot2.tidyverse.org/reference/scale_manual.html)`(`\
+`    values ``=`` `[`c`](https://rdrr.io/r/base/c.html)`(`\
+`      ``"Coefficient"`` ``=`` ``"#607D8B"``,`\
+`      ``"MAP"`` ``=`` ``"#795548"``,`\
+`      ``"Mean"`` ``=`` ``"#FF9800"``,`\
+`      ``"Median"`` ``=`` ``"#FFEB3B"`\
+`    ``)``,`\
+`    name ``=`` ``"Index"`\
+`  ``)`` ``+`\
+`  `[`ylab`](https://ggplot2.tidyverse.org/reference/labs.html)`(``"Point-estimate"``)`` ``+`\
+`  `[`xlab`](https://ggplot2.tidyverse.org/reference/labs.html)`(``"Noise"``)`` ``+`\
+`  `[`facet_wrap`](https://ggplot2.tidyverse.org/reference/facet_wrap.html)`(``~`` ``outcome_type`` ``*`` ``true_effect``, scales ``=`` ``"free"``)`
 
 ![](indicesEstimationComparison_files/figure-html/unnamed-chunk-3-1.png)
 
 ##### Sensitivity to Sample Size
 
-`dat`` ``<-`` ``df`` ``dat`` ``<-`` `[`data_select`](https://easystats.github.io/datawizard/reference/extract_column_names.html)`(`` `` ``dat``,`` `` select ``=`` `[`c`](https://rdrr.io/r/base/c.html)`(`` `` ``"sample_size"``,`` `` ``"true_effect"``,`` `` ``"outcome_type"``,`` `` ``"Coefficient"``,`` `` ``"Median"``,`` `` ``"Mean"``,`` `` ``"MAP"`` `` ``)`` ``)`` ``dat`` ``<-`` `[`reshape_longer`](https://easystats.github.io/datawizard/reference/data_to_long.html)`(`` `` ``dat``,`` `` select ``=`` ``-`[`c`](https://rdrr.io/r/base/c.html)`(``"sample_size"``, ``"true_effect"``, ``"outcome_type"``)``,`` `` names_to ``=`` ``"estimate"``,`` `` values_to ``=`` ``"value"`` ``)`` ``dat``$``temp`` ``<-`` `[`as.factor`](https://rdrr.io/r/base/factor.html)`(`[`cut`](https://rdrr.io/r/base/cut.html)`(``dat``$``sample_size``, ``10``, labels ``=`` ``FALSE``)``)`` `` ``tmp`` ``<-`` `[`lapply`](https://rdrr.io/r/base/lapply.html)`(`[`split`](https://rdrr.io/r/base/split.html)`(``dat``, ``dat``$``temp``)``, ``function``(``x``)`` ``{`` `` ``x``$``size_group`` ``<-`` `[`rep`](https://rdrr.io/r/base/rep.html)`(`[`round`](https://rdrr.io/r/base/Round.html)`(`[`mean`](https://rdrr.io/r/base/mean.html)`(``x``$``sample_size``)``, ``1``)``, times ``=`` `[`nrow`](https://rdrr.io/r/base/nrow.html)`(``x``)``)`` `` `[`return`](https://rdrr.io/r/base/function.html)`(``x``)`` ``}``)`` `` ``dat`` ``<-`` `[`do.call`](https://rdrr.io/r/base/do.call.html)`(``rbind``, ``tmp``)`` ``dat`` ``<-`` `[`data_filter`](https://easystats.github.io/datawizard/reference/data_match.html)`(``dat``, ``value`` ``<`` ``6``)`` `` `[`ggplot`](https://ggplot2.tidyverse.org/reference/ggplot.html)`(`` `` ``dat``,`` `` `[`aes`](https://ggplot2.tidyverse.org/reference/aes.html)`(`` `` x ``=`` ``size_group``,`` `` y ``=`` ``value``,`` `` fill ``=`` ``estimate``,`` `` group ``=`` `[`interaction`](https://rdrr.io/r/base/interaction.html)`(``estimate``, ``size_group``)`` `` ``)`` ``)`` ``+`` `` ``# geom_hline(yintercept = 0) +`` `` ``# geom_point(alpha=0.05, size=2, stroke = 0, shape=16) +`` `` ``# geom_smooth(method="loess") +`` `` `[`geom_boxplot`](https://ggplot2.tidyverse.org/reference/geom_boxplot.html)`(``outlier.shape ``=`` ``NA``)`` ``+`` `` `[`theme_modern`](https://easystats.github.io/see/reference/theme_modern.html)`(``)`` ``+`` `` `[`scale_fill_manual`](https://ggplot2.tidyverse.org/reference/scale_manual.html)`(`` `` values ``=`` `[`c`](https://rdrr.io/r/base/c.html)`(`` `` ``"Coefficient"`` ``=`` ``"#607D8B"``,`` `` ``"MAP"`` ``=`` ``"#795548"``,`` `` ``"Mean"`` ``=`` ``"#FF9800"``,`` `` ``"Median"`` ``=`` ``"#FFEB3B"`` `` ``)``,`` `` name ``=`` ``"Index"`` `` ``)`` ``+`` `` `[`ylab`](https://ggplot2.tidyverse.org/reference/labs.html)`(``"Point-estimate"``)`` ``+`` `` `[`xlab`](https://ggplot2.tidyverse.org/reference/labs.html)`(``"Sample size"``)`` ``+`` `` `[`facet_wrap`](https://ggplot2.tidyverse.org/reference/facet_wrap.html)`(``~`` ``outcome_type`` ``*`` ``true_effect``, scales ``=`` ``"free"``)`
+\
+`dat`` ``<-`` ``df`\
+`dat`` ``<-`` `[`data_select`](https://easystats.github.io/datawizard/reference/extract_column_names.html)`(`\
+`  ``dat``,`\
+`  select ``=`` `[`c`](https://rdrr.io/r/base/c.html)`(`\
+`    ``"sample_size"``,`\
+`    ``"true_effect"``,`\
+`    ``"outcome_type"``,`\
+`    ``"Coefficient"``,`\
+`    ``"Median"``,`\
+`    ``"Mean"``,`\
+`    ``"MAP"`\
+`  ``)`\
+`)`\
+`dat`` ``<-`` `[`reshape_longer`](https://easystats.github.io/datawizard/reference/data_to_long.html)`(`\
+`  ``dat``,`\
+`  select ``=`` ``-`[`c`](https://rdrr.io/r/base/c.html)`(``"sample_size"``, ``"true_effect"``, ``"outcome_type"``)``,`\
+`  names_to ``=`` ``"estimate"``,`\
+`  values_to ``=`` ``"value"`\
+`)`\
+`dat``$``temp`` ``<-`` `[`as.factor`](https://rdrr.io/r/base/factor.html)`(`[`cut`](https://rdrr.io/r/base/cut.html)`(``dat``$``sample_size``, ``10``, labels ``=`` ``FALSE``)``)`\
+\
+`tmp`` ``<-`` `[`lapply`](https://rdrr.io/r/base/lapply.html)`(`[`split`](https://rdrr.io/r/base/split.html)`(``dat``, ``dat``$``temp``)``, ``function``(``x``)`` ``{`\
+`  ``x``$``size_group`` ``<-`` `[`rep`](https://rdrr.io/r/base/rep.html)`(`[`round`](https://rdrr.io/r/base/Round.html)`(`[`mean`](https://rdrr.io/r/base/mean.html)`(``x``$``sample_size``)``, ``1``)``, times ``=`` `[`nrow`](https://rdrr.io/r/base/nrow.html)`(``x``)``)`\
+`  `[`return`](https://rdrr.io/r/base/function.html)`(``x``)`\
+`}``)`\
+\
+`dat`` ``<-`` `[`do.call`](https://rdrr.io/r/base/do.call.html)`(``rbind``, ``tmp``)`\
+`dat`` ``<-`` `[`data_filter`](https://easystats.github.io/datawizard/reference/data_match.html)`(``dat``, ``value`` ``<`` ``6``)`\
+\
+[`ggplot`](https://ggplot2.tidyverse.org/reference/ggplot.html)`(`\
+`  ``dat``,`\
+`  `[`aes`](https://ggplot2.tidyverse.org/reference/aes.html)`(`\
+`    x ``=`` ``size_group``,`\
+`    y ``=`` ``value``,`\
+`    fill ``=`` ``estimate``,`\
+`    group ``=`` `[`interaction`](https://rdrr.io/r/base/interaction.html)`(``estimate``, ``size_group``)`\
+`  ``)`\
+`)`` ``+`\
+`  ``# geom_hline(yintercept = 0) +`\
+`  ``# geom_point(alpha=0.05, size=2, stroke = 0, shape=16) +`\
+`  ``# geom_smooth(method="loess") +`\
+`  `[`geom_boxplot`](https://ggplot2.tidyverse.org/reference/geom_boxplot.html)`(``outlier.shape ``=`` ``NA``)`` ``+`\
+`  `[`theme_modern`](https://easystats.github.io/see/reference/theme_modern.html)`(``)`` ``+`\
+`  `[`scale_fill_manual`](https://ggplot2.tidyverse.org/reference/scale_manual.html)`(`\
+`    values ``=`` `[`c`](https://rdrr.io/r/base/c.html)`(`\
+`      ``"Coefficient"`` ``=`` ``"#607D8B"``,`\
+`      ``"MAP"`` ``=`` ``"#795548"``,`\
+`      ``"Mean"`` ``=`` ``"#FF9800"``,`\
+`      ``"Median"`` ``=`` ``"#FFEB3B"`\
+`    ``)``,`\
+`    name ``=`` ``"Index"`\
+`  ``)`` ``+`\
+`  `[`ylab`](https://ggplot2.tidyverse.org/reference/labs.html)`(``"Point-estimate"``)`` ``+`\
+`  `[`xlab`](https://ggplot2.tidyverse.org/reference/labs.html)`(``"Sample size"``)`` ``+`\
+`  `[`facet_wrap`](https://ggplot2.tidyverse.org/reference/facet_wrap.html)`(``~`` ``outcome_type`` ``*`` ``true_effect``, scales ``=`` ``"free"``)`
 
 ![](indicesEstimationComparison_files/figure-html/unnamed-chunk-4-1.png)
 
@@ -77,7 +193,34 @@ We fitted a (frequentist) multiple linear regression to statistically
 test the the predict the presence or absence of effect with the
 estimates as well as their interaction with noise and sample size.
 
-`dat`` ``<-`` ``df`` ``dat`` ``<-`` `[`data_select`](https://easystats.github.io/datawizard/reference/extract_column_names.html)`(`` `` ``dat``,`` `` select ``=`` `[`c`](https://rdrr.io/r/base/c.html)`(`` `` ``"sample_size"``,`` `` ``"true_effect"``,`` `` ``"outcome_type"``,`` `` ``"Coefficient"``,`` `` ``"Median"``,`` `` ``"Mean"``,`` `` ``"MAP"`` `` ``)`` ``)`` ``dat`` ``<-`` `[`reshape_longer`](https://easystats.github.io/datawizard/reference/data_to_long.html)`(`` `` ``dat``,`` `` select ``=`` ``-`[`c`](https://rdrr.io/r/base/c.html)`(``"sample_size"``, ``"true_effect"``, ``"outcome_type"``)``,`` `` names_to ``=`` ``"estimate"``,`` `` values_to ``=`` ``"value"`` ``)`` `` ``out`` ``<-`` `[`glm`](https://rdrr.io/r/stats/glm.html)`(``true_effect`` ``~`` ``outcome_type`` ``/`` ``estimate`` ``/`` ``value``, data ``=`` ``dat``, family ``=`` ``"binomial"``)`` ``out`` ``<-`` `[`parameters`](https://easystats.github.io/parameters/reference/model_parameters.html)`(``out``, ci_method ``=`` ``"wald"``)`` ``out`` ``<-`` `[`data_select`](https://easystats.github.io/datawizard/reference/extract_column_names.html)`(``out``, `[`c`](https://rdrr.io/r/base/c.html)`(``"Parameter"``, ``"Coefficient"``, ``"p"``)``)`` ``rows`` ``<-`` `[`grep`](https://rdrr.io/r/base/grep.html)`(``"^outcome_type(.*):value$"``, x ``=`` ``out``$``Parameter``)`` ``out`` ``<-`` `[`data_filter`](https://easystats.github.io/datawizard/reference/data_match.html)`(``out``, ``rows``)`` ``out`` ``<-`` ``out``[`[`order`](https://rdrr.io/r/base/order.html)`(``out``$``Coefficient``, decreasing ``=`` ``TRUE``)``, ``]`` ``knitr``::`[`kable`](https://rdrr.io/pkg/knitr/man/kable.html)`(``out``, digits ``=`` ``2``)`
+\
+`dat`` ``<-`` ``df`\
+`dat`` ``<-`` `[`data_select`](https://easystats.github.io/datawizard/reference/extract_column_names.html)`(`\
+`  ``dat``,`\
+`  select ``=`` `[`c`](https://rdrr.io/r/base/c.html)`(`\
+`    ``"sample_size"``,`\
+`    ``"true_effect"``,`\
+`    ``"outcome_type"``,`\
+`    ``"Coefficient"``,`\
+`    ``"Median"``,`\
+`    ``"Mean"``,`\
+`    ``"MAP"`\
+`  ``)`\
+`)`\
+`dat`` ``<-`` `[`reshape_longer`](https://easystats.github.io/datawizard/reference/data_to_long.html)`(`\
+`  ``dat``,`\
+`  select ``=`` ``-`[`c`](https://rdrr.io/r/base/c.html)`(``"sample_size"``, ``"true_effect"``, ``"outcome_type"``)``,`\
+`  names_to ``=`` ``"estimate"``,`\
+`  values_to ``=`` ``"value"`\
+`)`\
+\
+`out`` ``<-`` `[`glm`](https://rdrr.io/r/stats/glm.html)`(``true_effect`` ``~`` ``outcome_type`` ``/`` ``estimate`` ``/`` ``value``, data ``=`` ``dat``, family ``=`` ``"binomial"``)`\
+`out`` ``<-`` `[`parameters`](https://easystats.github.io/parameters/reference/model_parameters.html)`(``out``, ci_method ``=`` ``"wald"``)`\
+`out`` ``<-`` `[`data_select`](https://easystats.github.io/datawizard/reference/extract_column_names.html)`(``out``, `[`c`](https://rdrr.io/r/base/c.html)`(``"Parameter"``, ``"Coefficient"``, ``"p"``)``)`\
+`rows`` ``<-`` `[`grep`](https://rdrr.io/r/base/grep.html)`(``"^outcome_type(.*):value$"``, x ``=`` ``out``$``Parameter``)`\
+`out`` ``<-`` `[`data_filter`](https://easystats.github.io/datawizard/reference/data_match.html)`(``out``, ``rows``)`\
+`out`` ``<-`` ``out``[`[`order`](https://rdrr.io/r/base/order.html)`(``out``$``Coefficient``, decreasing ``=`` ``TRUE``)``, ``]`\
+`knitr``::`[`kable`](https://rdrr.io/pkg/knitr/man/kable.html)`(``out``, digits ``=`` ``2``)`
 
 |     | Parameter                                    | Coefficient |   p |
 |:----|:---------------------------------------------|------------:|----:|
@@ -123,19 +266,109 @@ frequentist models. The code used for generation is available
 [here](https://easystats.github.io/circus/articles/bayesian_indices.html)
 (please note that it takes usually several days/weeks to complete).
 
-`df`` ``<-`` `[`read.csv`](https://rdrr.io/r/utils/read.table.html)`(``"https://raw.github.com/easystats/circus/main/data/bayesSim_study2.csv"``)`
+\
+`df`` ``<-`` `[`read.csv`](https://rdrr.io/r/utils/read.table.html)`(``"https://raw.github.com/easystats/circus/main/data/bayesSim_study2.csv"``)`
 
 #### Results
 
 ##### Sensitivity to number of iterations
 
-`dat`` ``<-`` ``df`` ``dat`` ``<-`` `[`data_select`](https://easystats.github.io/datawizard/reference/extract_column_names.html)`(`` `` ``dat``,`` `` select ``=`` `[`c`](https://rdrr.io/r/base/c.html)`(``"iterations"``, ``"true_effect"``, ``"outcome_type"``, ``"beta"``, ``"Median"``, ``"Mean"``, ``"MAP"``)`` ``)`` ``dat`` ``<-`` `[`reshape_longer`](https://easystats.github.io/datawizard/reference/data_to_long.html)`(`` `` ``dat``,`` `` select ``=`` ``-`[`c`](https://rdrr.io/r/base/c.html)`(``"iterations"``, ``"true_effect"``, ``"outcome_type"``)``,`` `` names_to ``=`` ``"estimate"``,`` `` values_to ``=`` ``"value"`` ``)`` ``dat``$``temp`` ``<-`` `[`as.factor`](https://rdrr.io/r/base/factor.html)`(`[`cut`](https://rdrr.io/r/base/cut.html)`(``dat``$``iterations``, ``5``, labels ``=`` ``FALSE``)``)`` `` ``tmp`` ``<-`` `[`lapply`](https://rdrr.io/r/base/lapply.html)`(`[`split`](https://rdrr.io/r/base/split.html)`(``dat``, ``dat``$``temp``)``, ``function``(``x``)`` ``{`` `` ``x``$``iterations_group`` ``<-`` `[`rep`](https://rdrr.io/r/base/rep.html)`(`[`round`](https://rdrr.io/r/base/Round.html)`(`[`mean`](https://rdrr.io/r/base/mean.html)`(``x``$``iterations``)``, ``1``)``, times ``=`` `[`nrow`](https://rdrr.io/r/base/nrow.html)`(``x``)``)`` `` `[`return`](https://rdrr.io/r/base/function.html)`(``x``)`` ``}``)`` `` ``dat`` ``<-`` `[`do.call`](https://rdrr.io/r/base/do.call.html)`(``rbind``, ``tmp``)`` ``dat`` ``<-`` `[`data_filter`](https://easystats.github.io/datawizard/reference/data_match.html)`(``dat``, ``value`` ``<`` ``6``)`` `` `[`ggplot`](https://ggplot2.tidyverse.org/reference/ggplot.html)`(`` `` ``dat``,`` `` `[`aes`](https://ggplot2.tidyverse.org/reference/aes.html)`(`` `` x ``=`` ``iterations_group``,`` `` y ``=`` ``value``,`` `` fill ``=`` ``estimate``,`` `` group ``=`` `[`interaction`](https://rdrr.io/r/base/interaction.html)`(``estimate``, ``iterations_group``)`` `` ``)`` ``)`` ``+`` `` `[`geom_boxplot`](https://ggplot2.tidyverse.org/reference/geom_boxplot.html)`(``outlier.shape ``=`` ``NA``)`` ``+`` `` `[`theme_classic`](https://ggplot2.tidyverse.org/reference/ggtheme.html)`(``)`` ``+`` `` `[`scale_fill_manual`](https://ggplot2.tidyverse.org/reference/scale_manual.html)`(`` `` values ``=`` `[`c`](https://rdrr.io/r/base/c.html)`(`` `` ``"beta"`` ``=`` ``"#607D8B"``,`` `` ``"MAP"`` ``=`` ``"#795548"``,`` `` ``"Mean"`` ``=`` ``"#FF9800"``,`` `` ``"Median"`` ``=`` ``"#FFEB3B"`` `` ``)``,`` `` name ``=`` ``"Index"`` `` ``)`` ``+`` `` `[`ylab`](https://ggplot2.tidyverse.org/reference/labs.html)`(``"Point-estimate of the true value 0\n"``)`` ``+`` `` `[`xlab`](https://ggplot2.tidyverse.org/reference/labs.html)`(``"\nNumber of Iterations"``)`` ``+`` `` `[`facet_wrap`](https://ggplot2.tidyverse.org/reference/facet_wrap.html)`(``~`` ``outcome_type`` ``*`` ``true_effect``, scales ``=`` ``"free"``)`
+\
+`dat`` ``<-`` ``df`\
+`dat`` ``<-`` `[`data_select`](https://easystats.github.io/datawizard/reference/extract_column_names.html)`(`\
+`  ``dat``,`\
+`  select ``=`` `[`c`](https://rdrr.io/r/base/c.html)`(``"iterations"``, ``"true_effect"``, ``"outcome_type"``, ``"beta"``, ``"Median"``, ``"Mean"``, ``"MAP"``)`\
+`)`\
+`dat`` ``<-`` `[`reshape_longer`](https://easystats.github.io/datawizard/reference/data_to_long.html)`(`\
+`  ``dat``,`\
+`  select ``=`` ``-`[`c`](https://rdrr.io/r/base/c.html)`(``"iterations"``, ``"true_effect"``, ``"outcome_type"``)``,`\
+`  names_to ``=`` ``"estimate"``,`\
+`  values_to ``=`` ``"value"`\
+`)`\
+`dat``$``temp`` ``<-`` `[`as.factor`](https://rdrr.io/r/base/factor.html)`(`[`cut`](https://rdrr.io/r/base/cut.html)`(``dat``$``iterations``, ``5``, labels ``=`` ``FALSE``)``)`\
+\
+`tmp`` ``<-`` `[`lapply`](https://rdrr.io/r/base/lapply.html)`(`[`split`](https://rdrr.io/r/base/split.html)`(``dat``, ``dat``$``temp``)``, ``function``(``x``)`` ``{`\
+`  ``x``$``iterations_group`` ``<-`` `[`rep`](https://rdrr.io/r/base/rep.html)`(`[`round`](https://rdrr.io/r/base/Round.html)`(`[`mean`](https://rdrr.io/r/base/mean.html)`(``x``$``iterations``)``, ``1``)``, times ``=`` `[`nrow`](https://rdrr.io/r/base/nrow.html)`(``x``)``)`\
+`  `[`return`](https://rdrr.io/r/base/function.html)`(``x``)`\
+`}``)`\
+\
+`dat`` ``<-`` `[`do.call`](https://rdrr.io/r/base/do.call.html)`(``rbind``, ``tmp``)`\
+`dat`` ``<-`` `[`data_filter`](https://easystats.github.io/datawizard/reference/data_match.html)`(``dat``, ``value`` ``<`` ``6``)`\
+\
+[`ggplot`](https://ggplot2.tidyverse.org/reference/ggplot.html)`(`\
+`  ``dat``,`\
+`  `[`aes`](https://ggplot2.tidyverse.org/reference/aes.html)`(`\
+`    x ``=`` ``iterations_group``,`\
+`    y ``=`` ``value``,`\
+`    fill ``=`` ``estimate``,`\
+`    group ``=`` `[`interaction`](https://rdrr.io/r/base/interaction.html)`(``estimate``, ``iterations_group``)`\
+`  ``)`\
+`)`` ``+`\
+`  `[`geom_boxplot`](https://ggplot2.tidyverse.org/reference/geom_boxplot.html)`(``outlier.shape ``=`` ``NA``)`` ``+`\
+`  `[`theme_classic`](https://ggplot2.tidyverse.org/reference/ggtheme.html)`(``)`` ``+`\
+`  `[`scale_fill_manual`](https://ggplot2.tidyverse.org/reference/scale_manual.html)`(`\
+`    values ``=`` `[`c`](https://rdrr.io/r/base/c.html)`(`\
+`      ``"beta"`` ``=`` ``"#607D8B"``,`\
+`      ``"MAP"`` ``=`` ``"#795548"``,`\
+`      ``"Mean"`` ``=`` ``"#FF9800"``,`\
+`      ``"Median"`` ``=`` ``"#FFEB3B"`\
+`    ``)``,`\
+`    name ``=`` ``"Index"`\
+`  ``)`` ``+`\
+`  `[`ylab`](https://ggplot2.tidyverse.org/reference/labs.html)`(``"Point-estimate of the true value 0\n"``)`` ``+`\
+`  `[`xlab`](https://ggplot2.tidyverse.org/reference/labs.html)`(``"\nNumber of Iterations"``)`` ``+`\
+`  `[`facet_wrap`](https://ggplot2.tidyverse.org/reference/facet_wrap.html)`(``~`` ``outcome_type`` ``*`` ``true_effect``, scales ``=`` ``"free"``)`
 
 ![](indicesEstimationComparison_files/figure-html/unnamed-chunk-7-1.png)
 
 ##### Sensitivity to warmup ratio
 
-`dat`` ``<-`` ``df`` ``dat``$``warmup`` ``<-`` ``dat``$``warmup`` ``/`` ``dat``$``iterations`` ``dat`` ``<-`` `[`data_select`](https://easystats.github.io/datawizard/reference/extract_column_names.html)`(`` `` ``dat``,`` `` select ``=`` `[`c`](https://rdrr.io/r/base/c.html)`(``"warmup"``, ``"true_effect"``, ``"outcome_type"``, ``"beta"``, ``"Median"``, ``"Mean"``, ``"MAP"``)`` ``)`` ``dat`` ``<-`` `[`reshape_longer`](https://easystats.github.io/datawizard/reference/data_to_long.html)`(`` `` ``dat``,`` `` select ``=`` ``-`[`c`](https://rdrr.io/r/base/c.html)`(``"warmup"``, ``"true_effect"``, ``"outcome_type"``)``,`` `` names_to ``=`` ``"estimate"``,`` `` values_to ``=`` ``"value"`` ``)`` ``dat``$``temp`` ``<-`` `[`as.factor`](https://rdrr.io/r/base/factor.html)`(`[`cut`](https://rdrr.io/r/base/cut.html)`(``dat``$``warmup``, ``3``, labels ``=`` ``FALSE``)``)`` `` ``tmp`` ``<-`` `[`lapply`](https://rdrr.io/r/base/lapply.html)`(`[`split`](https://rdrr.io/r/base/split.html)`(``dat``, ``dat``$``temp``)``, ``function``(``x``)`` ``{`` `` ``x``$``warmup_group`` ``<-`` `[`rep`](https://rdrr.io/r/base/rep.html)`(`[`round`](https://rdrr.io/r/base/Round.html)`(`[`mean`](https://rdrr.io/r/base/mean.html)`(``x``$``warmup``)``, ``1``)``, times ``=`` `[`nrow`](https://rdrr.io/r/base/nrow.html)`(``x``)``)`` `` `[`return`](https://rdrr.io/r/base/function.html)`(``x``)`` ``}``)`` `` ``dat`` ``<-`` `[`do.call`](https://rdrr.io/r/base/do.call.html)`(``rbind``, ``tmp``)`` ``dat`` ``<-`` `[`data_filter`](https://easystats.github.io/datawizard/reference/data_match.html)`(``dat``, ``value`` ``<`` ``6``)`` `` `[`ggplot`](https://ggplot2.tidyverse.org/reference/ggplot.html)`(`` `` ``dat``,`` `` `[`aes`](https://ggplot2.tidyverse.org/reference/aes.html)`(`` `` x ``=`` ``warmup_group``,`` `` y ``=`` ``value``,`` `` fill ``=`` ``estimate``,`` `` group ``=`` `[`interaction`](https://rdrr.io/r/base/interaction.html)`(``estimate``, ``warmup_group``)`` `` ``)`` ``)`` ``+`` `` `[`geom_boxplot`](https://ggplot2.tidyverse.org/reference/geom_boxplot.html)`(``outlier.shape ``=`` ``NA``)`` ``+`` `` `[`theme_classic`](https://ggplot2.tidyverse.org/reference/ggtheme.html)`(``)`` ``+`` `` `[`scale_fill_manual`](https://ggplot2.tidyverse.org/reference/scale_manual.html)`(`` `` values ``=`` `[`c`](https://rdrr.io/r/base/c.html)`(`` `` ``"beta"`` ``=`` ``"#607D8B"``,`` `` ``"MAP"`` ``=`` ``"#795548"``,`` `` ``"Mean"`` ``=`` ``"#FF9800"``,`` `` ``"Median"`` ``=`` ``"#FFEB3B"`` `` ``)``,`` `` name ``=`` ``"Index"`` `` ``)`` ``+`` `` `[`ylab`](https://ggplot2.tidyverse.org/reference/labs.html)`(``"Point-estimate of the true value 0\n"``)`` ``+`` `` `[`xlab`](https://ggplot2.tidyverse.org/reference/labs.html)`(``"\nNumber of Iterations"``)`` ``+`` `` `[`facet_wrap`](https://ggplot2.tidyverse.org/reference/facet_wrap.html)`(``~`` ``outcome_type`` ``*`` ``true_effect``, scales ``=`` ``"free"``)`
+\
+`dat`` ``<-`` ``df`\
+`dat``$``warmup`` ``<-`` ``dat``$``warmup`` ``/`` ``dat``$``iterations`\
+`dat`` ``<-`` `[`data_select`](https://easystats.github.io/datawizard/reference/extract_column_names.html)`(`\
+`  ``dat``,`\
+`  select ``=`` `[`c`](https://rdrr.io/r/base/c.html)`(``"warmup"``, ``"true_effect"``, ``"outcome_type"``, ``"beta"``, ``"Median"``, ``"Mean"``, ``"MAP"``)`\
+`)`\
+`dat`` ``<-`` `[`reshape_longer`](https://easystats.github.io/datawizard/reference/data_to_long.html)`(`\
+`  ``dat``,`\
+`  select ``=`` ``-`[`c`](https://rdrr.io/r/base/c.html)`(``"warmup"``, ``"true_effect"``, ``"outcome_type"``)``,`\
+`  names_to ``=`` ``"estimate"``,`\
+`  values_to ``=`` ``"value"`\
+`)`\
+`dat``$``temp`` ``<-`` `[`as.factor`](https://rdrr.io/r/base/factor.html)`(`[`cut`](https://rdrr.io/r/base/cut.html)`(``dat``$``warmup``, ``3``, labels ``=`` ``FALSE``)``)`\
+\
+`tmp`` ``<-`` `[`lapply`](https://rdrr.io/r/base/lapply.html)`(`[`split`](https://rdrr.io/r/base/split.html)`(``dat``, ``dat``$``temp``)``, ``function``(``x``)`` ``{`\
+`  ``x``$``warmup_group`` ``<-`` `[`rep`](https://rdrr.io/r/base/rep.html)`(`[`round`](https://rdrr.io/r/base/Round.html)`(`[`mean`](https://rdrr.io/r/base/mean.html)`(``x``$``warmup``)``, ``1``)``, times ``=`` `[`nrow`](https://rdrr.io/r/base/nrow.html)`(``x``)``)`\
+`  `[`return`](https://rdrr.io/r/base/function.html)`(``x``)`\
+`}``)`\
+\
+`dat`` ``<-`` `[`do.call`](https://rdrr.io/r/base/do.call.html)`(``rbind``, ``tmp``)`\
+`dat`` ``<-`` `[`data_filter`](https://easystats.github.io/datawizard/reference/data_match.html)`(``dat``, ``value`` ``<`` ``6``)`\
+\
+[`ggplot`](https://ggplot2.tidyverse.org/reference/ggplot.html)`(`\
+`  ``dat``,`\
+`  `[`aes`](https://ggplot2.tidyverse.org/reference/aes.html)`(`\
+`    x ``=`` ``warmup_group``,`\
+`    y ``=`` ``value``,`\
+`    fill ``=`` ``estimate``,`\
+`    group ``=`` `[`interaction`](https://rdrr.io/r/base/interaction.html)`(``estimate``, ``warmup_group``)`\
+`  ``)`\
+`)`` ``+`\
+`  `[`geom_boxplot`](https://ggplot2.tidyverse.org/reference/geom_boxplot.html)`(``outlier.shape ``=`` ``NA``)`` ``+`\
+`  `[`theme_classic`](https://ggplot2.tidyverse.org/reference/ggtheme.html)`(``)`` ``+`\
+`  `[`scale_fill_manual`](https://ggplot2.tidyverse.org/reference/scale_manual.html)`(`\
+`    values ``=`` `[`c`](https://rdrr.io/r/base/c.html)`(`\
+`      ``"beta"`` ``=`` ``"#607D8B"``,`\
+`      ``"MAP"`` ``=`` ``"#795548"``,`\
+`      ``"Mean"`` ``=`` ``"#FF9800"``,`\
+`      ``"Median"`` ``=`` ``"#FFEB3B"`\
+`    ``)``,`\
+`    name ``=`` ``"Index"`\
+`  ``)`` ``+`\
+`  `[`ylab`](https://ggplot2.tidyverse.org/reference/labs.html)`(``"Point-estimate of the true value 0\n"``)`` ``+`\
+`  `[`xlab`](https://ggplot2.tidyverse.org/reference/labs.html)`(``"\nNumber of Iterations"``)`` ``+`\
+`  `[`facet_wrap`](https://ggplot2.tidyverse.org/reference/facet_wrap.html)`(``~`` ``outcome_type`` ``*`` ``true_effect``, scales ``=`` ``"free"``)`
 
 ![](indicesEstimationComparison_files/figure-html/unnamed-chunk-8-1.png)
 

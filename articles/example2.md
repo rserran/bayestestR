@@ -36,7 +36,9 @@ tutorial](https://easystats.github.io/bayestestR/articles/example1.html)).
 We will compute a Pearson’s correlation test, store the results in an
 object called `result`, and then display it:
 
-`result`` ``<-`` `[`cor.test`](https://rdrr.io/r/stats/cor.test.html)`(``iris``$``Sepal.Width``, ``iris``$``Sepal.Length``)`` ``result`
+\
+`result`` ``<-`` `[`cor.test`](https://rdrr.io/r/stats/cor.test.html)`(``iris``$``Sepal.Width``, ``iris``$``Sepal.Length``)`\
+`result`
 
     > 
     >   Pearson's product-moment correlation
@@ -67,12 +69,15 @@ can then load this package, compute the correlation using the
 [`correlationBF()`](https://rdrr.io/pkg/BayesFactor/man/correlationBF.html)
 function, and store the result.
 
-[`library`](https://rdrr.io/r/base/library.html)`(`[`BayesFactor`](https://richarddmorey.github.io/BayesFactor/)`)`` ``result`` ``<-`` `[`correlationBF`](https://rdrr.io/pkg/BayesFactor/man/correlationBF.html)`(``iris``$``Sepal.Width``, ``iris``$``Sepal.Length``)`
+\
+[`library`](https://rdrr.io/r/base/library.html)`(`[`BayesFactor`](https://richarddmorey.github.io/BayesFactor/)`)`\
+`result`` ``<-`` `[`correlationBF`](https://rdrr.io/pkg/BayesFactor/man/correlationBF.html)`(``iris``$``Sepal.Width``, ``iris``$``Sepal.Length``)`
 
 Now, let us run our
 [`describe_posterior()`](https://easystats.github.io/bayestestR/reference/describe_posterior.md)
 function on that:
 
+\
 [`describe_posterior`](https://easystats.github.io/bayestestR/reference/describe_posterior.md)`(``result``)`
 
     > Summary of Posterior Distribution
@@ -112,6 +117,7 @@ We can use
 [`bayesfactor_models()`](https://easystats.github.io/bayestestR/reference/bayesfactor_models.md)
 to specifically compute the Bayes factor comparing those models:
 
+\
 [`bayesfactor_models`](https://easystats.github.io/bayestestR/reference/bayesfactor_models.md)`(``result``)`
 
     > Bayes Factors for Model Comparison
@@ -185,7 +191,11 @@ Such “pizza plots” can be directly created through the
 package for `easystats` (you can install it by running
 `install.packages("see")`):
 
-[`library`](https://rdrr.io/r/base/library.html)`(`[`see`](https://easystats.github.io/see/)`)`` `` `[`plot`](https://rdrr.io/r/graphics/plot.default.html)`(`[`bayesfactor_models`](https://easystats.github.io/bayestestR/reference/bayesfactor_models.md)`(``result``)``)`` ``+`` `` `[`scale_fill_pizza`](https://easystats.github.io/see/reference/scale_color_pizza.html)`(``)`
+\
+[`library`](https://rdrr.io/r/base/library.html)`(`[`see`](https://easystats.github.io/see/)`)`\
+\
+[`plot`](https://rdrr.io/r/graphics/plot.default.html)`(`[`bayesfactor_models`](https://easystats.github.io/bayestestR/reference/bayesfactor_models.md)`(``result``)``)`` ``+`\
+`  `[`scale_fill_pizza`](https://easystats.github.io/see/reference/scale_color_pizza.html)`(``)`
 
 ![](example2_files/figure-html/unnamed-chunk-7-1.png)
 
@@ -208,7 +218,18 @@ filtering out from `iris` the non-relevant observations corresponding to
 the *setosa* specie, and we will then visualise the observations and the
 distribution of the `Sepal.Width` variable.
 
-[`library`](https://rdrr.io/r/base/library.html)`(`[`datawizard`](https://easystats.github.io/datawizard/)`)`` `[`library`](https://rdrr.io/r/base/library.html)`(`[`ggplot2`](https://ggplot2.tidyverse.org)`)`` `` ``# Select only two relevant species`` ``data`` ``<-`` `[`droplevels`](https://rdrr.io/r/base/droplevels.html)`(`[`data_filter`](https://easystats.github.io/datawizard/reference/data_match.html)`(``iris``, ``Species`` ``!=`` ``"setosa"``)``)`` `` ``# Visualise distributions and observations`` `[`ggplot`](https://ggplot2.tidyverse.org/reference/ggplot.html)`(``data``, `[`aes`](https://ggplot2.tidyverse.org/reference/aes.html)`(``x ``=`` ``Species``, y ``=`` ``Sepal.Width``, fill ``=`` ``Species``)``)`` ``+`` `` `[`geom_violindot`](https://easystats.github.io/see/reference/geom_violindot.html)`(``fill_dots ``=`` ``"black"``, size_dots ``=`` ``1``)`` ``+`` `` `[`scale_fill_material`](https://easystats.github.io/see/reference/scale_color_material.html)`(``)`` ``+`` `` `[`theme_modern`](https://easystats.github.io/see/reference/theme_modern.html)`(``)`
+\
+[`library`](https://rdrr.io/r/base/library.html)`(`[`datawizard`](https://easystats.github.io/datawizard/)`)`\
+[`library`](https://rdrr.io/r/base/library.html)`(`[`ggplot2`](https://ggplot2.tidyverse.org)`)`\
+\
+`# Select only two relevant species`\
+`data`` ``<-`` `[`droplevels`](https://rdrr.io/r/base/droplevels.html)`(`[`data_filter`](https://easystats.github.io/datawizard/reference/data_match.html)`(``iris``, ``Species`` ``!=`` ``"setosa"``)``)`\
+\
+`# Visualise distributions and observations`\
+[`ggplot`](https://ggplot2.tidyverse.org/reference/ggplot.html)`(``data``, `[`aes`](https://ggplot2.tidyverse.org/reference/aes.html)`(``x ``=`` ``Species``, y ``=`` ``Sepal.Width``, fill ``=`` ``Species``)``)`` ``+`\
+`  `[`geom_violindot`](https://easystats.github.io/see/reference/geom_violindot.html)`(``fill_dots ``=`` ``"black"``, size_dots ``=`` ``1``)`` ``+`\
+`  `[`scale_fill_material`](https://easystats.github.io/see/reference/scale_color_material.html)`(``)`` ``+`\
+`  `[`theme_modern`](https://easystats.github.io/see/reference/theme_modern.html)`(``)`
 
 ![](example2_files/figure-html/unnamed-chunk-8-1.png)
 
@@ -220,7 +241,9 @@ in the `BayesFactor` package.
 
 ### Compute the Bayesian *t*-test
 
-`result`` ``<-`` ``BayesFactor``::`[`ttestBF`](https://rdrr.io/pkg/BayesFactor/man/ttestBF.html)`(``formula ``=`` ``Sepal.Width`` ``~`` ``Species``, data ``=`` ``data``)`` `[`describe_posterior`](https://easystats.github.io/bayestestR/reference/describe_posterior.md)`(``result``)`
+\
+`result`` ``<-`` ``BayesFactor``::`[`ttestBF`](https://rdrr.io/pkg/BayesFactor/man/ttestBF.html)`(``formula ``=`` ``Sepal.Width`` ``~`` ``Species``, data ``=`` ``data``)`\
+[`describe_posterior`](https://easystats.github.io/bayestestR/reference/describe_posterior.md)`(``result``)`
 
     > Summary of Posterior Distribution
     > 
@@ -256,14 +279,34 @@ species using only* `Sepal.Width`.
 
 ### Fit the model
 
-[`library`](https://rdrr.io/r/base/library.html)`(`[`rstanarm`](https://mc-stan.org/rstanarm/)`)`` `` ``model`` ``<-`` `[`stan_glm`](https://mc-stan.org/rstanarm/reference/stan_glm.html)`(`` `` ``Species`` ``~`` ``Sepal.Width``,`` `` data ``=`` ``data``,`` `` family ``=`` ``"binomial"``,`` `` chains ``=`` ``10``,`` `` iter ``=`` ``5000``,`` `` warmup ``=`` ``1000``,`` `` refresh ``=`` ``0`` ``)`
+\
+[`library`](https://rdrr.io/r/base/library.html)`(`[`rstanarm`](https://mc-stan.org/rstanarm/)`)`\
+\
+`model`` ``<-`` `[`stan_glm`](https://mc-stan.org/rstanarm/reference/stan_glm.html)`(`\
+`  ``Species`` ``~`` ``Sepal.Width``,`\
+`  data ``=`` ``data``,`\
+`  family ``=`` ``"binomial"``,`\
+`  chains ``=`` ``10``,`\
+`  iter ``=`` ``5000``,`\
+`  warmup ``=`` ``1000``,`\
+`  refresh ``=`` ``0`\
+`)`
 
 ### Visualise the model
 
 Using the [`modelbased`](https://github.com/easystats/modelbased)
 package.
 
-[`library`](https://rdrr.io/r/base/library.html)`(`[`modelbased`](https://easystats.github.io/modelbased/)`)`` `` ``vizdata`` ``<-`` `[`estimate_relation`](https://easystats.github.io/modelbased/reference/estimate_expectation.html)`(``model``)`` `` `[`ggplot`](https://ggplot2.tidyverse.org/reference/ggplot.html)`(``vizdata``, `[`aes`](https://ggplot2.tidyverse.org/reference/aes.html)`(``x ``=`` ``Sepal.Width``, y ``=`` ``Predicted``)``)`` ``+`` `` `[`geom_ribbon`](https://ggplot2.tidyverse.org/reference/geom_ribbon.html)`(`[`aes`](https://ggplot2.tidyverse.org/reference/aes.html)`(``ymin ``=`` ``CI_low``, ymax ``=`` ``CI_high``)``, alpha ``=`` ``0.5``)`` ``+`` `` `[`geom_line`](https://ggplot2.tidyverse.org/reference/geom_path.html)`(``)`` ``+`` `` `[`ylab`](https://ggplot2.tidyverse.org/reference/labs.html)`(``"Probability of being virginica"``)`` ``+`` `` `[`theme_modern`](https://easystats.github.io/see/reference/theme_modern.html)`(``)`
+\
+[`library`](https://rdrr.io/r/base/library.html)`(`[`modelbased`](https://easystats.github.io/modelbased/)`)`\
+\
+`vizdata`` ``<-`` `[`estimate_relation`](https://easystats.github.io/modelbased/reference/estimate_expectation.html)`(``model``)`\
+\
+[`ggplot`](https://ggplot2.tidyverse.org/reference/ggplot.html)`(``vizdata``, `[`aes`](https://ggplot2.tidyverse.org/reference/aes.html)`(``x ``=`` ``Sepal.Width``, y ``=`` ``Predicted``)``)`` ``+`\
+`  `[`geom_ribbon`](https://ggplot2.tidyverse.org/reference/geom_ribbon.html)`(`[`aes`](https://ggplot2.tidyverse.org/reference/aes.html)`(``ymin ``=`` ``CI_low``, ymax ``=`` ``CI_high``)``, alpha ``=`` ``0.5``)`` ``+`\
+`  `[`geom_line`](https://ggplot2.tidyverse.org/reference/geom_path.html)`(``)`` ``+`\
+`  `[`ylab`](https://ggplot2.tidyverse.org/reference/labs.html)`(``"Probability of being virginica"``)`` ``+`\
+`  `[`theme_modern`](https://easystats.github.io/see/reference/theme_modern.html)`(``)`
 
 ![](example2_files/figure-html/unnamed-chunk-12-1.png)
 
@@ -273,7 +316,8 @@ Once again, we can extract all indices of interest for the posterior
 distribution using our old pal
 [`describe_posterior()`](https://easystats.github.io/bayestestR/reference/describe_posterior.md).
 
-[`describe_posterior`](https://easystats.github.io/bayestestR/reference/describe_posterior.md)`(``model``, test ``=`` `[`c`](https://rdrr.io/r/base/c.html)`(``"pd"``, ``"ROPE"``, ``"BF"``)``)`
+\
+[`describe_posterior`](https://easystats.github.io/bayestestR/reference/describe_posterior.md)`(``model``, test ``=`` `[`c`](https://rdrr.io/r/base/c.html)`(``"pd"``, ``"ROPE"``, ``"BF"``)``)`
 
     > Summary of Posterior Distribution
     > 
@@ -287,7 +331,10 @@ distribution using our old pal
     > (Intercept) | 13.38 | 1.000 |      22809
     > Sepal.Width | 11.97 | 1.000 |      23303
 
-[`library`](https://rdrr.io/r/base/library.html)`(`[`performance`](https://easystats.github.io/performance/)`)`` `` `[`model_performance`](https://easystats.github.io/performance/reference/model_performance.html)`(``model``)`
+\
+[`library`](https://rdrr.io/r/base/library.html)`(`[`performance`](https://easystats.github.io/performance/)`)`\
+\
+[`model_performance`](https://easystats.github.io/performance/reference/model_performance.html)`(``model``)`
 
     > # Indices of model performance
     > 
@@ -303,7 +350,10 @@ distribution using our old pal
 
 TO DO.
 
-[`library`](https://rdrr.io/r/base/library.html)`(`[`see`](https://easystats.github.io/see/)`)`` `` `[`plot`](https://rdrr.io/r/graphics/plot.default.html)`(`[`rope`](https://easystats.github.io/bayestestR/reference/rope.md)`(``result``)``)`
+\
+[`library`](https://rdrr.io/r/base/library.html)`(`[`see`](https://easystats.github.io/see/)`)`\
+\
+[`plot`](https://rdrr.io/r/graphics/plot.default.html)`(`[`rope`](https://easystats.github.io/bayestestR/reference/rope.md)`(``result``)``)`
 
 ![](example2_files/figure-html/unnamed-chunk-16-1.png)
 

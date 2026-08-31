@@ -21,7 +21,10 @@ the necessary packages, we can load `rstanarm` (to fit the models),
 `bayestestR` (to compute useful indices), and `insight` (to access the
 parameters).
 
-[`library`](https://rdrr.io/r/base/library.html)`(`[`rstanarm`](https://mc-stan.org/rstanarm/)`)`` `[`library`](https://rdrr.io/r/base/library.html)`(`[`bayestestR`](https://easystats.github.io/bayestestR/)`)`` `[`library`](https://rdrr.io/r/base/library.html)`(`[`insight`](https://easystats.github.io/insight/)`)`
+\
+[`library`](https://rdrr.io/r/base/library.html)`(`[`rstanarm`](https://mc-stan.org/rstanarm/)`)`\
+[`library`](https://rdrr.io/r/base/library.html)`(`[`bayestestR`](https://easystats.github.io/bayestestR/)`)`\
+[`library`](https://rdrr.io/r/base/library.html)`(`[`insight`](https://easystats.github.io/insight/)`)`
 
 ## Simple linear (regression) model
 
@@ -36,7 +39,9 @@ dataset which is included by default in R.
 Let’s start by fitting a **frequentist** version of the model, just to
 have a reference point:
 
-`model`` ``<-`` `[`lm`](https://rdrr.io/r/stats/lm.html)`(``Sepal.Length`` ``~`` ``Petal.Length``, data ``=`` ``iris``)`` `[`summary`](https://rdrr.io/r/base/summary.html)`(``model``)`
+\
+`model`` ``<-`` `[`lm`](https://rdrr.io/r/stats/lm.html)`(``Sepal.Length`` ``~`` ``Petal.Length``, data ``=`` ``iris``)`\
+[`summary`](https://rdrr.io/r/base/summary.html)`(``model``)`
 
     > 
     > Call:
@@ -59,6 +64,7 @@ have a reference point:
 
 We can also zoom in on the parameters of interest to us:
 
+\
 [`get_parameters`](https://easystats.github.io/insight/reference/get_parameters.html)`(``model``)`
 
     >      Parameter Estimate
@@ -73,14 +79,22 @@ response) to increase by **0.41**. This effect can be visualized by
 plotting the predictor values on the `x` axis and the response values as
 `y` using the `ggplot2` package:
 
-[`library`](https://rdrr.io/r/base/library.html)`(`[`ggplot2`](https://ggplot2.tidyverse.org)`)`` ``# Load the package`` `` ``# The ggplot function takes the data as argument, and then the variables`` ``# related to aesthetic features such as the x and y axes.`` `[`ggplot`](https://ggplot2.tidyverse.org/reference/ggplot.html)`(``iris``, `[`aes`](https://ggplot2.tidyverse.org/reference/aes.html)`(``x ``=`` ``Petal.Length``, y ``=`` ``Sepal.Length``)``)`` ``+`` `` `[`geom_point`](https://ggplot2.tidyverse.org/reference/geom_point.html)`(``)`` ``+`` ``# This adds the points`` `` `[`geom_smooth`](https://ggplot2.tidyverse.org/reference/geom_smooth.html)`(``method ``=`` ``"lm"``)`` ``# This adds a regression line`
+\
+[`library`](https://rdrr.io/r/base/library.html)`(`[`ggplot2`](https://ggplot2.tidyverse.org)`)`` ``# Load the package`\
+\
+`# The ggplot function takes the data as argument, and then the variables`\
+`# related to aesthetic features such as the x and y axes.`\
+[`ggplot`](https://ggplot2.tidyverse.org/reference/ggplot.html)`(``iris``, `[`aes`](https://ggplot2.tidyverse.org/reference/aes.html)`(``x ``=`` ``Petal.Length``, y ``=`` ``Sepal.Length``)``)`` ``+`\
+`  `[`geom_point`](https://ggplot2.tidyverse.org/reference/geom_point.html)`(``)`` ``+`` ``# This adds the points`\
+`  `[`geom_smooth`](https://ggplot2.tidyverse.org/reference/geom_smooth.html)`(``method ``=`` ``"lm"``)`` ``# This adds a regression line`
 
 ![](example1_files/figure-html/unnamed-chunk-5-1.png)
 
 Now let’s fit a **Bayesian version** of the model by using the
 `stan_glm` function in the `rstanarm` package:
 
-`model`` ``<-`` `[`stan_glm`](https://mc-stan.org/rstanarm/reference/stan_glm.html)`(``Sepal.Length`` ``~`` ``Petal.Length``, data ``=`` ``iris``)`
+\
+`model`` ``<-`` `[`stan_glm`](https://mc-stan.org/rstanarm/reference/stan_glm.html)`(``Sepal.Length`` ``~`` ``Petal.Length``, data ``=`` ``iris``)`
 
 You can see the sampling algorithm being run.
 
@@ -89,7 +103,10 @@ You can see the sampling algorithm being run.
 Once it is done, let us extract the parameters (*i.e.*, coefficients) of
 the model.
 
-`posteriors`` ``<-`` `[`get_parameters`](https://easystats.github.io/insight/reference/get_parameters.html)`(``model``)`` `` `[`head`](https://rdrr.io/r/utils/head.html)`(``posteriors``)`` ``# Show the first 6 rows`
+\
+`posteriors`` ``<-`` `[`get_parameters`](https://easystats.github.io/insight/reference/get_parameters.html)`(``model``)`\
+\
+[`head`](https://rdrr.io/r/utils/head.html)`(``posteriors``)`` ``# Show the first 6 rows`
 
     >   (Intercept) Petal.Length
     > 1         4.4         0.39
@@ -113,7 +130,8 @@ important differences between these two frameworks.
 
 Let’s look at the length of the posteriors.
 
-[`nrow`](https://rdrr.io/r/base/nrow.html)`(``posteriors``)`` ``# Size (number of rows)`
+\
+[`nrow`](https://rdrr.io/r/base/nrow.html)`(``posteriors``)`` ``# Size (number of rows)`
 
     > [1] 4000
 
@@ -139,7 +157,16 @@ equals **`4 chains * (2000 iterations - 1000 warm-up) = 4000`**.
 
 We can change that, for instance:
 
-`model`` ``<-`` `[`stan_glm`](https://mc-stan.org/rstanarm/reference/stan_glm.html)`(`` `` ``Sepal.Length`` ``~`` ``Petal.Length``,`` `` data ``=`` ``iris``,`` `` chains ``=`` ``2``,`` `` iter ``=`` ``1000``,`` `` warmup ``=`` ``250`` ``)`` `` `[`nrow`](https://rdrr.io/r/base/nrow.html)`(`[`get_parameters`](https://easystats.github.io/insight/reference/get_parameters.html)`(``model``)``)`` ``# Size (number of rows)`
+\
+`model`` ``<-`` `[`stan_glm`](https://mc-stan.org/rstanarm/reference/stan_glm.html)`(`\
+`  ``Sepal.Length`` ``~`` ``Petal.Length``,`\
+`  data ``=`` ``iris``,`\
+`  chains ``=`` ``2``,`\
+`  iter ``=`` ``1000``,`\
+`  warmup ``=`` ``250`\
+`)`\
+\
+[`nrow`](https://rdrr.io/r/base/nrow.html)`(`[`get_parameters`](https://easystats.github.io/insight/reference/get_parameters.html)`(``model``)``)`` ``# Size (number of rows)`
 
     [1] 1500
 
@@ -154,7 +181,9 @@ Now that we’ve understood where these values come from, let’s look at
 them. We will start by visualizing the posterior distribution of our
 parameter of interest, the effect of `Petal.Length`.
 
-[`ggplot`](https://ggplot2.tidyverse.org/reference/ggplot.html)`(``posteriors``, `[`aes`](https://ggplot2.tidyverse.org/reference/aes.html)`(``x ``=`` ``Petal.Length``)``)`` ``+`` `` `[`geom_density`](https://ggplot2.tidyverse.org/reference/geom_density.html)`(``fill ``=`` ``"orange"``)`
+\
+[`ggplot`](https://ggplot2.tidyverse.org/reference/ggplot.html)`(``posteriors``, `[`aes`](https://ggplot2.tidyverse.org/reference/aes.html)`(``x ``=`` ``Petal.Length``)``)`` ``+`\
+`  `[`geom_density`](https://ggplot2.tidyverse.org/reference/geom_density.html)`(``fill ``=`` ``"orange"``)`
 
 ![](example1_files/figure-html/unnamed-chunk-13-1.png)
 
@@ -203,6 +232,7 @@ usually used as point-estimates. But what’s the difference between them?
 
 Let’s answer this by first inspecting the **mean**:
 
+\
 [`mean`](https://rdrr.io/r/base/mean.html)`(``posteriors``$``Petal.Length``)`
 
     > [1] 0.41
@@ -211,6 +241,7 @@ This is close to the frequentist \beta. But, as we know, the mean is
 quite sensitive to outliers or extremes values. Maybe the **median**
 could be more robust?
 
+\
 [`median`](https://rdrr.io/r/stats/median.html)`(``posteriors``$``Petal.Length``)`
 
     > [1] 0.41
@@ -220,6 +251,7 @@ the values). Maybe we could take the **mode**, that is, the *peak* of
 the posterior distribution? In the Bayesian framework, this value is
 called the **Maximum A Posteriori (MAP)**. Let’s see:
 
+\
 [`map_estimate`](https://easystats.github.io/bayestestR/reference/map_estimate.md)`(``posteriors``$``Petal.Length``)`
 
     > MAP Estimate
@@ -232,7 +264,19 @@ called the **Maximum A Posteriori (MAP)**. Let’s see:
 
 Let’s visualize these values on the posterior distribution:
 
-[`ggplot`](https://ggplot2.tidyverse.org/reference/ggplot.html)`(``posteriors``, `[`aes`](https://ggplot2.tidyverse.org/reference/aes.html)`(``x ``=`` ``Petal.Length``)``)`` ``+`` `` `[`geom_density`](https://ggplot2.tidyverse.org/reference/geom_density.html)`(``fill ``=`` ``"orange"``)`` ``+`` `` ``# The mean in blue`` `` `[`geom_vline`](https://ggplot2.tidyverse.org/reference/geom_abline.html)`(``xintercept ``=`` `[`mean`](https://rdrr.io/r/base/mean.html)`(``posteriors``$``Petal.Length``)``, color ``=`` ``"blue"``, linewidth ``=`` ``1``)`` ``+`` `` ``# The median in red`` `` `[`geom_vline`](https://ggplot2.tidyverse.org/reference/geom_abline.html)`(``xintercept ``=`` `[`median`](https://rdrr.io/r/stats/median.html)`(``posteriors``$``Petal.Length``)``, color ``=`` ``"red"``, linewidth ``=`` ``1``)`` ``+`` `` ``# The MAP in purple`` `` `[`geom_vline`](https://ggplot2.tidyverse.org/reference/geom_abline.html)`(`` `` xintercept ``=`` `[`as.numeric`](https://rdrr.io/r/base/numeric.html)`(`[`map_estimate`](https://easystats.github.io/bayestestR/reference/map_estimate.md)`(``posteriors``$``Petal.Length``)``)``,`` `` color ``=`` ``"purple"``,`` `` linewidth ``=`` ``1`` `` ``)`
+\
+[`ggplot`](https://ggplot2.tidyverse.org/reference/ggplot.html)`(``posteriors``, `[`aes`](https://ggplot2.tidyverse.org/reference/aes.html)`(``x ``=`` ``Petal.Length``)``)`` ``+`\
+`  `[`geom_density`](https://ggplot2.tidyverse.org/reference/geom_density.html)`(``fill ``=`` ``"orange"``)`` ``+`\
+`  ``# The mean in blue`\
+`  `[`geom_vline`](https://ggplot2.tidyverse.org/reference/geom_abline.html)`(``xintercept ``=`` `[`mean`](https://rdrr.io/r/base/mean.html)`(``posteriors``$``Petal.Length``)``, color ``=`` ``"blue"``, linewidth ``=`` ``1``)`` ``+`\
+`  ``# The median in red`\
+`  `[`geom_vline`](https://ggplot2.tidyverse.org/reference/geom_abline.html)`(``xintercept ``=`` `[`median`](https://rdrr.io/r/stats/median.html)`(``posteriors``$``Petal.Length``)``, color ``=`` ``"red"``, linewidth ``=`` ``1``)`` ``+`\
+`  ``# The MAP in purple`\
+`  `[`geom_vline`](https://ggplot2.tidyverse.org/reference/geom_abline.html)`(`\
+`    xintercept ``=`` `[`as.numeric`](https://rdrr.io/r/base/numeric.html)`(`[`map_estimate`](https://easystats.github.io/bayestestR/reference/map_estimate.md)`(``posteriors``$``Petal.Length``)``)``,`\
+`    color ``=`` ``"purple"``,`\
+`    linewidth ``=`` ``1`\
+`  ``)`
 
 ![](example1_files/figure-html/unnamed-chunk-17-1.png)
 
@@ -247,6 +291,7 @@ two equal parts).
 Now that the have a point-estimate, we have to **describe the
 uncertainty**. We could compute the range:
 
+\
 [`range`](https://rdrr.io/r/base/range.html)`(``posteriors``$``Petal.Length``)`
 
     > [1] 0.33 0.48
@@ -266,7 +311,8 @@ values. **Note that we will use 89% CIs instead of 95%** CIs (as in the
 frequentist framework) - see discussion on choice of credibility level
 [here](https://easystats.github.io/bayestestR/articles/credible_interval.html).
 
-[`hdi`](https://easystats.github.io/bayestestR/reference/hdi.md)`(``posteriors``$``Petal.Length``, ci ``=`` ``0.89``)`
+\
+[`hdi`](https://easystats.github.io/bayestestR/reference/hdi.md)`(``posteriors``$``Petal.Length``, ci ``=`` ``0.89``)`
 
     > 89% HDI: [0.38, 0.44]
 
@@ -306,16 +352,25 @@ R) two feed types of interest for us (*we do have peculiar interests*):
 
 ### Data preparation and model fitting
 
-[`library`](https://rdrr.io/r/base/library.html)`(`[`datawizard`](https://easystats.github.io/datawizard/)`)`` `` ``# We keep only rows for which feed is meatmeal or sunflower`` ``data`` ``<-`` `[`data_filter`](https://easystats.github.io/datawizard/reference/data_match.html)`(``chickwts``, ``feed`` `[`%in%`](https://rdrr.io/r/base/match.html)` `[`c`](https://rdrr.io/r/base/c.html)`(``"meatmeal"``, ``"sunflower"``)``)`
+\
+[`library`](https://rdrr.io/r/base/library.html)`(`[`datawizard`](https://easystats.github.io/datawizard/)`)`\
+\
+`# We keep only rows for which feed is meatmeal or sunflower`\
+`data`` ``<-`` `[`data_filter`](https://easystats.github.io/datawizard/reference/data_match.html)`(``chickwts``, ``feed`` `[`%in%`](https://rdrr.io/r/base/match.html)` `[`c`](https://rdrr.io/r/base/c.html)`(``"meatmeal"``, ``"sunflower"``)``)`
 
 Let’s run another Bayesian regression to predict the **weight** with the
 **two types of feed type**.
 
-`model`` ``<-`` `[`stan_glm`](https://mc-stan.org/rstanarm/reference/stan_glm.html)`(``weight`` ``~`` ``feed``, data ``=`` ``data``)`
+\
+`model`` ``<-`` `[`stan_glm`](https://mc-stan.org/rstanarm/reference/stan_glm.html)`(``weight`` ``~`` ``feed``, data ``=`` ``data``)`
 
 ### Posterior description
 
-`posteriors`` ``<-`` `[`get_parameters`](https://easystats.github.io/insight/reference/get_parameters.html)`(``model``)`` `` `[`ggplot`](https://ggplot2.tidyverse.org/reference/ggplot.html)`(``posteriors``, `[`aes`](https://ggplot2.tidyverse.org/reference/aes.html)`(``x ``=`` ``feedsunflower``)``)`` ``+`` `` `[`geom_density`](https://ggplot2.tidyverse.org/reference/geom_density.html)`(``fill ``=`` ``"red"``)`
+\
+`posteriors`` ``<-`` `[`get_parameters`](https://easystats.github.io/insight/reference/get_parameters.html)`(``model``)`\
+\
+[`ggplot`](https://ggplot2.tidyverse.org/reference/ggplot.html)`(``posteriors``, `[`aes`](https://ggplot2.tidyverse.org/reference/aes.html)`(``x ``=`` ``feedsunflower``)``)`` ``+`\
+`  `[`geom_density`](https://ggplot2.tidyverse.org/reference/geom_density.html)`(``fill ``=`` ``"red"``)`
 
 ![](example1_files/figure-html/unnamed-chunk-23-1.png)
 
@@ -327,10 +382,12 @@ But, **by how much?**
 
 Let us compute the **median** and the **CI**:
 
+\
 [`median`](https://rdrr.io/r/stats/median.html)`(``posteriors``$``feedsunflower``)`
 
     > [1] 52
 
+\
 [`hdi`](https://easystats.github.io/bayestestR/reference/hdi.md)`(``posteriors``$``feedsunflower``)`
 
     > 95% HDI: [2.76, 101.93]
@@ -370,7 +427,8 @@ Well, that’s convenient. Now we know that we can define the ROPE as the
 probable values (the 89% CI) which are not null**, *i.e.*, which are
 outside this range.
 
-[`rope`](https://easystats.github.io/bayestestR/reference/rope.md)`(``posteriors``$``feedsunflower``, range ``=`` `[`c`](https://rdrr.io/r/base/c.html)`(``-``20``, ``20``)``, ci ``=`` ``0.89``)`
+\
+[`rope`](https://easystats.github.io/bayestestR/reference/rope.md)`(``posteriors``$``feedsunflower``, range ``=`` `[`c`](https://rdrr.io/r/base/c.html)`(``-``20``, ``20``)``, ci ``=`` ``0.89``)`
 
     > # Proportion of samples inside the ROPE [-20.00, 20.00]:
     > 
@@ -400,7 +458,10 @@ Equivalence (ROPE).
 variable, which can be considered as a “negligible” effect size (Cohen,
 1988).
 
-`rope_value`` ``<-`` ``0.1`` ``*`` `[`sd`](https://rdrr.io/r/stats/sd.html)`(``data``$``weight``)`` ``rope_range`` ``<-`` `[`c`](https://rdrr.io/r/base/c.html)`(``-``rope_value``, ``rope_value``)`` ``rope_range`
+\
+`rope_value`` ``<-`` ``0.1`` ``*`` `[`sd`](https://rdrr.io/r/stats/sd.html)`(``data``$``weight``)`\
+`rope_range`` ``<-`` `[`c`](https://rdrr.io/r/base/c.html)`(``-``rope_value``, ``rope_value``)`\
+`rope_range`
 
     > [1] -6.2  6.2
 
@@ -408,13 +469,16 @@ Let’s redefine our ROPE as the region within the `[-6.2, 6.2]` range.
 **Note that this can be directly obtained by the `rope_range` function
 :)**
 
-`rope_value`` ``<-`` `[`rope_range`](https://easystats.github.io/bayestestR/reference/rope_range.md)`(``model``)`` ``rope_value`
+\
+`rope_value`` ``<-`` `[`rope_range`](https://easystats.github.io/bayestestR/reference/rope_range.md)`(``model``)`\
+`rope_value`
 
     > [1] -6.2  6.2
 
 Let’s recompute the **percentage in ROPE**:
 
-[`rope`](https://easystats.github.io/bayestestR/reference/rope.md)`(``posteriors``$``feedsunflower``, range ``=`` ``rope_range``, ci ``=`` ``0.89``)`
+\
+[`rope`](https://easystats.github.io/bayestestR/reference/rope.md)`(``posteriors``$``feedsunflower``, range ``=`` ``rope_range``, ci ``=`` ``0.89``)`
 
     > # Proportion of samples inside the ROPE [-6.17, 6.17]:
     > 
@@ -434,7 +498,11 @@ Maybe **we just want to know if this effect is positive or negative**.
 In this case, we can simply compute the proportion of the posterior that
 is positive, no matter the “size” of the effect.
 
-`# select only positive values`` ``n_positive`` ``<-`` `[`nrow`](https://rdrr.io/r/base/nrow.html)`(`[`data_filter`](https://easystats.github.io/datawizard/reference/data_match.html)`(``posteriors``, ``feedsunflower`` ``>`` ``0``)``)`` `` ``n_positive`` ``/`` `[`nrow`](https://rdrr.io/r/base/nrow.html)`(``posteriors``)`` ``*`` ``100`
+\
+`# select only positive values`\
+`n_positive`` ``<-`` `[`nrow`](https://rdrr.io/r/base/nrow.html)`(`[`data_filter`](https://easystats.github.io/datawizard/reference/data_match.html)`(``posteriors``, ``feedsunflower`` ``>`` ``0``)``)`\
+\
+`n_positive`` ``/`` `[`nrow`](https://rdrr.io/r/base/nrow.html)`(``posteriors``)`` ``*`` ``100`
 
     > [1] 98
 
@@ -443,6 +511,7 @@ We can conclude that **the effect is positive with a probability of
 (pd)**](https://easystats.github.io/bayestestR/articles/probability_of_direction.html).
 It can, in fact, be computed more easily with the following:
 
+\
 [`p_direction`](https://easystats.github.io/bayestestR/reference/p_direction.md)`(``posteriors``$``feedsunflower``)`
 
     > Probability of Direction
@@ -455,7 +524,11 @@ Interestingly, it so happens that **this index is usually highly
 correlated with the frequentist *p*-value**. We could almost roughly
 infer the corresponding *p*-value with a simple transformation:
 
-`pd`` ``<-`` ``97.82`` ``onesided_p`` ``<-`` ``1`` ``-`` ``pd`` ``/`` ``100`` ``twosided_p`` ``<-`` ``onesided_p`` ``*`` ``2`` ``twosided_p`
+\
+`pd`` ``<-`` ``97.82`\
+`onesided_p`` ``<-`` ``1`` ``-`` ``pd`` ``/`` ``100`\
+`twosided_p`` ``<-`` ``onesided_p`` ``*`` ``2`\
+`twosided_p`
 
     > [1] 0.044
 
@@ -465,7 +538,8 @@ true?**
 
 #### Comparison to frequentist
 
-[`summary`](https://rdrr.io/r/base/summary.html)`(`[`lm`](https://rdrr.io/r/stats/lm.html)`(``weight`` ``~`` ``feed``, data ``=`` ``data``)``)`
+\
+[`summary`](https://rdrr.io/r/base/summary.html)`(`[`lm`](https://rdrr.io/r/stats/lm.html)`(``weight`` ``~`` ``feed``, data ``=`` ``data``)``)`
 
     > 
     > Call:
@@ -504,7 +578,8 @@ more, with only one function?**
 This function computes all of the adored mentioned indices, and can be
 run directly on the model:
 
-[`describe_posterior`](https://easystats.github.io/bayestestR/reference/describe_posterior.md)`(``model``, test ``=`` `[`c`](https://rdrr.io/r/base/c.html)`(``"p_direction"``, ``"rope"``, ``"bayesfactor"``)``)`
+\
+[`describe_posterior`](https://easystats.github.io/bayestestR/reference/describe_posterior.md)`(``model``, test ``=`` `[`c`](https://rdrr.io/r/base/c.html)`(``"p_direction"``, ``"rope"``, ``"bayesfactor"``)``)`
 
     > Summary of Posterior Distribution
     > 

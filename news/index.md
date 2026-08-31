@@ -1,21 +1,5 @@
 # Changelog
 
-## bayestestR 0.18.1.x
-
-CRAN release: 2026-05-24
-
-### Breaking Changes
-
-- [`p_to_bf()`](https://easystats.github.io/bayestestR/reference/p_to_bf.md)
-  arguments `n_obs` and `log` have changed positions in the function
-  call.
-
-### Changes
-
-- [`p_to_bf()`](https://easystats.github.io/bayestestR/reference/p_to_bf.md)
-  documentation improvements as well as better implementation for models
-  (and mixed models).
-
 ## bayestestR 0.18.1
 
 CRAN release: 2026-05-24
@@ -44,8 +28,9 @@ CRAN release: 2026-05-21
     [`bayesfactor_restricted()`](https://easystats.github.io/bayestestR/reference/bayesfactor_restricted.md),
     to obtain a matrix of Bayes factors between all restricted models.
 
-- Added support for `CmdStanFit` models from `{cmdstanr}` and expanded
-  support for `stanfit` models from `rstan`.
+- Added support for `CmdStanFit` models from
+  [cmdstanr](https://mc-stan.org/cmdstanr/) and expanded support for
+  `stanfit` models from `rstan`.
 
 ### Changes
 
