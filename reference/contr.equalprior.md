@@ -29,9 +29,8 @@ contr.equalprior_deviations(n, contrasts = TRUE, sparse = FALSE)
 
 - sparse:
 
-  logical indicating if the result should be sparse (of class
-  `dgCMatrix`), using package
-  [Matrix](https://CRAN.R-project.org/package=Matrix).
+  Logical, indicating if the result should be sparse (of class
+  `Matrix::dgCMatrix`), using package **Matrix**.
 
 ## Value
 
