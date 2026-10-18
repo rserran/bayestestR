@@ -139,8 +139,8 @@ model <- suppressWarnings(rstanarm::stan_lmer(extra ~ group + (1 | ID), data = s
 #> 
 #> SAMPLING FOR MODEL 'continuous' NOW (CHAIN 1).
 #> Chain 1: 
-#> Chain 1: Gradient evaluation took 4.4e-05 seconds
-#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.44 seconds.
+#> Chain 1: Gradient evaluation took 3.9e-05 seconds
+#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.39 seconds.
 #> Chain 1: Adjust your expectations accordingly!
 #> Chain 1: 
 #> Chain 1: 
@@ -157,15 +157,15 @@ model <- suppressWarnings(rstanarm::stan_lmer(extra ~ group + (1 | ID), data = s
 #> Chain 1: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 1: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 1: 
-#> Chain 1:  Elapsed Time: 0.145 seconds (Warm-up)
-#> Chain 1:                0.22 seconds (Sampling)
-#> Chain 1:                0.365 seconds (Total)
+#> Chain 1:  Elapsed Time: 0.2 seconds (Warm-up)
+#> Chain 1:                0.299 seconds (Sampling)
+#> Chain 1:                0.499 seconds (Total)
 #> Chain 1: 
 #> 
 #> SAMPLING FOR MODEL 'continuous' NOW (CHAIN 2).
 #> Chain 2: 
-#> Chain 2: Gradient evaluation took 2.1e-05 seconds
-#> Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 0.21 seconds.
+#> Chain 2: Gradient evaluation took 1.9e-05 seconds
+#> Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 0.19 seconds.
 #> Chain 2: Adjust your expectations accordingly!
 #> Chain 2: 
 #> Chain 2: 
@@ -182,9 +182,9 @@ model <- suppressWarnings(rstanarm::stan_lmer(extra ~ group + (1 | ID), data = s
 #> Chain 2: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 2: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 2: 
-#> Chain 2:  Elapsed Time: 0.13 seconds (Warm-up)
-#> Chain 2:                0.13 seconds (Sampling)
-#> Chain 2:                0.26 seconds (Total)
+#> Chain 2:  Elapsed Time: 0.179 seconds (Warm-up)
+#> Chain 2:                0.177 seconds (Sampling)
+#> Chain 2:                0.356 seconds (Total)
 #> Chain 2: 
 #> 
 #> SAMPLING FOR MODEL 'continuous' NOW (CHAIN 3).
@@ -207,15 +207,15 @@ model <- suppressWarnings(rstanarm::stan_lmer(extra ~ group + (1 | ID), data = s
 #> Chain 3: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 3: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 3: 
-#> Chain 3:  Elapsed Time: 0.144 seconds (Warm-up)
-#> Chain 3:                0.089 seconds (Sampling)
-#> Chain 3:                0.233 seconds (Total)
+#> Chain 3:  Elapsed Time: 0.194 seconds (Warm-up)
+#> Chain 3:                0.122 seconds (Sampling)
+#> Chain 3:                0.316 seconds (Total)
 #> Chain 3: 
 #> 
 #> SAMPLING FOR MODEL 'continuous' NOW (CHAIN 4).
 #> Chain 4: 
-#> Chain 4: Gradient evaluation took 1.8e-05 seconds
-#> Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 0.18 seconds.
+#> Chain 4: Gradient evaluation took 1.9e-05 seconds
+#> Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 0.19 seconds.
 #> Chain 4: Adjust your expectations accordingly!
 #> Chain 4: 
 #> Chain 4: 
@@ -232,9 +232,9 @@ model <- suppressWarnings(rstanarm::stan_lmer(extra ~ group + (1 | ID), data = s
 #> Chain 4: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 4: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 4: 
-#> Chain 4:  Elapsed Time: 0.129 seconds (Warm-up)
-#> Chain 4:                0.15 seconds (Sampling)
-#> Chain 4:                0.279 seconds (Total)
+#> Chain 4:  Elapsed Time: 0.175 seconds (Warm-up)
+#> Chain 4:                0.204 seconds (Sampling)
+#> Chain 4:                0.379 seconds (Total)
 #> Chain 4: 
 bayesfactor(model, verbose = FALSE)
 #> Bayes Factor (Savage-Dickey density ratio) 

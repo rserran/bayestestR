@@ -24,7 +24,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">bayestestR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.19.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.20.0.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -150,24 +150,20 @@ probability of observing that datum were the hypothesis true (<span class="math 
 <em>likelihood</em>):<a class="footnote-ref" tabindex="0" data-bs-toggle="popover" data-bs-content='&lt;p&gt;normalized by the marginal probability of observing the
 data, &lt;span class="math inline"&gt;P(\mathcal{D})&lt;/span&gt;, which we will
 soon see is often not needed.&lt;/p&gt;'><sup>1</sup></a></p>
-<p><span class="math display">
-P(\mathcal{H|D}) = \frac{P(\mathcal{D|H})\times
-P(\mathcal{H})}{P(\mathcal{D})}
-</span></p>
+<p><span class="math display">P(\mathcal{H|D}) =
+\frac{P(\mathcal{D|H})\times P(\mathcal{H})}{P(\mathcal{D})}</span></p>
 <p>Within this context, an hypothesis is formalized through the
 specification of an a-priori model: Priors on the parameters (<span class="math inline">\Theta</span>) that define the data generating
 process.</p>
 <p>If we have two hypothesis, we can find their posterior
 probability-odds as such:</p>
-<p><span class="math display">
-\underbrace{\frac{P(\mathcal{H}_1|\mathcal{D})}{P(\mathcal{H}_2|\mathcal{D})}}_{\text{Posterior
+<p><span class="math display">\underbrace{\frac{P(\mathcal{H}_1|\mathcal{D})}{P(\mathcal{H}_2|\mathcal{D})}}_{\text{Posterior
 Odds}} =
 \underbrace{\frac{P(\mathcal{D}|\mathcal{H}_1)}{P(\mathcal{D}|\mathcal{H}_2)}}_{\text{Likelihood
 Ratio}}
 \times
 \underbrace{\frac{P(\mathcal{H}_1)}{P(\mathcal{H}_2)}}_{\text{Prior
-Odds}}
-</span></p>
+Odds}}</span></p>
 <p>Where the <em>likelihood ratio</em> (the middle term) is the
 <strong><em>Bayes factor</em></strong> - it is the
 <strong><em>factor</em></strong> by which some <strong>prior
@@ -184,17 +180,14 @@ observed data under each of the two hypotheses</strong>: (In some
 contexts, these probabilities are also called <em>marginal
 likelihoods</em>.)</li>
 </ul>
-<p><span class="math display">
-BF_{12}=\frac{P(\mathcal{D}|\mathcal{H}_1)}{P(\mathcal{D}|\mathcal{H}_2)}
-</span></p>
+<p><span class="math display">BF_{12}=\frac{P(\mathcal{D}|\mathcal{H}_1)}{P(\mathcal{D}|\mathcal{H}_2)}</span></p>
 <ul>
 <li>As <strong>the degree of shift in prior beliefs</strong> about the
 relative credibility of two hypotheses (since they can be computed by
 dividing posterior odds by prior odds).</li>
 </ul>
-<p><span class="math display">
-BF_{12}=\frac{\text{Posterior Odds}_{12}}{\text{Prior Odds}_{12}}
-</span></p>
+<p><span class="math display">BF_{12}=\frac{\text{Posterior
+Odds}_{12}}{\text{Prior Odds}_{12}}</span></p>
 <p><a href="https://easystats.github.io/bayestestR/">bayestestR</a> provides functions for computing Bayes
 factors in two different contexts:</p>
 <ul>
@@ -250,7 +243,7 @@ about 5 point in either direction.</li>
 <p>We can build models with these different priors with
 <a href="https://github.com/paul-buerkner/brms" class="external-link">brms</a> or <a href="https://mc-stan.org/rstanarm/" class="external-link">rstanarm</a>:<a class="footnote-ref" tabindex="0" data-bs-toggle="popover" data-bs-content='&lt;p&gt;We will be using &lt;a href="https://mc-stan.org/rstanarm/" class="external-link"&gt;rstanarm&lt;/a&gt; throughout this
 vignette, but &lt;code&gt;bayestestR&lt;/code&gt; also supports &lt;a href="https://github.com/paul-buerkner/brms" class="external-link"&gt;brms&lt;/a&gt;,
-&lt;a href="https://blavaan.org" class="external-link"&gt;blavaan&lt;/a&gt;, &lt;a href="https://mc-stan.org/rstan/" class="external-link"&gt;rstan&lt;/a&gt;, &lt;code&gt;{cmdstanr}&lt;/code&gt;,
+&lt;a href="https://blavaan.org" class="external-link"&gt;blavaan&lt;/a&gt;, &lt;a href="https://mc-stan.org/rstan/" class="external-link"&gt;rstan&lt;/a&gt;, &lt;a href="https://mc-stan.org/cmdstanr/" class="external-link"&gt;cmdstanr&lt;/a&gt;,
 &lt;a href="https://richarddmorey.github.io/BayesFactor/" class="external-link"&gt;BayesFactor&lt;/a&gt; and more.&lt;/p&gt;'><sup>2</sup></a></p>
 <p>In any case, note the we will always require <em>many</em> posterior
 samples for the stability of our BF estimation (typically 10 times more
@@ -460,8 +453,8 @@ comes from the second model.</p>
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">ppp</span>, <span class="st">"weights"</span><span class="op">)</span></span></code></pre></div>
 <pre><code>&gt;    Model weights pweights
 &gt; 1 mod_H0       1  2.5e-05
-&gt; 2 mod_H1   31665  7.9e-01
-&gt; 3 mod_H2    8334  2.1e-01</code></pre>
+&gt; 2 mod_H1   31662  7.9e-01
+&gt; 3 mod_H2    8338  2.1e-01</code></pre>
 </div>
 </div>
 <div class="section level3">
@@ -480,10 +473,8 @@ Rouder, 2011)</span>.</p>
 <p>For example, we can impose an <em>additional</em> order restriction
 that the difference <em>must be positive</em>, which we can write like
 this (if we had to):</p>
-<p><span class="math display">
-\mathcal{H}_{2r}: \theta \sim Normal(0, 5^2)\begin{bmatrix} \infty \\ 0
-\end{bmatrix}
-</span></p>
+<p><span class="math display">\mathcal{H}_{2r}: \theta \sim Normal(0,
+5^2)\begin{bmatrix} \infty \\ 0 \end{bmatrix}</span></p>
 <p>By testing the probabilities of these restrictions on prior and
 posterior samples, we can see how the probabilities of the restricted
 distributions <em>change</em> after observing the data - <a href="#bf-definitions">this change is a Bayes factor</a>. These can be
@@ -518,15 +509,14 @@ difference isn’t just positive, it’s larger than 4.</p>
 &gt;  Denominator\Numerator   |   [1] |   [positive] |   [strong]
 &gt; -----------------------------------------------------------
 &gt; [1] (Un-restricted)      |     1 |         2.00 |       4.70
-&gt; [positive] mom_hsyes &gt; 0 | 0.499 |            1 |       2.35
+&gt; [positive] mom_hsyes &gt; 0 | 0.500 |            1 |       2.35
 &gt; [strong] mom_hsyes &gt; 4   | 0.213 |        0.426 |          1</code></pre>
 <p>We can see the “strong” model is preferred over both the
 un-restricted model and the “positive” model.</p>
 <p>Again, we can use the transitive properties of Bayes factors to find
 the BF comparing <span class="math inline">\mathcal{H}_{2r}</span> and
 <span class="math inline">\mathcal{H}_0</span>:</p>
-<p><span class="math display">
-\begin{align}
+<p><span class="math display">\begin{align}
 BF_{2r,0} &amp; = BF_{2,0} \times BF_{2r,2} \\
 &amp; =
 \frac{P(\mathcal{D}|\mathcal{H}_{2})}{P(\mathcal{D}|\mathcal{H}_0)}
@@ -534,16 +524,15 @@ BF_{2r,0} &amp; = BF_{2,0} \times BF_{2r,2} \\
 \frac{P(\mathcal{D}|\mathcal{H}_{2r})}{P(\mathcal{D}|\mathcal{H}_2)} \\
 &amp; =
 \frac{P(\mathcal{D}|\mathcal{H}_{2r})}{P(\mathcal{D}|\mathcal{H}_0)}
-\end{align}
-</span></p>
+\end{align}</span></p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">BF_2.0</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">bfs</span><span class="op">)</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span></span>
 <span><span class="va">BF_2r.2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">bf_rstr</span><span class="op">)</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span></span>
 <span></span>
 <span><span class="op">(</span><span class="va">BF_2r.0</span> <span class="op">&lt;-</span> <span class="va">BF_2.0</span> <span class="op">*</span> <span class="va">BF_2r.2</span><span class="op">)</span></span></code></pre></div>
-<pre><code>&gt; [1] 54865</code></pre>
+<pre><code>&gt; [1] 54774</code></pre>
 <p>So the data support the hypothesis that the difference is small but
-strictly positive 54864.55 times more than the hypothesis that the
+strictly positive 54774.05 times more than the hypothesis that the
 difference is exactly 0.</p>
 <p><strong>Because these restrictions are on the prior distribution,
 they are only appropriate for testing pre-planned (<em>a priori</em>)
@@ -606,7 +595,7 @@ of the three conditions:</p>
 <pre><code>&gt; Bayes Factor (Order-Restriction)
 &gt; 
 &gt; Hypothesis                         P(Prior) P(Posterior)   BF
-&gt; lemon &lt; control &amp; control &lt; sulfur     0.17         0.68 4.04
+&gt; lemon &lt; control &amp; control &lt; sulfur     0.17         0.67 4.02
 &gt; 
 &gt; * Bayes factors for the restricted model vs. the un-restricted model.</code></pre>
 <p>We can see that a-priori, this specific ordering of the 3 means has a
@@ -619,8 +608,7 @@ is for two <em>complementary</em> opposing one-sided hypotheses <span class="cit
 <p>For example, we can compare <span class="math inline">\mathcal{H}_{+}: \theta &gt; 0</span> - <em>the
 difference is positive</em> to <span class="math inline">\mathcal{H}_{-}: \theta &lt; 0</span>: <em>the
 difference is negative</em>:</p>
-<p><span class="math display">
-\begin{align}
+<p><span class="math display">\begin{align}
 BF_{+,-} &amp; = BF_{+,0} \times BF_{0,-} \\
 &amp; =
 \frac{P(\mathcal{D}|\mathcal{H}_{+})}{P(\mathcal{D}|\mathcal{H}_0)}
@@ -628,8 +616,7 @@ BF_{+,-} &amp; = BF_{+,0} \times BF_{0,-} \\
 \frac{P(\mathcal{D}|\mathcal{H}_{0})}{P(\mathcal{D}|\mathcal{H}_-)} \\
 &amp; =
 \frac{P(\mathcal{D}|\mathcal{H}_{+})}{P(\mathcal{D}|\mathcal{H}_{-})}
-\end{align}
-</span></p>
+\end{align}</span></p>
 <div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bf_div</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/bayesfactor_restricted.html">bayesfactor_restricted</a></span><span class="op">(</span></span>
 <span>  posterior <span class="op">=</span> <span class="va">disgust_means</span>,</span>
@@ -645,9 +632,9 @@ BF_{+,-} &amp; = BF_{+,0} \times BF_{0,-} \\
 &gt; 
 &gt;  Denominator\Numerator        |   [1] |   [positive] |   [negative]
 &gt; ------------------------------------------------------------------
-&gt; [1] (Un-restricted)           |     1 |        0.050 |         1.97
-&gt; [positive] lemon - sulfur &gt; 0 | 19.93 |            1 |        39.22
-&gt; [negative] lemon - sulfur &lt; 0 | 0.508 |        0.025 |            1</code></pre>
+&gt; [1] (Un-restricted)           |     1 |        0.050 |         1.96
+&gt; [positive] lemon - sulfur &gt; 0 | 19.99 |            1 |        39.19
+&gt; [negative] lemon - sulfur &lt; 0 | 0.510 |        0.026 |            1</code></pre>
 <p>The hypothesis that the lemon condition yields lower ratings than the
 sulfur condition is about 60 times more supported by the data than the
 hypothesis that the lemon condition has higher ratings than the sulfur
@@ -684,28 +671,23 @@ other values is 1. However, the <em>density</em> of the null can be
 non-zero, and it is this density that quantifies the credibility of the
 null hypothesis. This means that the prior <em>odds</em> of the null vs
 the alternative are:</p>
-<p><span class="math display">
-\text{Prior Odds} = \frac{P(\theta \neq \theta_0)}{P(\theta=\theta_0)} =
-\frac{1}{P(\theta=\theta_0)}
-</span></p>
+<p><span class="math display">\text{Prior Odds} = \frac{P(\theta \neq
+\theta_0)}{P(\theta=\theta_0)} = \frac{1}{P(\theta=\theta_0)}</span></p>
 <p>Likewise, the posterior odds of the null vs the alternative are:</p>
-<p><span class="math display">
-\text{Posterior Odds} = \frac{P(\theta \neq \theta_0 \mid
-\mathcal{D})}{P(\theta=\theta_0 \mid \mathcal{D})}
+<p><span class="math display">\text{Posterior Odds} = \frac{P(\theta
+\neq \theta_0 \mid \mathcal{D})}{P(\theta=\theta_0 \mid \mathcal{D})}
 = \frac{1}{P(\theta=\theta_0 \mid \mathcal{D})} \\
 </span></p>
 <p>Recall that a Bayes factor can be thought of as the degree of shift
 in the relative credibility of two hypotheses from the prior model to
 the posterior model:</p>
-<p><span class="math display">
-\begin{align}
+<p><span class="math display">\begin{align}
 BF_{10} &amp; = \frac{\text{Posterior Odds}_{10}}{\text{Prior
 Odds}_{10}}
 = \frac{\frac{1}{P(\theta=\theta_0 \mid
 \mathcal{D})}}{\frac{1}{P(\theta=\theta_0)}} = \\
 &amp; = \frac{P(\theta=\theta_0)}{P(\theta=\theta_0 \mid \mathcal{D})}
-\end{align}
-</span></p>
+\end{align}</span></p>
 <p>In other words, it is sufficient to compare the density of the null
 under the prior distribution (<span class="math inline">P(\theta=\theta_0)</span>) with the density of the
 null under posterior distribution (<span class="math inline">P(\theta=\theta_0 \mid \mathcal{D})</span>) to
@@ -721,8 +703,8 @@ between the two groups is exactly 0:</p>
 &gt; 
 &gt; Parameter   |       BF
 &gt; ----------------------
-&gt; (Intercept) | 4.12e+60
-&gt; mom_hsyes   | 5.93e+03
+&gt; (Intercept) | 4.19e+60
+&gt; mom_hsyes   | 5.95e+03
 &gt; 
 &gt; * Evidence Against The Null: 0</code></pre>
 <p>Looking at the Savage-Dickey density ratio for the
@@ -776,8 +758,8 @@ specifying a null-region instead of a point null:</p>
 &gt; 
 &gt; Parameter   |       BF
 &gt; ----------------------
-&gt; (Intercept) | 5.86e+57
-&gt; mom_hsyes   |   153.56
+&gt; (Intercept) | 5.67e+57
+&gt; mom_hsyes   |   153.01
 &gt; 
 &gt; * Evidence Against The Null: [-5.000, 5.000]</code></pre>
 <div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
@@ -809,8 +791,8 @@ alternative will be restricted to the region to the right of the null
 &gt; 
 &gt; Parameter   |       BF
 &gt; ----------------------
-&gt; (Intercept) | 5.88e+57
-&gt; mom_hsyes   |   301.66
+&gt; (Intercept) | 5.93e+57
+&gt; mom_hsyes   |   299.53
 &gt; 
 &gt; * Evidence Against The Null: [-5.000, 5.000]
 &gt; *                 Direction: Right-Sided test</code></pre>
@@ -852,8 +834,8 @@ higher than the prior densities.</p>
 &gt; 
 &gt; Parameter   |      BF = 1 SI | Effects |   Component
 &gt; ----------------------------------------------------
-&gt; (Intercept) | [74.33, 83.94] |   fixed | conditional
-&gt; mom_hsyes   | [ 6.07, 17.23] |   fixed | conditional</code></pre>
+&gt; (Intercept) | [74.38, 83.93] |   fixed | conditional
+&gt; mom_hsyes   | [ 5.95, 17.86] |   fixed | conditional</code></pre>
 <p>The argument <code>BF = 1</code> indicates that we want the interval
 to contain values that have gained support by a factor of at least 1
 (that is, <em>any</em> support at all).</p>
@@ -992,9 +974,9 @@ these Bayesian (prior) models (after we already showed how do do so with
 <span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code>&gt; 
 &gt;  condition Estimate 2.5 % 97.5 %
-&gt;    control     30.3 -2.94   63.4
-&gt;    lemon       30.3 -3.03   63.4
-&gt;    sulfur      30.3 -3.00   63.5
+&gt;    control     30.1 -2.95   63.2
+&gt;    lemon       30.2 -2.98   63.3
+&gt;    sulfur      30.0 -3.11   63.3
 &gt; 
 &gt; Type: response</code></pre>
 <div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
@@ -1004,9 +986,9 @@ these Bayesian (prior) models (after we already showed how do do so with
 <span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code>&gt; 
 &gt;  condition Estimate 2.5 % 97.5 %
-&gt;    control     30.1 -3.28   63.9
-&gt;    lemon       30.1 -3.37   63.8
-&gt;    sulfur      30.1 -3.31   64.0
+&gt;    control     30.1 -3.67   64.1
+&gt;    lemon       30.2 -3.82   64.1
+&gt;    sulfur      30.1 -3.72   64.3
 &gt; 
 &gt; Type: response</code></pre>
 <div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
@@ -1016,9 +998,9 @@ these Bayesian (prior) models (after we already showed how do do so with
 <span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code>&gt; 
 &gt;  condition Estimate 2.5 % 97.5 %
-&gt;    control     30.3 -3.10   64.0
-&gt;    lemon       30.2 -2.97   63.9
-&gt;    sulfur      30.2 -2.87   64.1
+&gt;    control     30.2 -3.31   63.8
+&gt;    lemon       30.3 -3.39   63.7
+&gt;    sulfur      30.3 -3.21   63.9
 &gt; 
 &gt; Type: response</code></pre>
 <p>We can see that for all 3 models, the means of all three groups have
@@ -1033,9 +1015,9 @@ this is not the case:</p>
 <span><span class="op">)</span></span></code></pre></div>
 <pre><code>&gt; 
 &gt;          Contrast Estimate 2.5 % 97.5 %
-&gt;  lemon - control  -0.00104 -3.92   3.91
-&gt;  sulfur - control -0.01706 -3.92   3.90
-&gt;  sulfur - lemon   -0.01666 -5.55   5.48
+&gt;  lemon - control    0.0235 -3.91   3.93
+&gt;  sulfur - control  -0.0153 -3.95   3.90
+&gt;  sulfur - lemon    -0.0215 -5.59   5.56
 &gt; 
 &gt; Term: condition
 &gt; Type: response</code></pre>
@@ -1051,9 +1033,9 @@ two differences involving the <code>sulfer</code> condition:</p>
 <code class="sourceCode R"><span><span class="fu">avg_comparisons</span><span class="op">(</span><span class="va">mod_odor.sum_prior</span>, variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"condition"</span> <span class="op">=</span> <span class="st">"pairwise"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code>&gt; 
 &gt;          Contrast Estimate 2.5 % 97.5 %
-&gt;  lemon - control   0.00866 -5.58   5.50
-&gt;  sulfur - control -0.02207 -8.78   8.69
-&gt;  sulfur - lemon   -0.00672 -8.80   8.81
+&gt;  lemon - control   0.00891 -5.58   5.63
+&gt;  sulfur - control  0.00897 -8.85   8.75
+&gt;  sulfur - lemon   -0.01434 -8.89   8.83
 &gt; 
 &gt; Term: condition
 &gt; Type: response</code></pre>
@@ -1066,9 +1048,9 @@ prior distribution for all differences between the groups:</p>
 <span><span class="op">)</span></span></code></pre></div>
 <pre><code>&gt; 
 &gt;          Contrast Estimate 2.5 % 97.5 %
-&gt;  lemon - control  0.028964 -5.52   5.59
-&gt;  sulfur - control 0.030357 -5.55   5.58
-&gt;  sulfur - lemon   0.000774 -5.64   5.57
+&gt;  lemon - control   0.00523 -5.54   5.56
+&gt;  sulfur - control  0.00171 -5.56   5.54
+&gt;  sulfur - lemon   -0.00831 -5.57   5.57
 &gt; 
 &gt; Term: condition
 &gt; Type: response</code></pre>
@@ -1085,7 +1067,7 @@ different across the three models:</p>
 <pre><code>&gt; Bayes Factor (Order-Restriction)
 &gt; 
 &gt; Hypothesis        P(Prior) P(Posterior)   BF
-&gt; b2 &lt; b1 &amp; b1 &lt; b3     0.25         0.77 3.09
+&gt; b2 &lt; b1 &amp; b1 &lt; b3     0.25         0.77 3.12
 &gt; 
 &gt; * Bayes factors for the restricted model vs. the un-restricted model.</code></pre>
 <div class="sourceCode" id="cb65"><pre class="downlit sourceCode r">
@@ -1099,7 +1081,7 @@ different across the three models:</p>
 <pre><code>&gt; Bayes Factor (Order-Restriction)
 &gt; 
 &gt; Hypothesis        P(Prior) P(Posterior)   BF
-&gt; b2 &lt; b1 &amp; b1 &lt; b3     0.20         0.74 3.76
+&gt; b2 &lt; b1 &amp; b1 &lt; b3     0.20         0.73 3.70
 &gt; 
 &gt; * Bayes factors for the restricted model vs. the un-restricted model.</code></pre>
 <div class="sourceCode" id="cb67"><pre class="downlit sourceCode r">
@@ -1113,7 +1095,7 @@ different across the three models:</p>
 <pre><code>&gt; Bayes Factor (Order-Restriction)
 &gt; 
 &gt; Hypothesis        P(Prior) P(Posterior)   BF
-&gt; b2 &lt; b1 &amp; b1 &lt; b3     0.17         0.72 4.25
+&gt; b2 &lt; b1 &amp; b1 &lt; b3     0.17         0.71 4.26
 &gt; 
 &gt; * Bayes factors for the restricted model vs. the un-restricted model.</code></pre>
 <p>We can see that while all models have the very similar posterior
