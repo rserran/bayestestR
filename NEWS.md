@@ -1,9 +1,60 @@
 # bayestestR (devel)
 
+## Breaking Changes
+
+* The `resp` argument of `bayesian_as_frequentist()` is renamed to `response`.
+  `resp =` still works by partial matching.
+
+# bayestestR 0.20.0
+
+## Changes
+
+* `sensitivity_to_prior()` now supports models from package *brms*. All slopes
+  need a normal, student_t, or cauchy prior.
+
+* `p_rope()` now actually is just a wrapper for `rope(ci = 1)`.
+
+* `equivalence_test()` methods gain a `ci_method` argument passed to `rope()` to
+  select the type of credible interval used in the ROPE calculation (#777).
+
+* `bayesian_as_frequentist()` gains a `resp` argument to convert one response
+  of a multivariate *brms* model (easystats/performance#908).
+
 ## Bug fixes
+
+* `bayesian_as_frequentist()` now works for linear mixed models from
+  *BayesFactor* (with random factors set in `whichRandom`). They are refit with
+  `lme4::lmer()` (#505).
+
+* If suggested packages are not installed, the Bayes factor vignette now builds.
+  Before, its inline code ran and failed with "object not found".
+
+* `equivalence_test()` no longer prints "HDI" columns when using other CI
+  methods (such as the default ETI).
 
 * Fixed issue with printing wrong column order of multiple CI columns in
   `describe_posterior()`.
+
+* If the model formula transforms the response, for example with `scale(y)` or
+  `sqrt(y)`, `rope_range()` now uses the standard deviation of the transformed
+  response. For linear models, the default ROPE is then on the same scale as the
+  model parameters.
+
+* For multivariate *brms* models with `resp_weights()` and ordinal responses,
+  `rope_range()` now returns one ROPE per response, without a warning.
+
+* If `simulate_prior()` or `check_prior()` cannot simulate a prior, for example
+  a laplace or flat prior, it now gives a warning that names the parameters.
+  Before, it returned a column of `NA` with no warning.
+
+* For *brms* models with a censored outcome, such as `y | cens(censored)`,
+  `mediation()` now works (#631). Before, it failed with an indexing error, such
+  as "subscript out of bounds".
+
+* If the mediator enters the outcome model with `mo()`, `mediation()` now gives
+  an informative error (#576). If a coefficient for the `treatment` or
+  `mediator` is not in the model, the error names it. Before, both cases failed
+  with an indexing error, such as "undefined columns selected".
 
 # bayestestR 0.19.0
 

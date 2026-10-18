@@ -5,9 +5,14 @@
 \alias{bayesian_as_frequentist}
 \title{Convert (refit) a Bayesian model to frequentist}
 \usage{
-convert_bayesian_as_frequentist(model, data = NULL, REML = TRUE)
+convert_bayesian_as_frequentist(
+  model,
+  data = NULL,
+  REML = TRUE,
+  response = NULL
+)
 
-bayesian_as_frequentist(model, data = NULL, REML = TRUE)
+bayesian_as_frequentist(model, data = NULL, REML = TRUE, response = NULL)
 }
 \arguments{
 \item{model}{A Bayesian model.}
@@ -18,9 +23,19 @@ from the model.}
 \item{REML}{For mixed effects, should models be estimated using
 restricted maximum likelihood (REML) (\code{TRUE}, default) or maximum
 likelihood (\code{FALSE})?}
+
+\item{response}{For multivariate \emph{brms} models, the name of the one response
+to convert, as returned by \code{names(insight::find_formula(model))}. Other
+models ignore \code{response}.}
 }
 \description{
 Refit Bayesian model as frequentist. Can be useful for comparisons.
+}
+\details{
+Linear models from \emph{BayesFactor} with random factors (see \code{whichRandom} in
+\code{BayesFactor::lmBF()}) are refit with \code{lme4::lmer()}. A random term with only
+factors, such as \code{cyl:gear}, becomes \code{(1 | cyl:gear)}. A random term with a
+continuous variable, such as \code{Days:Subject}, becomes \code{(0 + Days | Subject)}.
 }
 \examples{
 \dontshow{if (require("rstanarm")) withAutoprint(\{ # examplesIf}

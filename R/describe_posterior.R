@@ -356,6 +356,7 @@ describe_posterior.default <- function(posterior, ...) {
       test_prope <- .prepare_output(
         p_rope(
           x_df,
+          ci_method = ci_method,
           range = rope_range,
           verbose = verbose,
           cleaned_parameters = cleaned_parameters,
@@ -364,6 +365,16 @@ describe_posterior.default <- function(posterior, ...) {
         cleaned_parameters,
         is_stanmvreg
       )
+
+      test_prope$p_ROPE <- test_prope$ROPE_Percentage
+      test_prope$CI <- NULL
+      test_prope$ROPE_Percentage <- NULL
+      if ("Superiority_Percentage" %in% colnames(test_prope)) {
+        test_prope$p_Superiority <- test_prope$Superiority_Percentage
+        test_prope$p_Inferiority <- test_prope$Inferiority_Percentage
+        test_prope$Superiority_Percentage <- test_prope$Inferiority_Percentage <- NULL
+      }
+
       if (!"Parameter" %in% names(test_prope)) {
         test_prope <- cbind(
           data.frame(Parameter = "Posterior", stringsAsFactors = FALSE),
@@ -405,6 +416,7 @@ describe_posterior.default <- function(posterior, ...) {
         rope(
           x_df,
           range = rope_range,
+          ci_method = ci_method,
           ci = rope_ci,
           cleaned_parameters = cleaned_parameters,
           ...
@@ -436,7 +448,8 @@ describe_posterior.default <- function(posterior, ...) {
             list(
               x = x_df,
               range = rope_range,
-              ci = rope_ci
+              ci = rope_ci,
+              ci_method = ci_method
             )
           )
         ),
@@ -454,7 +467,7 @@ describe_posterior.default <- function(posterior, ...) {
       names(test_equi)[names(test_equi) == "CI"] <- "ROPE_CI"
 
       test_rope <- merge(test_rope, test_equi, all = TRUE)
-      test_rope <- test_rope[!names(test_rope) %in% c("HDI_low", "HDI_high")]
+      test_rope <- test_rope[!names(test_rope) %in% c("CI_low", "CI_high")]
     }
 
     # Bayes Factors

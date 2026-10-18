@@ -2,12 +2,21 @@
 #'
 #' Refit Bayesian model as frequentist. Can be useful for comparisons.
 #'
+#' @details
+#' Linear models from *BayesFactor* with random factors (see `whichRandom` in
+#' `BayesFactor::lmBF()`) are refit with `lme4::lmer()`. A random term with only
+#' factors, such as `cyl:gear`, becomes `(1 | cyl:gear)`. A random term with a
+#' continuous variable, such as `Days:Subject`, becomes `(0 + Days | Subject)`.
+#'
 #' @param model A Bayesian model.
 #' @param data Data used by the model. If `NULL`, will try to extract it
 #'   from the model.
 #' @param REML For mixed effects, should models be estimated using
 #'   restricted maximum likelihood (REML) (`TRUE`, default) or maximum
 #'   likelihood (`FALSE`)?
+#' @param response For multivariate *brms* models, the name of the one response
+#'   to convert, as returned by `names(insight::find_formula(model))`. Other
+#'   models ignore `response`.
 #' @examplesIf require("rstanarm")
 #' \donttest{
 #' # Rstanarm ----------------------
@@ -38,14 +47,58 @@
 #' }
 #'
 #' @export
-convert_bayesian_as_frequentist <- function(model, data = NULL, REML = TRUE) {
+convert_bayesian_as_frequentist <- function(
+  model,
+  data = NULL,
+  REML = TRUE,
+  response = NULL
+) {
   if (is.null(data)) {
     data <- insight::get_data(model)
   }
 
-  info <- insight::model_info(model, verbose = FALSE)
-  model_formula <- insight::find_formula(model)
-  model_family <- insight::get_family(model)
+  # BayesFactor mixed models: random terms are not in lme4 syntax, so we build
+  # the formula from the model's data types
+  if (inherits(model, "BFBayesFactor")) {
+    bf_formula <- .bf_mixed_formula(model)
+    if (!is.null(bf_formula)) {
+      insight::check_if_installed("lme4")
+      freq <- tryCatch(
+        lme4::lmer(formula = bf_formula, data = data, REML = REML),
+        error = function(e) e
+      )
+      if (inherits(freq, "error")) {
+        insight::format_error(
+          "Model could not be automatically converted to frequentist model.",
+          paste0("`lme4::lmer()` failed with: ", conditionMessage(freq))
+        )
+      }
+      return(freq)
+    }
+  }
+
+  if (inherits(model, "brmsfit") && insight::is_multivariate(model)) {
+    # multivariate brms models: convert only the response named in `response`
+    model_formulas <- insight::find_formula(model)
+    responses <- names(model_formulas)
+    if (!is.character(response) || length(response) != 1 || !response %in% responses) {
+      insight::format_error(
+        "For multivariate brms models, `response` must name one response of the model.",
+        paste0("Possible responses are: ", toString(responses), ".")
+      )
+    }
+    info <- insight::model_info(
+      model,
+      response = which(responses == response),
+      verbose = FALSE
+    )
+    model_formula <- model_formulas[[response]]
+    model_family <- insight::get_family(model)[[response]]
+  } else {
+    info <- insight::model_info(model, verbose = FALSE)
+    model_formula <- insight::find_formula(model)
+    model_family <- insight::get_family(model)
+  }
 
   # fix exception: The 0 + Intercept syntax in brms can be used to facilitate
   # prior specification for the intercept, but but it leads to issues where it
@@ -208,6 +261,45 @@ convert_bayesian_as_frequentist <- function(model, data = NULL, REML = TRUE) {
 
   fixed_formula <- paste(as.character(formula$conditional)[c(2, 1, 3)], collapse = " ")
   stats::as.formula(paste(fixed_formula, random_formula, sep = " + "))
+}
+
+.bf_mixed_formula <- function(model) {
+  # same model that insight::find_formula() uses (the last numerator)
+  bf_model <- utils::tail(model@numerator, 1)[[1]]
+  if (!inherits(bf_model, "BFlinearModel")) {
+    return(NULL)
+  }
+  data_types <- bf_model@dataTypes
+  if (!"random" %in% data_types) {
+    return(NULL)
+  }
+
+  f <- stats::as.formula(bf_model@identifier$formula)
+  fixed_terms <- NULL
+  random_terms <- NULL
+  for (term in attr(stats::terms(f), "term.labels")) {
+    # term labels keep backticks for non-syntactic names, data types do not
+    term_vars <- all.vars(str2lang(term))
+    term_types <- data_types[term_vars]
+    if (!any(term_types == "random")) {
+      fixed_terms <- c(fixed_terms, term)
+    } else if (any(term_types == "continuous")) {
+      # random slopes without an intercept; a random intercept is its own
+      # term, so the two are uncorrelated
+      random_terms <- c(random_terms, sprintf(
+        "(0 + %s | %s)",
+        paste0("`", term_vars[term_types == "continuous"], "`", collapse = ":"),
+        paste0("`", term_vars[term_types != "continuous"], "`", collapse = ":")
+      ))
+    } else {
+      random_terms <- c(random_terms, sprintf("(1 | %s)", term))
+    }
+  }
+  if (is.null(fixed_terms)) {
+    fixed_terms <- "1"
+  }
+
+  stats::reformulate(c(fixed_terms, random_terms), response = f[[2]])
 }
 
 #' @rdname convert_bayesian_as_frequentist
