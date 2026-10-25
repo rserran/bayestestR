@@ -142,9 +142,9 @@ from each tail of the distribution and always include the median, the
 HDI is *not* equal-tailed and therefore always includes the mode(s) of
 posterior distributions. While this can be useful to better represent
 the credibility mass of a distribution, the HDI also has some
-limitations. See
-[`spi()`](https://easystats.github.io/bayestestR/reference/spi.md) for
-details.
+limitations. The section *Algorithms* of
+[`hdi()`](https://easystats.github.io/bayestestR/reference/hdi.md)
+explains how the HDI is computed.
 
 A 95% equal-tailed interval (ETI) has 2.5% of the distribution on either
 side of its limits. It indicates the 2.5th percentile and the 97.5th
@@ -210,8 +210,7 @@ Other ci:
 [`bci()`](https://easystats.github.io/bayestestR/reference/bci.md),
 [`ci()`](https://easystats.github.io/bayestestR/reference/ci.md),
 [`hdi()`](https://easystats.github.io/bayestestR/reference/hdi.md),
-[`si()`](https://easystats.github.io/bayestestR/reference/si.md),
-[`spi()`](https://easystats.github.io/bayestestR/reference/spi.md)
+[`si()`](https://easystats.github.io/bayestestR/reference/si.md)
 
 ## Examples
 
@@ -281,8 +280,8 @@ model <- brms::brm(mpg ~ wt + cyl, data = mtcars)
 #> 
 #> SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 1).
 #> Chain 1: 
-#> Chain 1: Gradient evaluation took 8e-06 seconds
-#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.08 seconds.
+#> Chain 1: Gradient evaluation took 7e-06 seconds
+#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.07 seconds.
 #> Chain 1: Adjust your expectations accordingly!
 #> Chain 1: 
 #> Chain 1: 
@@ -306,8 +305,8 @@ model <- brms::brm(mpg ~ wt + cyl, data = mtcars)
 #> 
 #> SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 2).
 #> Chain 2: 
-#> Chain 2: Gradient evaluation took 3e-06 seconds
-#> Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 0.03 seconds.
+#> Chain 2: Gradient evaluation took 4e-06 seconds
+#> Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 0.04 seconds.
 #> Chain 2: Adjust your expectations accordingly!
 #> Chain 2: 
 #> Chain 2: 
@@ -331,8 +330,8 @@ model <- brms::brm(mpg ~ wt + cyl, data = mtcars)
 #> 
 #> SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 3).
 #> Chain 3: 
-#> Chain 3: Gradient evaluation took 3e-06 seconds
-#> Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 0.03 seconds.
+#> Chain 3: Gradient evaluation took 4e-06 seconds
+#> Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 0.04 seconds.
 #> Chain 3: Adjust your expectations accordingly!
 #> Chain 3: 
 #> Chain 3: 
@@ -356,8 +355,8 @@ model <- brms::brm(mpg ~ wt + cyl, data = mtcars)
 #> 
 #> SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 4).
 #> Chain 4: 
-#> Chain 4: Gradient evaluation took 2e-06 seconds
-#> Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 0.02 seconds.
+#> Chain 4: Gradient evaluation took 4e-06 seconds
+#> Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 0.04 seconds.
 #> Chain 4: Adjust your expectations accordingly!
 #> Chain 4: 
 #> Chain 4: 
